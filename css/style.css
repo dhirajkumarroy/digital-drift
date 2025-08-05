@@ -1,0 +1,130 @@
+/* Add a custom font and set the background color */
+:root {
+    --bg-color: #0d1117;
+    --text-color: #c9d1d9;
+    --card-bg: #161b22;
+    --border-color: #30363d;
+    --link-color: #06acd3;
+    --tag-bg: rgba(99, 102, 241, 0.2); /* A light, slightly transparent purple */
+    --tag-text: #818cf8; /* A vibrant purple */
+    --tag-hover-bg: rgba(99, 102, 241, 0.3);
+}
+
+.light {
+    --bg-color: #ffffff;
+    --text-color: #24292f;
+    --card-bg: #f6f8fa;
+    --border-color: #d0d7de;
+    --link-color: #06acd3;
+    --tag-bg: #e0e7ff; /* Lighter blue */
+    --tag-text: #4f46e5; /* Deeper blue */
+    --tag-hover-bg: #c7d2fe;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Style for the button's hover effect */
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(6, 172, 219, 0.4);
+}
+
+/* Card hover effect */
+.blog-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.light .blog-card:hover {
+     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tag-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive menu styles for mobile */
+#mobile-menu {
+    display: none;
+}
+
+#mobile-menu.active {
+    display: block;
+}
+
+/* Custom scrollbar for mobile tag filter bar */
+#tag-filter-bar::-webkit-scrollbar {
+    height: 4px;
+}
+
+#tag-filter-bar::-webkit-scrollbar-track {
+    background: var(--card-bg);
+    border-radius: 2px;
+}
+
+#tag-filter-bar::-webkit-scrollbar-thumb {
+    background-color: var(--link-color);
+    border-radius: 2px;
+}
+
+
+/* Container for search with icon */
+.search-container {
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Search icon inside input */
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Input with padding for icon */
+.search-enhanced-input {
+  width: 100%;
+  padding: 0.75rem 1.25rem 0.75rem 2.75rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Placeholder */
+.search-enhanced-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+  font-style: italic;
+}
+
+/* Hover effect */
+.search-enhanced-input:hover {
+  border-color: var(--link-color);
+  box-shadow: 0 0 8px rgba(72, 149, 239, 0.3);
+  transform: scale(1.01);
+}
+
+/* Focus effect */
+.search-enhanced-input:focus {
+  outline: none;
+  border-color: var(--link-color);
+  box-shadow: 0 0 12px rgba(72, 149, 239, 0.5);
+  background-color: var(--bg-color);
+}

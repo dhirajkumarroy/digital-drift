@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Python Programming: A Complete Beginner’s Guide | Digital Drift
+    </title>
+    <!-- Link to external CSS and JavaScript files -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="antialiased">
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Header -->
+      <header
+        class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-4"
+      >
+        <a
+          href="../index.html"
+          class="text-3xl font-bold text-[var(--text-color)] tracking-tight"
+          >Digital Drift</a
+        >
+        <div class="flex items-center space-x-6">
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex space-x-6 text-[var(--text-color)]">
+            <a
+              href="../index.html"
+              class="hover:text-[var(--link-color)] transition-colors duration-200"
+              >Home</a
+            >
+            <a
+              href="../about.html"
+              class="hover:text-[var(--link-color)] transition-colors duration-200"
+              >About</a
+            >
+            <a
+              href="#"
+              class="hover:text-[var(--link-color)] transition-colors duration-200"
+              >Contact</a
+            >
+            <a
+              href="#"
+              class="hover:text-[var(--link-color)] transition-colors duration-200"
+              >Archive</a
+            >
+          </nav>
+          <!-- Theme Toggle Button -->
+          <button
+            id="theme-toggle"
+            class="p-2 text-[var(--text-color)] hover:text-[var(--link-color)] focus:outline-none transition-colors duration-200"
+          >
+            <!-- Moon icon for dark mode -->
+            <svg
+              id="moon-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              style="display: none"
+            >
+              <path
+                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8 0 1010.586 10.586z"
+              />
+            </svg>
+            <!-- Sun icon for light mode -->
+            <svg
+              id="sun-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+          <!-- Mobile Menu Button -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden p-2 text-[var(--text-color)] hover:text-[var(--link-color)] focus:outline-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Mobile Menu -->
+      <nav
+        id="mobile-menu"
+        class="md:hidden bg-[var(--card-bg)] rounded-lg shadow-lg mb-6 py-4 px-6 space-y-4 text-[var(--text-color)]"
+      >
+        <a
+          href="../index.html"
+          class="block hover:text-[var(--link-color)] transition-colors duration-200"
+          >Home</a
+        >
+        <a
+          href="../about.html"
+          class="block hover:text-[var(--link-color)] transition-colors duration-200"
+          >About</a
+        >
+        <a
+          href="#"
+          class="block hover:text-[var(--link-color)] transition-colors duration-200"
+          >Contact</a
+        >
+        <a
+          href="#"
+          class="block hover:text-[var(--link-color)] transition-colors duration-200"
+          >Archive</a
+        >
+      </nav>
+
+      <!-- Main Blog Post Content -->
+      <main class="max-w-4xl mx-auto py-8">
+        <article class="bg-[var(--card-bg)] p-8 rounded-lg shadow-lg">
+          <div class="flex items-center mb-4">
+            <a
+              href="#"
+              class="tag-link text-xs font-medium px-2 py-1 rounded-full bg-[var(--tag-bg)] text-[var(--tag-text)] mr-2"
+              >Programming</a
+            >
+            <a
+              href="#"
+              class="tag-link text-xs font-medium px-2 py-1 rounded-full bg-[var(--tag-bg)] text-[var(--tag-text)]"
+              >Python</a
+            >
+          </div>
+          <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">
+            Python Programming: A Complete Beginner’s Guide from Scratch
+          </h1>
+          <p class="text-sm text-[var(--text-color)] opacity-70 mb-8">
+            Published on Aug 4, 2025
+          </p>
+
+          <div
+            class="prose prose-invert text-[var(--text-color)] leading-relaxed"
+          >
+            <p class="text-xl">
+              Python is one of the most popular and beginner-friendly
+              programming languages today. Whether you're a student, a working
+              professional, or simply curious about coding, Python is the
+              perfect place to start. Its clean syntax and powerful features
+              make it ideal for web development, automation, data science,
+              artificial intelligence, and more.
+            </p>
+            <p class="text-xl">
+              In this article, we’ll guide you step-by-step from absolute
+              scratch — no prior coding experience required!
+            </p>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">What is Python?</h2>
+            <p>
+              Python is a **high-level, interpreted** programming language
+              created by **Guido van Rossum** and first released in 1991. It's
+              known for:
+            </p>
+            <ul class="list-disc list-inside">
+              <li>Easy syntax (similar to English)</li>
+              <li>
+                Versatility (can be used for web, data, AI, games, and more)
+              </li>
+              <li>
+                Huge community (millions of developers, tons of libraries)
+              </li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Why Learn Python First?
+            </h2>
+            <ul class="list-disc list-inside">
+              <li>✅ Simple to Read and Write</li>
+              <li>✅ Great Community Support</li>
+              <li>✅ Widely Used in Industry</li>
+              <li>✅ Ideal for Beginners and Experts</li>
+              <li>✅ Works on Windows, Mac, Linux</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Step 1: Setting Up Python
+            </h2>
+            <h3 class="text-xl font-semibold mt-6 mb-2">1. Download Python</h3>
+            <p>
+              Visit
+              <a
+                href="https://www.python.org"
+                class="text-[var(--link-color)] hover:underline"
+                >https://www.python.org</a
+              >
+              and download the latest version.
+            </p>
+            <h3 class="text-xl font-semibold mt-6 mb-2">
+              2. Install an IDE (Integrated Development Environment)
+            </h3>
+            <p>Recommended IDEs:</p>
+            <ul class="list-disc list-inside">
+              <li>**VS Code** (lightweight & powerful)</li>
+              <li>**PyCharm** (professional & rich features)</li>
+              <li>**Thonny** (simple for beginners)</li>
+            </ul>
+            <h3 class="text-xl font-semibold mt-6 mb-2">
+              3. Run Your First Code
+            </h3>
+            <p>Open your editor and type:</p>
+            <pre
+              class="bg-[#24292f] p-4 rounded-md overflow-x-auto text-sm text-[#c9d1d9]"
+            ><code>print("Hello, World!")</code></pre>
+            <p class="mt-4">
+              Save it as `hello.py` and run it. You’ve written your first Python
+              program!
+            </p>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Step 2: Learn the Basics
+            </h2>
+            <p>Let’s explore some core Python concepts:</p>
+            <h3 class="text-xl font-semibold mt-6 mb-2">
+              Variables & Data Types
+            </h3>
+            <pre
+              class="bg-[#24292f] p-4 rounded-md overflow-x-auto text-sm text-[#c9d1d9]"
+            ><code>name = "Xyz"
+age = 25
+is_coder = True</code></pre>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Operators</h3>
+            <pre
+              class="bg-[#24292f] p-4 rounded-md overflow-x-auto text-sm text-[#c9d1d9]"
+            ><code>x = 5 + 3    # Addition
+y = 10 - 2   # Subtraction</code></pre>
+            <h3 class="text-xl font-semibold mt-6 mb-2">
+              Conditional Statements
+            </h3>
+            <pre
+              class="bg-[#24292f] p-4 rounded-md overflow-x-auto text-sm text-[#c9d1d9]"
+            ><code>if age > 18:
+    print("You are an adult")
+else:
+    print("You are a minor")</code></pre>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Loops</h3>
+            <pre
+              class="bg-[#24292f] p-4 rounded-md overflow-x-auto text-sm text-[#c9d1d9]"
+            ><code># For loop
+for i in range(5):
+    print(i)
+
+# While loop
+count = 0
+while count < 5:
+    print(count)
+    count += 1</code></pre>
+            <h3 class="text-xl font-semibold mt-6 mb-2">Functions</h3>
+            <pre
+              class="bg-[#24292f] p-4 rounded-md overflow-x-auto text-sm text-[#c9d1d9]"
+            ><code>def greet(name):
+    print("Hello", name)
+
+greet("Xyz")</code></pre>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Step 3: Core Concepts to Learn Next
+            </h2>
+            <p>Here are topics you should explore in order:</p>
+            <ul class="list-disc list-inside">
+              <li>Lists, Tuples, Dictionaries</li>
+              <li>String Manipulation</li>
+              <li>File Handling</li>
+              <li>Error Handling (try-except)</li>
+              <li>Object-Oriented Programming (OOP)</li>
+              <li>Modules & Packages</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Step 4: Build Simple Projects
+            </h2>
+            <p>Start practicing with small projects:</p>
+            <ul class="list-disc list-inside">
+              <li>Calculator</li>
+              <li>To-do List App</li>
+              <li>Quiz Game</li>
+              <li>BMI Calculator</li>
+              <li>Number Guessing Game</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Step 5: Go Advanced (Optional)
+            </h2>
+            <p>Once you're comfortable, explore:</p>
+            <ul class="list-disc list-inside">
+              <li>Web Development with Flask/Django</li>
+              <li>Data Analysis with Pandas & NumPy</li>
+              <li>Machine Learning with Scikit-Learn or TensorFlow</li>
+              <li>Automation with Python scripts</li>
+              <li>APIs & JSON</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">
+              Recommended Resources
+            </h2>
+            <ul class="list-disc list-inside">
+              <li>Python.org Docs</li>
+              <li>W3Schools Python</li>
+              <li>Real Python</li>
+              <li>Kaggle Python Course</li>
+            </ul>
+
+            <h2 class="text-2xl font-semibold mt-8 mb-4">Conclusion</h2>
+            <p>
+              Python is more than just a programming language — it's a gateway
+              to endless possibilities. With consistent practice and real-world
+              projects, you can master it and unlock careers in development,
+              data science, automation, and beyond.
+            </p>
+            <p>Start small, stay curious, and keep coding. 💻🔥</p>
+          </div>
+        </article>
+      </main>
+
+      <!-- Footer -->
+      <footer
+        class="mt-16 text-center border-t border-[var(--border-color)] pt-8 text-[var(--text-color)]"
+      >
+        <p>&copy; 2025 Digital Drift. All rights reserved.</p>
+        <div class="flex justify-center mt-4 space-x-4">
+          <a
+            href="#"
+            class="text-[var(--text-color)] hover:text-[var(--link-color)] transition-colors duration-200"
+            >Twitter</a
+          >
+          <a
+            href="#"
+            class="text-[var(--text-color)] hover:text-[var(--link-color)] transition-colors duration-200"
+            >GitHub</a
+          >
+          <a
+            href="#"
+            class="text-[var(--text-color)] hover:text-[var(--link-color)] transition-colors duration-200"
+            >LinkedIn</a
+          >
+        </div>
+      </footer>
+    </div>
+
+    <script src="../js/script.js"></script>
+  </body>
+</html>
