@@ -18,6 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
       url: "./post/Perplexity_AI.html",
       tags: ["AI", "Search Engine", "Perplexity", "Technology"],
     },
+    {
+      id: 3,
+      title: "Perplexity AI vs ChatGPT: Which One Should You Use in 2025?",
+      summary:
+        "A complete 2025 comparison of Perplexity AI and ChatGPT. Discover which AI tool is best for your needs, from creative writing to academic research and real-time fact-checking.",
+      date: "Aug 18, 2025",
+      url: "./post/perplexity-ai-vs-chatgpt.html",
+      tags: ["AI", "ChatGPT", "Perplexity", "Comparison"],
+    },
   ];
 
   const staticCategories = ["All", "Programming", "AI", "Tech"];
