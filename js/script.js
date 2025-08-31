@@ -27,6 +27,16 @@ document.addEventListener("DOMContentLoaded", () => {
       url: "./post/perplexity-ai-vs-chatgpt.html",
       tags: ["AI", "ChatGPT", "Perplexity", "Comparison"],
     },
+    {
+      id: 4,
+      title:
+        "Google Nano Banana AI in Gemini: The Future of Image Editing (2025)",
+      summary:
+        "Explore Google DeepMind’s Nano Banana, the new AI image editing tool in Gemini. Learn how it enables consistent edits, photo blending, design mixing, and more.",
+      date: "Sep 1, 2025",
+      url: "./post/google-nano-banana-gemini-ai-image-editing.html",
+      tags: ["AI", "Google", "Gemini", "Image Editing", "DeepMind","Tech"],
+    },
   ];
 
   const staticCategories = ["All", "Programming", "AI", "Tech"];
