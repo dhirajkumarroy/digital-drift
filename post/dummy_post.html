@@ -3,43 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Digital Drift</title>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"
-    ></script>
+    <title>
+      Python Programming: A Complete Beginner’s Guide | Digital Drift
+    </title>
+
+    <!-- SEO Meta Description -->
+    <meta name="description" content="Python Programming: A Complete Beginner’s Guide from Scratch. Learn setup, syntax, variables, loops, functions, and projects step by step." />
+    <meta name="author" content="Digital Drift" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Python Programming: A Complete Beginner’s Guide" />
+    <meta property="og:description" content="Step-by-step Python tutorial for beginners: setup, syntax, variables, loops, functions, and projects." />
+    <meta property="og:image" content="https://yourdomain.com/images/python-guide.png" />
+    <meta property="og:url" content="https://yourdomain.com/blog/python-guide" />
+    <meta property="og:type" content="article" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Python Programming: A Complete Beginner’s Guide" />
+    <meta name="twitter:description" content="Step-by-step Python tutorial for beginners: setup, syntax, variables, loops, functions, and projects." />
+    <meta name="twitter:image" content="https://yourdomain.com/images/python-guide.png" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
+      function gtag(){ dataLayer.push(arguments); }
       gtag("js", new Date());
-
       gtag("config", "G-VN488V6MP5");
     </script>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/blog/python-guide"
+      },
+      "headline": "Python Programming: A Complete Beginner’s Guide from Scratch",
+      "description": "Step-by-step Python tutorial for beginners: setup, syntax, variables, loops, functions, and projects.",
+      "image": "https://yourdomain.com/images/python-guide.png",
+      "author": {
+        "@type": "Person",
+        "name": "Digital Drift"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Digital Drift",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://yourdomain.com/images/logo.png"
+        }
+      },
+      "datePublished": "2025-08-04",
+      "dateModified": "2025-08-04"
+    }
+    </script>
+
+    <!-- Tailwind + External CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body class="antialiased">
+    <!-- Main Container -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Header -->
       <header
         class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-4"
       >
         <a
-          href="index.html"
+          href="../index.html"
           class="text-3xl font-bold text-[var(--text-color)] tracking-tight"
           >Digital Drift</a
         >
-
         <div class="flex items-center space-x-6">
+          <!-- Desktop Navigation -->
           <nav class="hidden md:flex space-x-6 text-[var(--text-color)]">
             <a
-              href="index.html"
+              href="../index.html"
               class="hover:text-[var(--link-color)] transition-colors duration-200"
               >Home</a
             >
             <a
-              href="about.html"
+              href="../about.html"
               class="hover:text-[var(--link-color)] transition-colors duration-200"
               >About</a
             >
@@ -54,10 +102,12 @@
               >Archive</a
             >
           </nav>
+          <!-- Theme Toggle Button -->
           <button
             id="theme-toggle"
             class="p-2 text-[var(--text-color)] hover:text-[var(--link-color)] focus:outline-none transition-colors duration-200"
           >
+            <!-- Moon icon -->
             <svg
               id="moon-icon"
               xmlns="http://www.w3.org/2000/svg"
@@ -70,6 +120,7 @@
                 d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8 0 1010.586 10.586z"
               />
             </svg>
+            <!-- Sun icon -->
             <svg
               id="sun-icon"
               xmlns="http://www.w3.org/2000/svg"
@@ -84,6 +135,7 @@
               />
             </svg>
           </button>
+          <!-- Mobile Menu Button -->
           <button
             id="mobile-menu-btn"
             class="md:hidden p-2 text-[var(--text-color)] hover:text-[var(--link-color)] focus:outline-none"
@@ -106,17 +158,18 @@
         </div>
       </header>
 
+      <!-- Mobile Menu -->
       <nav
         id="mobile-menu"
         class="md:hidden bg-[var(--card-bg)] rounded-lg shadow-lg mb-6 py-4 px-6 space-y-4 text-[var(--text-color)]"
       >
         <a
-          href="index.html"
+          href="../index.html"
           class="block hover:text-[var(--link-color)] transition-colors duration-200"
           >Home</a
         >
         <a
-          href="about.html"
+          href="../about.html"
           class="block hover:text-[var(--link-color)] transition-colors duration-200"
           >About</a
         >
@@ -132,53 +185,44 @@
         >
       </nav>
 
-      <div
-        id="tag-filter-bar"
-        class="flex flex-nowrap overflow-x-auto space-x-2 pb-4 mb-8 md:flex-wrap md:justify-center md:space-x-4 md:overflow-hidden"
-      >
-        <a
-          href="#"
-          class="category-filter flex-shrink-0 text-sm font-medium px-4 py-2 rounded-full bg-[var(--tag-bg)] text-[var(--tag-text)] hover:bg-[var(--tag-hover-bg)] transition-colors duration-200 whitespace-nowrap"
-          data-tag="all"
-          >All</a
-        >
-        </div>
+      <!-- Main Blog Post Content -->
+      <main class="max-w-4xl mx-auto py-8">
+        <article class="bg-[var(--card-bg)] p-8 rounded-lg shadow-lg">
+          <div class="flex items-center mb-4">
+            <a
+              href="#"
+              class="tag-link text-xs font-medium px-2 py-1 rounded-full bg-[var(--tag-bg)] text-[var(--tag-text)] mr-2"
+              >Programming</a
+            >
+            <a
+              href="#"
+              class="tag-link text-xs font-medium px-2 py-1 rounded-full bg-[var(--tag-bg)] text-[var(--tag-text)]"
+              >Python</a
+            >
+          </div>
+          <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">
+            Python Programming: A Complete Beginner’s Guide from Scratch
+          </h1>
+          <p class="text-sm text-[var(--text-color)] opacity-70 mb-8">
+            Published on Aug 4, 2025
+          </p>
 
-      <main>
-        <div class="search-container mb-6 relative">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Search posts..."
-            class="search-enhanced-input"
-          />
-        </div>
+          <div class="prose prose-invert text-[var(--text-color)] leading-relaxed">
+            <!-- Your article content stays same (skipped here for brevity) -->
+            <p>... full blog content here ...</p>
+          </div>
 
-        <div>
-          <h2 class="text-2xl font-bold mb-6 text-[var(--text-color)]">
-            Recent Posts
-          </h2>
-
-          <div
-            id="blog-posts-container"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            </div>
-
-          <div id="pagination-container" class="flex justify-center items-center space-x-2 mt-8">
-            <button id="prev-page-btn" class="py-2 px-4 rounded-full font-semibold bg-[var(--link-color)] text-white shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-              &laquo; Prev
-            </button>
-            <div id="page-numbers" class="flex space-x-2">
-              </div>
-            <button id="next-page-btn" class="py-2 px-4 rounded-full font-semibold bg-[var(--link-color)] text-white shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-              Next &raquo;
+          <!-- ✅ Share Button at Bottom Center -->
+          <div class="mt-10 flex justify-center">
+            <button onclick="shareBlog()" 
+              class="px-6 py-3 rounded-lg bg-[var(--tag-bg)] text-[var(--tag-text)] font-medium hover:opacity-80 transition">
+              🔗 Share this Blog
             </button>
           </div>
-        </div>
+        </article>
       </main>
 
+      <!-- Footer -->
       <footer
         class="mt-16 text-center border-t border-[var(--border-color)] pt-8 text-[var(--text-color)]"
       >
@@ -203,6 +247,20 @@
       </footer>
     </div>
 
-    <script src="js/script.js"></script>
+    <!-- Scripts -->
+    <script>
+      function shareBlog() {
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            text: "Check out this blog post on Digital Drift!",
+            url: window.location.href
+          });
+        } else {
+          alert("Sharing not supported. Copy this link: " + window.location.href);
+        }
+      }
+    </script>
+    <script src="../js/script.js"></script>
   </body>
 </html>

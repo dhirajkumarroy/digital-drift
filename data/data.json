@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction to Python Programming",
+    "summary": "Python is a versatile language perfect for beginners and experts alike...",
+    "date": "Aug 4, 2025",
+    "url": "./post/python.html",
+    "tags": ["Programming", "Python"]
+  },
+  {
+    "id": 2,
+    "title": "Perplexity AI: Everything You Need to Know (2025 Guide)",
+    "summary": "Discover Perplexity AI, the conversational search engine reshaping online research. Learn about its features, pricing, growth, controversies, and why it’s the future of AI-powered search.",
+    "date": "Aug 18, 2025",
+    "url": "./post/Perplexity_AI.html",
+    "tags": ["AI", "Search Engine", "Perplexity", "Technology"]
+  },
+  {
+    "id": 3,
+    "title": "Perplexity AI vs ChatGPT: Which One Should You Use in 2025?",
+    "summary": "A complete 2025 comparison of Perplexity AI and ChatGPT. Discover which AI tool is best for your needs, from creative writing to academic research and real-time fact-checking.",
+    "date": "Aug 18, 2025",
+    "url": "./post/perplexity-ai-vs-chatgpt.html",
+    "tags": ["AI", "ChatGPT", "Perplexity", "Comparison"]
+  },
+  {
+    "id": 4,
+    "title": "Google Nano Banana AI in Gemini: The Future of Image Editing (2025)",
+    "summary": "Explore Google DeepMind’s Nano Banana, the new AI image editing tool in Gemini. Learn how it enables consistent edits, photo blending, design mixing, and more.",
+    "date": "Sep 1, 2025",
+    "url": "./post/google-nano-banana-gemini-ai-image-editing.html",
+    "tags": ["AI", "Google", "Gemini", "Image Editing", "DeepMind", "Tech"]
+  }
+
+]
