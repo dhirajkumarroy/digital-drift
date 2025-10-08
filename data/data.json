@@ -38,6 +38,13 @@
     "date": "Sep 13, 2025",
     "url": "./post/google-gemini-ai-nano-banana-3d-figurine-trend.html",
     "tags": ["AI", "Gemini", "Trends", "3D Models", "Google"]
-}
-
+  },
+  {
+    "id": 6,
+    "title": "Zoho Corporation: India’s Global Tech Powerhouse Built Without Funding",
+    "summary": "Explore how Zoho grew from AdventNet to a $1B global SaaS leader — 100% bootstrapped, rural-first, and privacy-driven. Learn about its AI model Zia, Ulaa browser, and Zoho’s mission of self-reliant innovation.",
+    "date": "Oct 8, 2025",
+    "url": "./post/zoho-corporation.html",
+    "tags": ["Technology", "Business", "AI", "India", "SaaS"]
+  }
 ]
