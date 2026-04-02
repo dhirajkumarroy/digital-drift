@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+  <title>Python Programming: A Complete Beginner's Guide | Digital Drift</title>
+  <meta name="description" content="Learn Python from scratch with this beginner-friendly guide. Covers basics, projects, and career paths for backend and AI development." />
+  <meta name="keywords" content="Python, Programming, Beginner Guide, Python Tutorial, Backend, AI" />
+  <meta name="author" content="Dhiraj Roy" />
+
+  <!-- Canonical URL (change to your actual domain) -->
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/python.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Python Programming: A Complete Beginner's Guide" />
+  <meta property="og:description" content="Complete beginner guide to Python programming. Learn syntax, projects, and how to start your coding journey." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/python.html" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Python Programming: A Complete Beginner's Guide" />
+  <meta name="twitter:description" content="Learn Python from scratch with this beginner-friendly guide." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data (Article) - CRITICAL for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Python Programming: A Complete Beginner's Guide",
+    "description": "Learn Python from scratch with this beginner-friendly guide. Covers basics, projects, and career paths.",
+    "author": {
+      "@type": "Person",
+      "name": "Dhiraj Roy"
+    },
+    "datePublished": "2025-08-04",
+    "dateModified": "2025-08-04",
+    "url": "https://blog.dhirajroy.com/post/python.html",
+    "mainEntityOfPage": "https://blog.dhirajroy.com/post/python.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://blog.dhirajroy.com/apple-touch-icon.png"
+      }
+    },
+    "image": "https://blog.dhirajroy.com/android-chrome-512x512.png"
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <!-- Custom CSS (versioned) -->
+  <link rel="stylesheet" href="/css/style.css?v=2" />
+</head>
+<body>
+  <div class="container">
+    <!-- Header (same as homepage) -->
+    <header class="header">
+      <a href="/index.html" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/index.html">Home</a>
+          <a href="/about.html">About</a>
+          <a href="/contact.html">Contact</a>
+          <a href="/archive.html">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/index.html">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/archive.html">Archive</a>
+    </nav>
+
+    <!-- Main Blog Post Content -->
+    <main role="main">
+      <article class="blog-post">
+        <!-- Tags -->
+        <div class="tags">
+          <span class="tag">Programming</span>
+          <span class="tag">Python</span>
+          <span class="tag">Beginner</span>
+        </div>
+
+        <!-- Title -->
+        <h1>Python Programming: A Complete Beginner’s Guide</h1>
+
+        <!-- Meta info -->
+        <div class="post-meta">
+          <span class="post-date">Published on August 4, 2025</span>
+          <span class="post-read-time">• 5 min read</span>
+        </div>
+
+        <!-- Article Body -->
+        <div class="post-content">
+          <p>
+            Python is one of the most popular and beginner-friendly programming languages today.
+            Its clean syntax and vast ecosystem make it the perfect choice for first-time coders,
+            backend developers, and AI engineers alike.
+          </p>
+
+          <h2>What is Python?</h2>
+          <p>
+            Python is a high-level, interpreted programming language created by Guido van Rossum
+            and first released in 1991. It emphasizes code readability with its use of significant
+            whitespace and simple, English-like syntax.
+          </p>
+
+          <h2>Why Learn Python in 2025?</h2>
+          <ul>
+            <li><strong>Beginner friendly</strong> – reads almost like plain English</li>
+            <li><strong>Huge community</strong> – thousands of libraries and frameworks</li>
+            <li><strong>Versatile</strong> – used in web development (Django, Flask), data science (pandas, NumPy), AI/ML (TensorFlow, PyTorch), automation, and more</li>
+            <li><strong>High salary potential</strong> – Python developers are in high demand globally</li>
+          </ul>
+
+          <h2>Your First Python Program</h2>
+          <p>To get started, make sure Python is installed. Then open a terminal or IDE and run:</p>
+          <pre><code>print("Hello, World!")</code></pre>
+          <p>This simple line outputs text to the console – you’ve just written your first program!</p>
+
+          <h2>Key Python Concepts for Beginners</h2>
+          <ul>
+            <li>Variables and Data Types</li>
+            <li>Lists, Tuples, and Dictionaries</li>
+            <li>Conditional Statements (if/else)</li>
+            <li>Loops (for, while)</li>
+            <li>Functions and Modules</li>
+          </ul>
+
+          <h2>Project Ideas to Practice</h2>
+          <ul>
+            <li>To‑Do List App</li>
+            <li>Calculator</li>
+            <li>Weather App using an API</li>
+            <li>Web Scraper with BeautifulSoup</li>
+          </ul>
+
+          <h2>Next Steps in Your Python Journey</h2>
+          <p>
+            After mastering the basics, dive into a framework that matches your interest:
+            Django/Flask for web, pandas for data analysis, or FastAPI for modern APIs.
+            Build real projects, contribute to open source, and never stop practicing.
+          </p>
+        </div>
+      </article>
+    </main>
+
+    <!-- Footer (consistent with homepage) -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript for dynamic year and theme toggle -->
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+  <script src="/js/script.js?v=2"></script>
+</body>
+</html>
