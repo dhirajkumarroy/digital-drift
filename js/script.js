@@ -24,6 +24,30 @@
       date: "Aug 9, 2025", 
       url: "/post/how-gpt-5-is-helpful-for-college-students.html", 
       tags: ["AI", "Education", "Productivity", "Tech"] 
+    },
+    { 
+      id: 4, 
+      title: "Introduction to Python Programming",
+      summary: "Python is a versatile language perfect for beginners and experts alike...",
+      date: "Aug 4, 2025", 
+      url: "/post/python.html",  // ✅ absolute path
+      tags: ["Programming", "Python"] 
+    },
+    { 
+      id: 5, 
+      title: "Python Learning Roadmap",
+      summary: "Follow a clear roadmap from Python basics to advanced topics with trackable learning milestones...",
+      date: "Apr 2, 2026",
+      url: "/post/python-roadmap.html",
+      tags: ["Programming", "Python", "Roadmap"] 
+    },
+    { 
+      id: 6, 
+      title: "5 Ways GPT-5 Helps College Students & Professionals", 
+      summary: "Discover how GPT-5 is transforming education, research, and career growth...", 
+      date: "Aug 9, 2025", 
+      url: "/post/how-gpt-5-is-helpful-for-college-students.html", 
+      tags: ["AI", "Education", "Productivity", "Tech"] 
     }
   ];
 
