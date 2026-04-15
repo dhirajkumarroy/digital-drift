@@ -2,7 +2,7 @@
   'use strict';
 
   /* ============================================================
-     Digital Drift — script.js  v3
+     Digital Drift — script.js  v3.1
      Depends on: /js/posts-data.js  (BLOG_POSTS array)
      ============================================================ */
 
@@ -16,7 +16,7 @@
 
   // ── DOM REFS ──────────────────────────────────────────────
   const postsContainer = document.getElementById('blog-posts-container');
-  const loadMoreBtn    = document.getElementById('load-more-btn');
+  const paginationEl   = document.getElementById('pagination');
   const tagFilterBar   = document.getElementById('tag-filter-bar');
   const searchInput    = document.getElementById('search-input');
   const searchClear    = document.getElementById('search-clear');
@@ -33,13 +33,11 @@
   // ── HELPERS ───────────────────────────────────────────────
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, function (m) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":"&#39;" }[m];
     });
   }
 
-  function formatReadTime(min) {
-    return min + ' min read';
-  }
+  function formatReadTime(min) { return min + ' min read'; }
 
   function getTagHtml(tag) {
     return `<span class="tag" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</span>`;
@@ -47,18 +45,13 @@
 
   function debounce(fn, delay) {
     let timer;
-    return function (...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(this, args), delay);
-    };
+    return function (...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); };
   }
 
   // ── POST FILTERING ────────────────────────────────────────
   function getFilteredPosts() {
     let filtered = [...BLOG_POSTS];
-    if (activeTag) {
-      filtered = filtered.filter(p => p.tags.includes(activeTag));
-    }
+    if (activeTag) filtered = filtered.filter(p => p.tags.includes(activeTag));
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(p =>
@@ -89,11 +82,12 @@
           <span>📅 ${escapeHtml(featured.date)}</span>
           <span>⏱ ${formatReadTime(featured.readTime)}</span>
         </div>
-        <a href="${escapeHtml(featured.url)}" class="card-link btn-primary" style="text-decoration:none;padding:0.6rem 1.5rem;">
+        <a href="${escapeHtml(featured.url)}" class="btn-primary" style="text-decoration:none;display:inline-block;margin-top:0.25rem;">
           Read Article →
         </a>
       </article>
     `;
+    initFadeIn();
   }
 
   // ── RENDER STATS BAR ──────────────────────────────────────
@@ -101,52 +95,46 @@
     if (!statsBarEl) return;
     const allTags = new Set(BLOG_POSTS.flatMap(p => p.tags));
     statsBarEl.innerHTML = `
-      <div class="stat-item"><strong>${BLOG_POSTS.length}</strong> Posts Published</div>
-      <div class="stat-item"><strong>${allTags.size}</strong> Topics</div>
-      <div class="stat-item"><strong>${BLOG_POSTS.reduce((s, p) => s + p.readTime, 0)}</strong> Min of Reading</div>
+      <div class="stat-item"><strong>${BLOG_POSTS.length}</strong>&nbsp;Posts Published</div>
+      <div class="stat-item"><strong>${allTags.size}</strong>&nbsp;Topics</div>
+      <div class="stat-item"><strong>${BLOG_POSTS.reduce((s,p) => s + p.readTime, 0)}</strong>&nbsp;Min of Reading</div>
     `;
   }
 
   // ── RENDER POST CARDS ─────────────────────────────────────
-  async function renderPosts(append = false) {
+  async function renderPosts() {
     if (!postsContainer) return;
 
-    if (!append) {
-      postsContainer.innerHTML = '<div class="skeleton-grid">' +
-        Array(3).fill(`
-          <div class="skeleton-card">
-            <div class="skeleton-line short"></div>
-            <div class="skeleton-line medium" style="height:1.1rem;margin-top:.5rem"></div>
-            <div class="skeleton-line" style="width:55%;margin-top:.25rem"></div>
-            <div class="skeleton-line tall" style="margin-top:.75rem"></div>
-            <div class="skeleton-line short" style="margin-top:.75rem"></div>
-          </div>`).join('') +
-        '</div>';
-    }
+    // Skeleton while loading
+    postsContainer.innerHTML = '<div class="skeleton-grid">' +
+      Array(Math.min(POSTS_PER_PAGE, 3)).fill(`
+        <div class="skeleton-card">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line medium" style="height:1.1rem;margin-top:.5rem"></div>
+          <div class="skeleton-line" style="width:55%;margin-top:.25rem"></div>
+          <div class="skeleton-line tall" style="margin-top:.75rem"></div>
+          <div class="skeleton-line short" style="margin-top:.75rem"></div>
+        </div>`).join('') + '</div>';
 
-    if (loadMoreBtn) loadMoreBtn.classList.add('loading');
+    await new Promise(r => setTimeout(r, 220));
 
-    await new Promise(resolve => setTimeout(resolve, 250));
+    const filtered = getFilteredPosts();
+    const total    = filtered.length;
+    const start    = currentPage * POSTS_PER_PAGE;
+    const end      = start + POSTS_PER_PAGE;
+    const toRender = filtered.slice(start, end);
 
-    const filtered    = getFilteredPosts();
-    const end         = POSTS_PER_PAGE * (currentPage + 1);
+    postsContainer.innerHTML = '';
 
-    if (!append) postsContainer.innerHTML = '';
-
-    if (filtered.length === 0) {
+    if (total === 0) {
       postsContainer.innerHTML = '<div class="no-results">No posts found. Try a different search or tag.</div>';
-      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-      if (loadMoreBtn) loadMoreBtn.classList.remove('loading');
+      if (paginationEl) paginationEl.innerHTML = '';
       return;
     }
 
-    const startIndex = append ? POSTS_PER_PAGE * currentPage : 0;
-    const newPosts   = filtered.slice(startIndex, end);
-
-    newPosts.forEach((post, i) => {
+    toRender.forEach((post, i) => {
       const card = document.createElement('article');
       card.className = 'blog-card';
-      card.style.animationDelay = `${i * 60}ms`;
       card.innerHTML = `
         <div class="card-tags">${post.tags.map(getTagHtml).join('')}</div>
         <h3 class="card-title">
@@ -165,23 +153,72 @@
         </a>
       `;
       // Staggered fade-in
-      requestAnimationFrame(() => {
-        setTimeout(() => card.classList.add('fade-in'), i * 60);
-      });
+      setTimeout(() => card.classList.add('fade-in'), i * 55);
       postsContainer.appendChild(card);
     });
 
-    if (loadMoreBtn) {
-      const hasMore = end < filtered.length;
-      loadMoreBtn.style.display = hasMore ? 'inline-block' : 'none';
-      loadMoreBtn.classList.remove('loading');
-    }
+    renderPagination(total);
+  }
+
+  // ── PAGINATION ────────────────────────────────────────────
+  function renderPagination(totalPosts) {
+    if (!paginationEl) return;
+    const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+    if (totalPages <= 1) { paginationEl.innerHTML = ''; return; }
+
+    const pages = getPageNumbers(currentPage, totalPages);
+    let html = '';
+
+    // Prev
+    html += `<button class="page-btn" id="pg-prev" aria-label="Previous page" ${currentPage === 0 ? 'disabled' : ''}>&#8592;</button>`;
+
+    // Page numbers
+    pages.forEach(p => {
+      if (p === '…') {
+        html += `<span class="page-ellipsis">…</span>`;
+      } else {
+        html += `<button class="page-btn${p === currentPage ? ' active' : ''}" data-page="${p}" aria-label="Page ${p+1}" aria-current="${p === currentPage ? 'page' : 'false'}">${p + 1}</button>`;
+      }
+    });
+
+    // Next
+    html += `<button class="page-btn" id="pg-next" aria-label="Next page" ${currentPage >= totalPages - 1 ? 'disabled' : ''}>&#8594;</button>`;
+
+    paginationEl.innerHTML = html;
+
+    // Bind events
+    paginationEl.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => goToPage(Number(btn.dataset.page)));
+    });
+    const prevBtn = paginationEl.querySelector('#pg-prev');
+    const nextBtn = paginationEl.querySelector('#pg-next');
+    if (prevBtn) prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => goToPage(currentPage + 1));
+  }
+
+  function getPageNumbers(current, total) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i);
+    if (current < 3)          return [0, 1, 2, 3, '…', total - 1];
+    if (current > total - 4)  return [0, '…', total - 4, total - 3, total - 2, total - 1];
+    return [0, '…', current - 1, current, current + 1, '…', total - 1];
+  }
+
+  function goToPage(page) {
+    const filtered = getFilteredPosts();
+    const totalPages = Math.ceil(filtered.length / POSTS_PER_PAGE);
+    if (page < 0 || page >= totalPages) return;
+    currentPage = page;
+    renderPosts();
+    // Scroll to top of posts grid smoothly
+    const anchor = document.getElementById('blog-posts-container') || document.querySelector('main');
+    if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ── FILTER BAR ────────────────────────────────────────────
   function buildFilterBar() {
     if (!tagFilterBar) return;
-    const allTags   = new Set(BLOG_POSTS.flatMap(p => p.tags));
+    const allTags    = new Set(BLOG_POSTS.flatMap(p => p.tags));
     const sortedTags = ['All', ...Array.from(allTags).sort()];
 
     tagFilterBar.innerHTML = '';
@@ -193,9 +230,9 @@
       if (tag === 'All') a.classList.add('active');
       a.addEventListener('click', e => {
         e.preventDefault();
-        activeTag    = tag === 'All' ? null : tag;
-        currentPage  = 0;
-        renderPosts(false);
+        activeTag   = tag === 'All' ? null : tag;
+        currentPage = 0;
+        renderPosts();
         document.querySelectorAll('.filter-bar a').forEach(l => l.classList.remove('active'));
         a.classList.add('active');
       });
@@ -207,25 +244,27 @@
   const onSearchInput = debounce(function () {
     searchQuery = searchInput ? searchInput.value : '';
     currentPage = 0;
-    renderPosts(false);
+    renderPosts();
     if (searchClear) searchClear.classList.toggle('visible', searchQuery.length > 0);
   }, 280);
 
-  // ── THEME ─────────────────────────────────────────────────
+  // ── THEME (uses <html> element to prevent FOUC) ───────────
   function applyTheme(isLight) {
-    document.body.classList.toggle('light', isLight);
+    document.documentElement.classList.toggle('light', isLight);
     if (moonIcon) moonIcon.style.display = isLight ? 'block' : 'none';
     if (sunIcon)  sunIcon.style.display  = isLight ? 'none'  : 'block';
   }
 
   function initTheme() {
-    const saved     = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyTheme(saved === 'light' || (!saved && !prefersDark));
+    // The inline <head> script already set html.light if needed.
+    // Just sync the icon state.
+    const isLight = document.documentElement.classList.contains('light');
+    if (moonIcon) moonIcon.style.display = isLight ? 'block' : 'none';
+    if (sunIcon)  sunIcon.style.display  = isLight ? 'none'  : 'block';
   }
 
   function toggleTheme() {
-    const isLight = !document.body.classList.contains('light');
+    const isLight = !document.documentElement.classList.contains('light');
     applyTheme(isLight);
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
   }
@@ -240,25 +279,21 @@
       mobileMenu && mobileMenu.classList.contains('active') &&
       !mobileMenu.contains(e.target) &&
       mobileMenuBtn && !mobileMenuBtn.contains(e.target)
-    ) {
-      mobileMenu.classList.remove('active');
-    }
+    ) mobileMenu.classList.remove('active');
   });
 
   // ── BACK TO TOP ───────────────────────────────────────────
   function initBackToTop() {
     if (!backToTop) return;
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
-  // ── READING PROGRESS (homepage scroll indicator) ──────────
+  // ── READING PROGRESS ─────────────────────────────────────
   function initReadingProgress() {
     if (!progressBar) return;
     window.addEventListener('scroll', () => {
       const doc    = document.documentElement;
-      const scroll = doc.scrollTop  || document.body.scrollTop;
+      const scroll = doc.scrollTop || document.body.scrollTop;
       const height = doc.scrollHeight - doc.clientHeight;
       progressBar.style.width = height > 0 ? (scroll / height * 100) + '%' : '0%';
       if (backToTop) backToTop.classList.toggle('visible', scroll > 400);
@@ -267,7 +302,10 @@
 
   // ── INTERSECTION OBSERVER (fade-in sections) ─────────────
   function initFadeIn() {
-    if (!('IntersectionObserver' in window)) return;
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.fade-in-section').forEach(el => el.classList.add('visible'));
+      return;
+    }
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -275,26 +313,20 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in-section:not(.visible)').forEach(el => observer.observe(el));
   }
 
-  // ── KEYBOARD SHORTCUT: "/" to focus search ────────────────
+  // ── KEYBOARD SHORTCUTS ────────────────────────────────────
   document.addEventListener('keydown', e => {
-    if (
-      e.key === '/' &&
-      document.activeElement.tagName !== 'INPUT' &&
-      document.activeElement.tagName !== 'TEXTAREA'
-    ) {
+    const tag = document.activeElement.tagName;
+    if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
       e.preventDefault();
       if (searchInput) { searchInput.focus(); searchInput.select(); }
     }
     if (e.key === 'Escape' && searchInput && document.activeElement === searchInput) {
-      searchInput.value = '';
-      searchQuery = '';
-      currentPage = 0;
-      renderPosts(false);
+      searchInput.value = ''; searchQuery = ''; currentPage = 0;
+      renderPosts();
       if (searchClear) searchClear.classList.remove('visible');
       searchInput.blur();
     }
@@ -304,21 +336,21 @@
   function markActiveNav() {
     const path = window.location.pathname.replace(/\/$/, '') || '/';
     document.querySelectorAll('.nav-desktop a, .nav-mobile a').forEach(a => {
-      const href = a.getAttribute('href').replace(/\/$/, '') || '/';
+      const href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
       a.classList.toggle('active', href === path);
     });
   }
 
-  // ── COPY CODE BUTTONS (post pages) ───────────────────────
+  // ── COPY CODE BUTTONS ─────────────────────────────────────
   function initCopyCodeBtns() {
     document.querySelectorAll('pre').forEach(pre => {
+      if (pre.querySelector('.copy-code-btn')) return;
       const btn = document.createElement('button');
       btn.className = 'copy-code-btn';
       btn.textContent = 'Copy';
       btn.addEventListener('click', () => {
         const code = pre.querySelector('code');
-        const text = code ? code.textContent : pre.textContent;
-        navigator.clipboard.writeText(text).then(() => {
+        navigator.clipboard.writeText(code ? code.textContent : pre.textContent).then(() => {
           btn.textContent = 'Copied!';
           btn.classList.add('copied');
           setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
@@ -331,8 +363,8 @@
 
   // ── ARCHIVE PAGE ──────────────────────────────────────────
   function initArchive() {
-    const archiveList  = document.getElementById('archive-list');
-    const archiveMeta  = document.getElementById('archive-meta');
+    const archiveList   = document.getElementById('archive-list');
+    const archiveMeta   = document.getElementById('archive-meta');
     const archiveSearch = document.getElementById('archive-search-input');
     if (!archiveList) return;
 
@@ -345,10 +377,7 @@
           p.tags.some(t => t.toLowerCase().includes(q))
         );
       }
-
-      if (archiveMeta) {
-        archiveMeta.textContent = `${posts.length} post${posts.length !== 1 ? 's' : ''} total`;
-      }
+      if (archiveMeta) archiveMeta.textContent = `${posts.length} post${posts.length !== 1 ? 's' : ''} total`;
 
       // Group by year
       const byYear = {};
@@ -376,48 +405,50 @@
               <div class="archive-item-title">${escapeHtml(p.title)}</div>
               <div class="archive-item-tags">${p.tags.map(getTagHtml).join('')}</div>
             </div>
-            <span class="read-time-badge">⏱ ${formatReadTime(p.readTime)}</span>
+            <span class="read-time-badge" style="flex-shrink:0;">⏱ ${formatReadTime(p.readTime)}</span>
           </a>
         `).join('');
         group.innerHTML = `<div class="archive-year">${escapeHtml(year)}</div><div class="archive-list">${items}</div>`;
         archiveList.appendChild(group);
       });
-
       initFadeIn();
     }
 
     renderArchive('');
-
     if (archiveSearch) {
-      archiveSearch.addEventListener('input', debounce(function () {
-        renderArchive(this.value);
-      }, 280));
+      archiveSearch.addEventListener('input', debounce(function () { renderArchive(this.value); }, 280));
     }
   }
 
+  // ── TOAST ─────────────────────────────────────────────────
+  window.showToast = function(msg, type) {
+    const container = document.getElementById('toast-container') || document.body;
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type || '');
+    el.textContent = msg;
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  };
+
   // ── EVENT BINDINGS ────────────────────────────────────────
   function bindEvents() {
-    if (loadMoreBtn) {
-      loadMoreBtn.addEventListener('click', () => {
-        currentPage++;
-        renderPosts(true);
-      });
-    }
-    if (searchInput) {
-      searchInput.addEventListener('input', onSearchInput);
-    }
+    if (searchInput) searchInput.addEventListener('input', onSearchInput);
     if (searchClear) {
       searchClear.addEventListener('click', () => {
-        searchInput.value = '';
-        searchQuery = '';
-        currentPage = 0;
-        renderPosts(false);
+        searchInput.value = ''; searchQuery = ''; currentPage = 0;
+        renderPosts();
         searchClear.classList.remove('visible');
         searchInput.focus();
       });
     }
     if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
     if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+  }
+
+  // ── FOOTER YEAR ───────────────────────────────────────────
+  function initFooterYear() {
+    const el = document.getElementById('current-year');
+    if (el) el.textContent = new Date().getFullYear();
   }
 
   // ── INIT ──────────────────────────────────────────────────
@@ -427,20 +458,18 @@
     initReadingProgress();
     initBackToTop();
     initCopyCodeBtns();
+    initFadeIn();
+    initFooterYear();
+    bindEvents();
 
     if (postsContainer) {
       renderFeatured();
       renderStats();
       buildFilterBar();
-      bindEvents();
-      renderPosts(false);
+      renderPosts();
     }
 
     initArchive();
-
-    // Dynamic footer year
-    const yearEl = document.getElementById('current-year');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
   }
 
   init();

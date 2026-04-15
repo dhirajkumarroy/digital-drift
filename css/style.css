@@ -27,7 +27,8 @@ img { max-width: 100%; display: block; }
   --shadow-glow:         0 0 0 3px rgba(6,172,211,0.25);
 }
 
-body.light {
+/* Light mode on <html> so the inline theme-init script prevents FOUC */
+html.light {
   --color-bg:        #f6f8fa;
   --color-text:      #24292f;
   --color-card:      #ffffff;
@@ -36,6 +37,8 @@ body.light {
   --shadow-hover:    0 8px 40px rgba(0,0,0,0.14);
   --shadow-glow:     0 0 0 3px rgba(6,172,211,0.18);
 }
+/* Keep body selector in sync (JS toggles both) */
+html.light body { background: var(--color-bg); color: var(--color-text); }
 
 /* ---------- GLOBAL ---------- */
 html { scroll-behavior: smooth; }
@@ -607,6 +610,48 @@ a:focus-visible {
 }
 .loading { opacity: 0.6; pointer-events: none; }
 
+/* ---------- PAGINATION ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+.page-btn {
+  min-width: 2.4rem;
+  height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 0.6rem;
+  transition: var(--transition);
+  user-select: none;
+}
+.page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(6,172,211,0.08);
+  transform: translateY(-1px);
+}
+.page-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(6,172,211,0.35);
+}
+.page-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+.page-ellipsis { color: var(--color-text); opacity: 0.4; padding: 0 0.2rem; font-weight: 600; }
+
 /* ---------- BACK TO TOP ---------- */
 .back-to-top {
   position: fixed;
@@ -1175,3 +1220,136 @@ code {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ============================================================
+   RESPONSIVE OVERRIDES — MOBILE FIRST IMPROVEMENTS  v3
+   ============================================================ */
+
+/* ── 640px and below (phones) ─────────────────────────────── */
+@media (max-width: 640px) {
+  /* Container */
+  .container { padding: 0 0.875rem; }
+
+  /* Header */
+  .header { padding: 0.85rem 0; margin-bottom: 1.25rem; }
+  .logo { font-size: 1.4rem; }
+
+  /* Stats bar — stack on tiny screens */
+  .stats-bar { gap: 0.5rem; padding: 0.875rem 1rem; }
+  .stat-item { font-size: 0.8rem; }
+
+  /* Featured card */
+  .featured-card { padding: 1.25rem; }
+  .featured-card .card-title { font-size: 1.2rem; }
+  .featured-card .card-summary { font-size: 0.95rem; }
+
+  /* Headings */
+  .main-heading { font-size: 1.65rem; }
+  .section-title { font-size: 1.15rem; }
+
+  /* Cards — better vertical spacing */
+  .blog-card { padding: 1.2rem; }
+  .card-title { font-size: 1.05rem; }
+
+  /* Search */
+  .search-container { margin-bottom: 1.5rem; }
+
+  /* Archive items — stack date above title */
+  .archive-item { flex-direction: column; gap: 0.4rem; padding: 0.9rem 1rem; }
+  .archive-item-date { min-width: unset; width: 100%; }
+  .archive-item:hover { transform: translateX(2px); }
+
+  /* Post page */
+  .blog-post { padding: 1.25rem 0; }
+  .post-title { font-size: 1.6rem; }
+  .post-meta { gap: 0.6rem; }
+  .post-nav { grid-template-columns: 1fr; gap: 0.75rem; }
+  .author-bio { flex-direction: column; text-align: center; align-items: center; }
+
+  /* Pagination */
+  .page-btn { min-width: 2.1rem; height: 2.1rem; font-size: 0.8rem; }
+
+  /* Footer */
+  .footer { margin-top: 3rem; }
+  .footer-links { gap: 1rem; }
+
+  /* Back to top */
+  .back-to-top { bottom: 1rem; right: 1rem; width: 2.25rem; height: 2.25rem; font-size: 1rem; }
+
+  /* Toast */
+  .toast-container { width: calc(100% - 2rem); left: 1rem; transform: none; }
+}
+
+/* ── 480px and below (small phones) ──────────────────────── */
+@media (max-width: 480px) {
+  .stats-bar { flex-direction: column; }
+  .stat-item { justify-content: space-between; padding: 0.1rem 0; border-bottom: 1px solid var(--color-border); }
+  .stat-item:last-child { border-bottom: none; }
+  .featured-badge { font-size: 0.65rem; }
+  .main-heading { font-size: 1.5rem; }
+  .page-btn { min-width: 1.9rem; height: 1.9rem; padding: 0 0.35rem; }
+  .output-box { font-size: 0.72rem; }
+  pre { font-size: 0.8rem; }
+}
+
+/* ── 768px — tablet adjustments ──────────────────────────── */
+@media (min-width: 641px) and (max-width: 768px) {
+  .featured-card { padding: 1.5rem 1.75rem; }
+  .featured-card .card-title { font-size: 1.4rem; }
+  .archive-item-date { min-width: 70px; }
+}
+
+/* ── INTERACTIVE IMPROVEMENTS ─────────────────────────────── */
+
+/* Make entire card a focus target for keyboard nav */
+.blog-card:focus-within { box-shadow: var(--shadow-hover); border-color: rgba(6,172,211,0.35); }
+
+/* Tag clickable feedback */
+.filter-bar a { cursor: pointer; }
+.filter-bar a:active { transform: scale(0.96); }
+
+/* Button press feedback */
+.btn-primary:active { transform: translateY(1px); box-shadow: none; }
+.btn-secondary:active { transform: translateY(1px); }
+
+/* Smooth page transitions */
+main { animation: fadeInUp 0.35s ease both; }
+
+/* Featured card link button — fix text colour in light mode */
+html.light .featured-card a.btn-primary { color: #fff; }
+
+/* Search input — ensure readable in light mode */
+html.light .search-input { background: #fff; }
+
+/* Archive item hover in light mode */
+html.light .archive-item:hover { background: rgba(6,172,211,0.05); }
+
+/* Filter bar — ensure active pill is always white text */
+.filter-bar a.active { color: #fff !important; }
+
+/* Mobile menu backdrop */
+.nav-mobile.active {
+  box-shadow: var(--shadow);
+}
+
+/* Card link focus ring */
+.card-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: 2px; }
+
+/* Reading progress — visible in light mode */
+html.light .reading-progress { opacity: 0.9; }
+
+/* Back-to-top — light mode contrast */
+html.light .back-to-top { box-shadow: 0 4px 16px rgba(6,172,211,0.3); }
+
+/* Code block light mode */
+html.light pre { background: #f1f4f9; border-color: #dde3ec; }
+html.light :not(pre) > code { background: rgba(6,172,211,0.08); }
+
+/* Skeleton shimmer in light mode */
+html.light .skeleton-line {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+}
+
+/* Toast in light mode */
+html.light .toast { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }

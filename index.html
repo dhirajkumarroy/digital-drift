@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -128,9 +130,7 @@
       <h1 class="main-heading">Digital Drift</h1>
       <h2 class="section-title">Latest Posts</h2>
       <div id="blog-posts-container" class="posts-grid"></div>
-      <div class="load-more-wrapper">
-        <button id="load-more-btn" class="btn-primary">Load More</button>
-      </div>
+      <nav id="pagination" class="pagination" aria-label="Blog post pages"></nav>
     </main>
 
     <!-- Footer -->
