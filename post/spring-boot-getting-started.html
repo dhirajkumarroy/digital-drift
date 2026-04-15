@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO — edit every line in this block ═══ -->
+  <title>Getting Started with Spring Boot: Build Your First REST API | Digital Drift</title>
+  <meta name="description" content="A hands-on guide to building your first REST API with Spring Boot. Covers project setup, key annotations, controllers, and running your app in under 30 minutes." />
+  <meta name="keywords" content="Spring Boot, Java, REST API, Backend, Spring Framework, Beginner" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-getting-started.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph — edit title, description, url -->
+  <meta property="og:title" content="Getting Started with Spring Boot: Build Your First REST API" />
+  <meta property="og:description" content="Hands-on guide to Spring Boot — project setup, annotations, controllers, and a working REST API in under 30 minutes." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-getting-started.html" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Getting Started with Spring Boot: Build Your First REST API" />
+  <meta name="twitter:description" content="Hands-on guide to Spring Boot — project setup, annotations, controllers, and a working REST API in under 30 minutes." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data — edit headline, description, datePublished, dateModified, url, keywords -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Getting Started with Spring Boot: Build Your First REST API",
+    "description": "A hands-on guide to building your first REST API with Spring Boot.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-04-15",
+    "dateModified":  "2026-04-15",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-getting-started.html",
+    "keywords": ["Spring Boot", "Java", "REST API", "Backend"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+</head>
+<body>
+  <!-- Reading progress bar (fixed, top of viewport) -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ══════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ══════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile nav — do NOT edit -->
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- ══════════════════════════════════════════
+         ARTICLE — edit everything inside <article>
+         ══════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ──────────────────────────────────────
+             Use data-tag="X" to get automatic colour coding.
+             Supported colours: Java · Spring Boot · Python · AI
+             · Backend · Education · Roadmap · Productivity · Tech
+             ─────────────────────────────────────────────────── -->
+        <div class="tags">
+          <span class="tag" data-tag="Java">Java</span>
+          <span class="tag" data-tag="Spring Boot">Spring Boot</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+
+        <!-- ── 2. TITLE ─────────────────────────────────── -->
+        <h1 class="post-title">Getting Started with Spring Boot: Build Your First REST API</h1>
+
+        <!-- ── 3. META ──────────────────────────────────────
+             Format: 📅 Month DD, YYYY · ⏱ X min read · ✍ Author
+             ─────────────────────────────────────────────────── -->
+        <div class="post-meta">
+          <span>📅 Apr 15, 2026</span>
+          <span>⏱ 7 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ──────────────────────────────
+             Allowed elements inside .post-content:
+               <p>             — paragraph
+               <h2>            — section heading
+               <h3>            — sub-section heading
+               <ul><li>        — bullet list
+               <ol><li>        — numbered list
+               <pre><code>     — code block (gets a Copy button automatically)
+               <code>          — inline code (inside a <p>)
+               <blockquote>    — pull quote / callout
+               <strong>        — bold emphasis
+               <em>            — italic emphasis
+               <a href="">     — hyperlink
+             ─────────────────────────────────────────────────── -->
+        <div class="post-content">
+
+          <!-- Introduction paragraph — required, comes first -->
+          <p>
+            Spring Boot is the fastest way to build production-ready Java applications.
+            It removes the boilerplate configuration that made classic Spring so intimidating,
+            letting you focus entirely on writing business logic. In this guide we will go
+            from zero to a working REST API in under 30 minutes — no prior Spring experience needed.
+          </p>
+
+          <!-- ── Section heading + paragraph ── -->
+          <h2>What is Spring Boot?</h2>
+          <p>
+            Spring Boot is an opinionated extension of the Spring Framework that provides
+            <strong>auto-configuration</strong>, an embedded web server (Tomcat by default),
+            and a curated set of "starter" dependencies. Instead of wiring hundreds of XML
+            beans by hand, you declare what you need and Spring Boot wires everything automatically.
+          </p>
+          <blockquote>
+            "Spring Boot makes it easy to create stand-alone, production-grade Spring-based
+            applications that you can just run." — Spring.io
+          </blockquote>
+
+          <!-- ── Section heading + code block ── -->
+          <h2>Step 1 — Create a New Project</h2>
+          <p>
+            The easiest way is <a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">Spring Initializr</a>.
+            Select <strong>Maven</strong>, Java 17, and add the
+            <code>Spring Web</code> dependency. Download and unzip the project,
+            then open it in IntelliJ IDEA or VS Code.
+          </p>
+          <p>Your generated <code>pom.xml</code> will include this starter automatically:</p>
+          <pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+
+          <!-- ── Section heading + unordered list ── -->
+          <h2>Step 2 — Understand Key Annotations</h2>
+          <p>Spring Boot uses annotations to express intent with almost zero configuration:</p>
+          <ul>
+            <li><code>@SpringBootApplication</code> — marks the entry point; combines <code>@Configuration</code>, <code>@EnableAutoConfiguration</code>, and <code>@ComponentScan</code></li>
+            <li><code>@RestController</code> — declares a class as a REST controller; combines <code>@Controller</code> and <code>@ResponseBody</code></li>
+            <li><code>@GetMapping</code> / <code>@PostMapping</code> — maps HTTP verbs to handler methods</li>
+            <li><code>@RequestParam</code> — binds a query parameter from the URL</li>
+            <li><code>@PathVariable</code> — extracts a segment from the URL path</li>
+            <li><code>@RequestBody</code> — deserialises the request JSON into a Java object</li>
+          </ul>
+
+          <!-- ── Section heading + larger code block ── -->
+          <h2>Step 3 — Write Your First Controller</h2>
+          <p>
+            Create a file <code>HelloController.java</code> inside your main package
+            and paste the following:
+          </p>
+          <pre><code>package com.example.demo;
+
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api")
+public class HelloController {
+
+    // GET /api/hello  →  "Hello, World!"
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, World!";
+    }
+
+    // GET /api/greet?name=Dhiraj  →  "Hello, Dhiraj!"
+    @GetMapping("/greet")
+    public String greet(@RequestParam(defaultValue = "Guest") String name) {
+        return "Hello, " + name + "!";
+    }
+
+    // GET /api/user/42  →  "User ID: 42"
+    @GetMapping("/user/{id}")
+    public String getUser(@PathVariable Long id) {
+        return "User ID: " + id;
+    }
+}</code></pre>
+
+          <!-- ── Sub-section heading ── -->
+          <h3>Returning JSON Instead of Plain Text</h3>
+          <p>
+            Replace the <code>String</code> return type with a record (Java 16+) or a POJO.
+            Spring Boot will serialise it to JSON automatically via Jackson:
+          </p>
+          <pre><code>// Define the model
+public record UserResponse(Long id, String name, String email) {}
+
+// Use it in the controller
+@GetMapping("/user/{id}")
+public UserResponse getUser(@PathVariable Long id) {
+    return new UserResponse(id, "Dhiraj Roy", "dhiraj@example.com");
+}</code></pre>
+          <p>
+            Hitting <code>GET /api/user/1</code> now returns:
+          </p>
+          <pre><code>{
+  "id": 1,
+  "name": "Dhiraj Roy",
+  "email": "dhiraj@example.com"
+}</code></pre>
+
+          <!-- ── Section heading + ordered list ── -->
+          <h2>Step 4 — Run the Application</h2>
+          <p>Spring Boot's embedded Tomcat means no external server to install or configure:</p>
+          <ol>
+            <li>Open a terminal in the project root.</li>
+            <li>Run <code>./mvnw spring-boot:run</code> (Linux / macOS) or <code>mvnw.cmd spring-boot:run</code> (Windows).</li>
+            <li>Wait for the log line: <code>Tomcat started on port 8080</code>.</li>
+            <li>Open your browser and visit <code>http://localhost:8080/api/hello</code>.</li>
+            <li>You should see <strong>Hello, World!</strong> — your first Spring Boot API is live.</li>
+          </ol>
+
+          <!-- ── Section heading + mixed content ── -->
+          <h2>Project Structure at a Glance</h2>
+          <p>Understanding where files live will save you hours of confusion:</p>
+          <pre><code>src/
+├── main/
+│   ├── java/com/example/demo/
+│   │   ├── DemoApplication.java      ← entry point (@SpringBootApplication)
+│   │   ├── HelloController.java      ← your REST controller
+│   │   └── UserResponse.java         ← your response model
+│   └── resources/
+│       └── application.properties    ← config (port, DB, etc.)
+└── test/
+    └── java/com/example/demo/
+        └── HelloControllerTest.java  ← unit / integration tests</code></pre>
+          <p>
+            To change the default port from 8080, add one line to
+            <code>application.properties</code>:
+          </p>
+          <pre><code>server.port=9090</code></pre>
+
+          <!-- ── Callout blockquote ── -->
+          <blockquote>
+            <strong>Pro tip:</strong> Enable hot reload during development by adding the
+            <code>spring-boot-devtools</code> dependency. The server restarts automatically
+            whenever you save a file — no manual restart needed.
+          </blockquote>
+
+          <!-- ── Key takeaways list ── -->
+          <h2>Key Takeaways</h2>
+          <ul>
+            <li>Spring Boot eliminates XML config with <strong>auto-configuration</strong></li>
+            <li><code>@RestController</code> + <code>@GetMapping</code> is all you need for a basic endpoint</li>
+            <li>Return a Java record or POJO and Spring Boot serialises it to JSON automatically</li>
+            <li>The embedded Tomcat server means a single <code>mvnw spring-boot:run</code> command gets you running</li>
+            <li>Use <code>application.properties</code> for all environment-specific configuration</li>
+          </ul>
+
+          <!-- ── Conclusion — required, comes last ── -->
+          <h2>What's Next?</h2>
+          <p>
+            You now have a working REST API. The logical next steps are connecting to a database
+            with <strong>Spring Data JPA</strong>, adding request validation with
+            <code>spring-boot-starter-validation</code>, and securing your endpoints with
+            <strong>Spring Security</strong>. Each of these follows the same pattern:
+            add a starter → Spring Boot auto-configures it → you focus on the logic.
+          </p>
+          <p>
+            Check out the <a href="/archive">archive</a> for more backend guides, or drop a question
+            via the <a href="/contact">contact page</a> — happy to help you level up.
+          </p>
+
+        </div>
+        <!-- END .post-content -->
+
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+
+        <!-- ── 6. POST NAVIGATION ───────────────────────────
+             Update href values to link to the prev / next post.
+             If there's no prev or next, remove that <a> block.
+             ─────────────────────────────────────────────────── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/python-roadmap.html" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Python Learning Roadmap</span>
+          </a>
+          <a href="/" class="nav-next">
+            <span class="nav-label">Home →</span>
+            <span class="nav-title">All Posts</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Back to top button — do NOT edit -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts — do NOT edit -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>

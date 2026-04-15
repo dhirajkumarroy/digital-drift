@@ -118,23 +118,20 @@
     <!-- Main Blog Post Content -->
     <main role="main">
       <article class="blog-post">
-        <!-- Tags -->
+
         <div class="tags">
-          <span class="tag">Programming</span>
-          <span class="tag">Python</span>
-          <span class="tag">Beginner</span>
+          <span class="tag" data-tag="Programming">Programming</span>
+          <span class="tag" data-tag="Python">Python</span>
         </div>
 
-        <!-- Title -->
-        <h1>Python Programming: A Complete Beginner’s Guide</h1>
+        <h1 class="post-title">Python Programming: A Complete Beginner’s Guide</h1>
 
-        <!-- Meta info -->
         <div class="post-meta">
-          <span class="post-date">Published on August 4, 2025</span>
-          <span class="post-read-time">• 5 min read</span>
+          <span>📅 Aug 4, 2025</span>
+          <span>⏱ 8 min read</span>
+          <span>✍ Dhiraj Roy</span>
         </div>
 
-        <!-- Article Body -->
         <div class="post-content">
           <p>
             Python is one of the most popular and beginner-friendly programming languages today.
@@ -146,64 +143,97 @@
           <p>
             Python is a high-level, interpreted programming language created by Guido van Rossum
             and first released in 1991. It emphasizes code readability with its use of significant
-            whitespace and simple, English like syntax.
+            whitespace and simple, English-like syntax.
           </p>
 
           <h2>Why Learn Python in 2025?</h2>
           <ul>
             <li><strong>Beginner friendly</strong> – reads almost like plain English</li>
             <li><strong>Huge community</strong> – thousands of libraries and frameworks</li>
-            <li><strong>Versatile</strong> – used in web development (Django, Flask), data science (pandas, NumPy), AI/ML (TensorFlow, PyTorch), automation, and more</li>
+            <li><strong>Versatile</strong> – used in web (Django, Flask), data science (pandas, NumPy), AI/ML (TensorFlow, PyTorch), and automation</li>
             <li><strong>High salary potential</strong> – Python developers are in high demand globally</li>
           </ul>
 
           <h2>Your First Python Program</h2>
           <p>To get started, make sure Python is installed. Then open a terminal or IDE and run:</p>
           <pre><code>print("Hello, World!")</code></pre>
-          <p>This simple line outputs text to the console – you’ve just written your first program!</p>
+          <p>This simple line outputs text to the console — you’ve just written your first program!</p>
 
-          <h2>Key Python Concepts for Beginners</h2>
+          <h2>Core Concepts to Master</h2>
           <ul>
-            <li>Variables and Data Types</li>
-            <li>Lists, Tuples, and Dictionaries</li>
-            <li>Conditional Statements (if/else)</li>
-            <li>Loops (for, while)</li>
+            <li>Variables and Data Types (<code>int</code>, <code>str</code>, <code>list</code>, <code>dict</code>)</li>
+            <li>Conditional Statements (<code>if</code> / <code>elif</code> / <code>else</code>)</li>
+            <li>Loops (<code>for</code>, <code>while</code>)</li>
             <li>Functions and Modules</li>
+            <li>Object-Oriented Programming (classes, inheritance)</li>
           </ul>
+
+          <h2>A Real-World Example</h2>
+          <p>Here is a small function that filters a list and returns only even numbers:</p>
+          <pre><code>def get_even_numbers(numbers):
+    """Return only the even numbers from a list."""
+    return [n for n in numbers if n % 2 == 0]
+
+result = get_even_numbers([1, 2, 3, 4, 5, 6])
+print(result)  # [2, 4, 6]</code></pre>
+
+          <blockquote>
+            The best way to learn Python is to build something you actually need.
+            Start small, break things, and fix them — that’s real learning.
+          </blockquote>
 
           <h2>Project Ideas to Practice</h2>
-          <ul>
-            <li>To‑Do List App</li>
-            <li>Calculator</li>
-            <li>Weather App using an API</li>
-            <li>Web Scraper with BeautifulSoup</li>
-          </ul>
+          <ol>
+            <li>To-Do List App (file I/O + lists)</li>
+            <li>Calculator (functions + conditionals)</li>
+            <li>Weather App (REST API + <code>requests</code> library)</li>
+            <li>Web Scraper with <code>BeautifulSoup</code></li>
+            <li>Simple Flask web server</li>
+          </ol>
 
           <h2>Next Steps in Your Python Journey</h2>
           <p>
-            After mastering the basics, dive into a framework that matches your interest:
-            Django/Flask for web, pandas for data analysis, or FastAPI for modern APIs.
+            After mastering the basics, pick a direction that matches your goals:
+            <strong>Django or Flask</strong> for web development,
+            <strong>pandas and NumPy</strong> for data analysis, or
+            <strong>FastAPI</strong> for modern async APIs.
             Build real projects, contribute to open source, and never stop practicing.
           </p>
         </div>
+
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/archive" class="nav-prev">
+            <span class="nav-label">← Browse</span>
+            <span class="nav-title">All Posts</span>
+          </a>
+          <a href="/post/python-roadmap.html" class="nav-next">
+            <span class="nav-label">Next →</span>
+            <span class="nav-title">Python Learning Roadmap</span>
+          </a>
+        </nav>
+
       </article>
     </main>
 
-    <!-- Footer (consistent with homepage) -->
     <footer class="footer">
-      <p>&copy; <span id="current-year"></span> Digital Drift. All rights reserved.</p>
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
       <div class="footer-links">
         <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
         <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
         <a href="/contact">Contact</a>
       </div>
     </footer>
   </div>
 
-  <!-- JavaScript for dynamic year and theme toggle -->
-  <script>
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-  </script>
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
   <script src="/js/posts-data.js?v=3"></script>
   <script src="/js/script.js?v=3"></script>

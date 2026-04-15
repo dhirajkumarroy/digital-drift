@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 5,
+    slug: "spring-boot-getting-started",
+    title: "Getting Started with Spring Boot: Build Your First REST API",
+    summary: "A hands-on guide to Spring Boot — project setup, key annotations, controllers, and a working REST API in under 30 minutes.",
+    date: "Apr 15, 2026",
+    dateISO: "2026-04-15",
+    url: "/post/spring-boot-getting-started.html",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 7,
+    featured: false
+  },
+  {
     id: 4,
     slug: "python-roadmap",
     title: "Python Learning Roadmap",

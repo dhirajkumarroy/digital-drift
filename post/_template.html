@@ -6,55 +6,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!--
-    ════════════════════════════════════════════════
-    DIGITAL DRIFT — Post Template  v3
-    ════════════════════════════════════════════════
-    HOW TO USE:
-    1. Find & replace every  YOUR_*  placeholder below.
-    2. Save as  /post/your-slug.html
-    3. Add the entry to /js/posts-data.js
-    ════════════════════════════════════════════════
-  -->
-
-  <!-- Primary SEO — EDIT THESE -->
-  <title>YOUR_TITLE | Digital Drift</title>
-  <meta name="description" content="YOUR_SUMMARY" />
+  <!-- ═══ SEO — edit every line in this block ═══ -->
+  <title>YOUR POST TITLE | Digital Drift</title>
+  <meta name="description" content="YOUR SUMMARY (max 160 chars)" />
+  <meta name="keywords" content="Tag1, Tag2, Tag3" />
   <meta name="author" content="Dhiraj Roy" />
-  <link rel="canonical" href="https://blog.dhirajroy.com/post/YOUR_SLUG.html" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/YOUR-SLUG.html" />
 
-  <!-- Favicon -->
+  <!-- Favicon — do NOT edit -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <!-- Open Graph — EDIT THESE -->
-  <meta property="og:title" content="YOUR_TITLE" />
-  <meta property="og:description" content="YOUR_SUMMARY" />
+  <!-- Open Graph — edit title, description, url -->
+  <meta property="og:title" content="YOUR POST TITLE" />
+  <meta property="og:description" content="YOUR SUMMARY" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://blog.dhirajroy.com/post/YOUR_SLUG.html" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/YOUR-SLUG.html" />
   <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
   <meta property="og:site_name" content="Digital Drift" />
 
-  <!-- Twitter Card -->
+  <!-- Twitter Card — edit title, description -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="YOUR_TITLE" />
-  <meta name="twitter:description" content="YOUR_SUMMARY" />
+  <meta name="twitter:title" content="YOUR POST TITLE" />
+  <meta name="twitter:description" content="YOUR SUMMARY" />
   <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
 
-  <!-- Structured Data — EDIT datePublished, dateModified, keywords -->
+  <!-- Structured Data — edit headline, description, dates, url, keywords -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "YOUR_TITLE",
-    "description": "YOUR_SUMMARY",
+    "headline": "YOUR POST TITLE",
+    "description": "YOUR SUMMARY",
     "author": { "@type": "Person", "name": "Dhiraj Roy" },
     "datePublished": "YYYY-MM-DD",
     "dateModified":  "YYYY-MM-DD",
-    "url": "https://blog.dhirajroy.com/post/YOUR_SLUG.html",
-    "keywords": ["Tag1", "Tag2"],
+    "url": "https://blog.dhirajroy.com/post/YOUR-SLUG.html",
+    "keywords": ["Tag1", "Tag2", "Tag3"],
     "publisher": {
       "@type": "Organization",
       "name": "Digital Drift",
@@ -63,7 +53,7 @@
   }
   </script>
 
-  <!-- Google Analytics -->
+  <!-- Google Analytics — do NOT edit -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -72,14 +62,18 @@
     gtag('config', 'G-VN488V6MP5');
   </script>
 
+  <!-- CSS — do NOT edit -->
   <link rel="stylesheet" href="/css/style.css?v=3" />
 </head>
 <body>
-  <!-- Reading progress bar -->
+  <!-- Reading progress bar — do NOT edit -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <div class="container">
-    <!-- Header (same on every page — do NOT edit) -->
+
+    <!-- ════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ════════════════════════════════════════ -->
     <header class="header">
       <a href="/" class="logo">Digital Drift</a>
       <div class="header-actions">
@@ -110,100 +104,182 @@
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
     </nav>
+    <!-- ════════════════════════════════════════ -->
 
-    <!-- ════════════ POST CONTENT — EDIT BELOW ════════════ -->
-    <article class="blog-post">
 
-      <!-- Tags — use data-tag for colour theming -->
-      <div class="tags">
-        <span class="tag" data-tag="Tag1">Tag1</span>
-        <span class="tag" data-tag="Tag2">Tag2</span>
-      </div>
+    <!-- ════════════════════════════════════════
+         ARTICLE — only edit inside <article>
+         See spring-boot-getting-started.html
+         for a full live example of every element.
+         ════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
 
-      <!-- Title -->
-      <h1 class="post-title">YOUR_TITLE</h1>
-
-      <!-- Meta -->
-      <div class="post-meta">
-        <span>📅 Mon DD, YYYY</span>
-        <span>⏱ X min read</span>
-        <span>✍ Dhiraj Roy</span>
-      </div>
-
-      <!-- Optional featured image
-      <img src="/images/YOUR_SLUG-cover.jpg" alt="Cover image for YOUR_TITLE" class="featured-image" />
-      -->
-
-      <!-- Post body -->
-      <div class="post-content">
-
-        <p>
-          Opening paragraph — hook the reader here. Explain what the post covers and why it matters.
-        </p>
-
-        <h2>First Section Heading</h2>
-        <p>
-          Section content goes here. Keep paragraphs short (3–5 sentences max).
-        </p>
-
-        <h2>Code Example</h2>
-        <pre><code>// Paste your code here
-const example = "Hello, Digital Drift!";</code></pre>
-
-        <h2>Key Takeaways</h2>
-        <ul>
-          <li>First key point</li>
-          <li>Second key point</li>
-          <li>Third key point</li>
-        </ul>
-
-        <blockquote>
-          A memorable quote or important callout can go here.
-        </blockquote>
-
-        <h2>Conclusion</h2>
-        <p>
-          Wrap up the post. Reinforce the main idea and suggest a next step for the reader.
-        </p>
-
-      </div>
-      <!-- ════════════ END POST CONTENT ════════════ -->
-
-      <!-- Author bio -->
-      <div class="author-bio">
-        <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
-        <div class="author-info">
-          <strong>Dhiraj Roy</strong>
-          <p>Backend developer &amp; tech writer. Writing about Python, Java, Spring Boot, and AI at Digital Drift.</p>
+        <!-- ── 1. TAGS ───────────────────────────────────────
+             Rules:
+             • Always use  data-tag="X"  for colour coding
+             • Reuse existing tags from posts-data.js when possible
+             • Available colours: Java · Spring Boot · Python · AI
+               · Backend · Education · Roadmap · Productivity · Tech
+               · Programming (any unlisted tag gets the default colour)
+             ───────────────────────────────────────────────────── -->
+        <div class="tags">
+          <span class="tag" data-tag="Tag1">Tag1</span>
+          <span class="tag" data-tag="Tag2">Tag2</span>
         </div>
-      </div>
 
-      <!-- Post navigation -->
-      <nav class="post-nav" aria-label="Post navigation">
-        <a href="/archive" class="nav-prev">
-          <span class="nav-label">← Browse</span>
-          <span class="nav-title">All Posts</span>
-        </a>
-        <a href="/" class="nav-next">
-          <span class="nav-label">Go to →</span>
-          <span class="nav-title">Home</span>
-        </a>
-      </nav>
+        <!-- ── 2. TITLE ──────────────────────────────────────
+             Rules:
+             • Must match the title in posts-data.js exactly
+             • Always include  class="post-title"
+             ───────────────────────────────────────────────────── -->
+        <h1 class="post-title">YOUR POST TITLE</h1>
 
-    </article>
+        <!-- ── 3. META ───────────────────────────────────────
+             Rules:
+             • Date format: Mon DD, YYYY  (e.g. "Apr 15, 2026")
+             • Read time: estimate words ÷ 200
+             • Author: always "Dhiraj Roy"
+             ───────────────────────────────────────────────────── -->
+        <div class="post-meta">
+          <span>📅 Mon DD, YYYY</span>
+          <span>⏱ X min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
 
+        <!-- ── 4. POST CONTENT ───────────────────────────────
+             ALLOWED ELEMENTS (copy-paste as needed):
+
+             Paragraph:
+               <p>Your text here.</p>
+
+             Section heading (H2 — main sections):
+               <h2>Section Title</h2>
+
+             Sub-section heading (H3 — inside a section):
+               <h3>Sub-section Title</h3>
+
+             Bullet list:
+               <ul>
+                 <li>First item</li>
+                 <li>Second item</li>
+               </ul>
+
+             Numbered list:
+               <ol>
+                 <li>First step</li>
+                 <li>Second step</li>
+               </ol>
+
+             Code block (auto gets a Copy button):
+               <pre><code>your code here</code></pre>
+
+             Inline code (inside a paragraph):
+               Use <code>someFunction()</code> like this.
+
+             Blockquote / callout:
+               <blockquote>Highlighted quote or tip goes here.</blockquote>
+
+             Bold text: <strong>important word</strong>
+             Italic text: <em>emphasised word</em>
+             Link: <a href="/path">link text</a>
+
+             ── STRUCTURE RULES ──────────────────────────────
+             1. Always start with an intro <p> (no heading before it)
+             2. Use <h2> for every main section
+             3. Always end with a "Conclusion" or "What's Next" <h2>
+             4. Do NOT skip heading levels (no <h4> unless you used <h3>)
+             ───────────────────────────────────────────────────── -->
+        <div class="post-content">
+
+          <!-- Intro paragraph — required, no heading above it -->
+          <p>
+            Write a compelling opening paragraph here. Hook the reader,
+            state what the post covers, and why it matters to them.
+          </p>
+
+          <h2>First Section Heading</h2>
+          <p>
+            Section content. Use <strong>bold</strong> for important terms
+            and <code>inline code</code> for technical names.
+          </p>
+
+          <h2>Code Example</h2>
+          <p>Brief intro sentence before the code block:</p>
+          <pre><code>// Your code here
+const example = "paste real, runnable code";</code></pre>
+
+          <h2>Key Points</h2>
+          <ul>
+            <li>First bullet point</li>
+            <li>Second bullet point</li>
+            <li>Third bullet point</li>
+          </ul>
+
+          <blockquote>
+            A memorable quote, pro tip, or important callout goes here.
+          </blockquote>
+
+          <!-- Conclusion — required, always last section -->
+          <h2>Conclusion</h2>
+          <p>
+            Wrap up. Reinforce the main idea and suggest one clear next step
+            the reader can take right now.
+          </p>
+
+        </div>
+        <!-- END .post-content -->
+
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ──────────────── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+
+        <!-- ── 6. POST NAVIGATION ────────────────────────────
+             Rules:
+             • nav-prev  = the post published BEFORE this one
+             • nav-next  = the post published AFTER this one
+             • If no previous post exists, remove the nav-prev <a>
+             • If no next post exists, remove the nav-next <a>
+             • Update both href and nav-title for each post
+             ───────────────────────────────────────────────────── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/previous-post-slug.html" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Previous Post Title</span>
+          </a>
+          <a href="/post/next-post-slug.html" class="nav-next">
+            <span class="nav-label">Next →</span>
+            <span class="nav-title">Next Post Title</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+    <!-- ════════════════════════════════════════ -->
+
+
+    <!-- FOOTER — do NOT edit -->
     <footer class="footer">
       <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
       <div class="footer-links">
         <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
         <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
         <a href="/contact">Contact</a>
       </div>
     </footer>
-  </div>
 
+  </div><!-- /.container -->
+
+  <!-- do NOT edit these three lines -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-
   <script src="/js/posts-data.js?v=3"></script>
   <script src="/js/script.js?v=3"></script>
 </body>
