@@ -74,9 +74,10 @@
   </script>
 
   <!-- Custom CSS (versioned) -->
-  <link rel="stylesheet" href="/css/style.css?v=2" />
+  <link rel="stylesheet" href="/css/style.css?v=3" />
 </head>
 <body>
+  <div class="reading-progress" id="reading-progress"></div>
   <div class="container">
     <!-- Header (same as homepage) -->
     <header class="header">
@@ -201,6 +202,8 @@
   <script>
     document.getElementById('current-year').textContent = new Date().getFullYear();
   </script>
-  <script src="/js/script.js?v=2"></script>
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
 </body>
 </html>

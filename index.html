@@ -4,16 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Primary SEO (optimized title) -->
-  <title>Digital Drift | Learn Java, Spring Boot & Backend Engineering</title>
-  <meta name="description" content="Digital Drift - Backend, AI, and programming blogs by Dhiraj Roy. Learn Spring Boot, Java, and modern development." />
-  <meta name="keywords" content="Java, Spring Boot, Backend, AI, Programming, Blog, Dhiraj Roy" />
+  <!-- Primary SEO -->
+  <title>Digital Drift | Backend, AI &amp; Programming Blog</title>
+  <meta name="description" content="Digital Drift — Backend, AI, and programming blogs by Dhiraj Roy. Learn Python, Java, Spring Boot, and modern development." />
+  <meta name="keywords" content="Java, Spring Boot, Backend, AI, Python, Programming, Blog, Dhiraj Roy" />
   <meta name="author" content="Dhiraj Roy" />
 
-  <!-- Canonical URL (change to your actual domain) -->
   <link rel="canonical" href="https://blog.dhirajroy.com/" />
 
-  <!-- Favicon (Production Ready) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -22,34 +21,31 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
   <meta name="theme-color" content="#0d1117" />
 
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:title" content="Digital Drift - Backend & AI Blog" />
-  <meta property="og:description" content="Learn backend engineering, Java, Spring Boot, and AI with practical guides." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Digital Drift — Backend &amp; AI Blog" />
+  <meta property="og:description" content="Learn backend engineering, Python, Java, Spring Boot, and AI with practical guides." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://blog.dhirajroy.com" />
   <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Digital Drift - Backend & AI Blog" />
+  <meta name="twitter:title" content="Digital Drift — Backend &amp; AI Blog" />
   <meta name="twitter:description" content="Learn backend engineering and AI with real-world projects." />
   <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
 
-  <!-- Structured Data (JSON-LD) -->
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Blog",
     "name": "Digital Drift",
     "url": "https://blog.dhirajroy.com",
-    "author": {
-      "@type": "Person",
-      "name": "Dhiraj Roy"
-    },
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
     "description": "Backend, AI, and programming blogs with real-world projects."
   }
   </script>
@@ -63,10 +59,12 @@
     gtag('config', 'G-VN488V6MP5');
   </script>
 
-  <!-- Custom CSS (versioned for cache busting) -->
-  <link rel="stylesheet" href="/css/style.css?v=2" />
+  <link rel="stylesheet" href="/css/style.css?v=3" />
 </head>
 <body>
+  <!-- Reading progress bar (fixed top) -->
+  <div class="reading-progress" id="reading-progress"></div>
+
   <div class="container">
     <!-- Header -->
     <header class="header">
@@ -86,7 +84,7 @@
             <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
           </svg>
         </button>
-        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Menu">
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -95,49 +93,63 @@
     </header>
 
     <!-- Mobile Navigation -->
-    <nav id="mobile-menu" class="nav-mobile">
+    <nav id="mobile-menu" class="nav-mobile" aria-label="Mobile navigation">
       <a href="/">Home</a>
       <a href="/about">About</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
     </nav>
 
-    <!-- Category Filter -->
-    <div id="tag-filter-bar" class="filter-bar"></div>
+    <!-- Featured Post (rendered by JS) -->
+    <div id="featured-post" class="featured-section"></div>
 
-    <!-- Search with hidden label for accessibility -->
+    <!-- Stats Bar (rendered by JS) -->
+    <div id="stats-bar" class="stats-bar"></div>
+
+    <!-- Category Filter -->
+    <div id="tag-filter-bar" class="filter-bar" role="navigation" aria-label="Filter by topic"></div>
+
+    <!-- Search -->
     <div class="search-container">
       <label for="search-input" class="sr-only">Search blog posts</label>
       <span class="search-icon" aria-hidden="true">🔍</span>
-      <input type="text" id="search-input" placeholder="Search posts..." class="search-input" />
+      <input
+        type="search"
+        id="search-input"
+        placeholder="Search posts… (press / to focus)"
+        class="search-input"
+        autocomplete="off"
+      />
+      <button id="search-clear" class="search-clear" aria-label="Clear search">✕</button>
     </div>
 
     <!-- Blog Posts -->
     <main role="main">
-      <!-- H1 for SEO (main heading) -->
-      <h1 class="main-heading">Digital Drift Blog</h1>
-      <h2 class="section-title">Recent Posts</h2>
+      <h1 class="main-heading">Digital Drift</h1>
+      <h2 class="section-title">Latest Posts</h2>
       <div id="blog-posts-container" class="posts-grid"></div>
       <div class="load-more-wrapper">
         <button id="load-more-btn" class="btn-primary">Load More</button>
       </div>
     </main>
 
-    <!-- Footer with dynamic year and safe links -->
+    <!-- Footer -->
     <footer class="footer">
-      <p>&copy; <span id="current-year"></span> Digital Drift. All rights reserved.</p>
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
       <div class="footer-links">
         <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
         <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
         <a href="/contact">Contact</a>
       </div>
     </footer>
   </div>
 
-  <!-- Small script for dynamic year -->
-  <script>
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-  </script>
-  <script src="/js/script.js?v=2"></script>
+  <!-- Back to Top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
 </body>
 </html>

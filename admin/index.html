@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Post — Digital Drift Admin</title>
+  <!-- Noindex: keep this out of search results -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+  <style>
+    /* Admin-only tweaks */
+    body { padding-bottom: 4rem; }
+    .full-width { grid-column: 1 / -1; }
+    .section-block {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .section-block-header h3 { font-size: 0.875rem; font-weight: 700; opacity: 0.75; }
+    .remove-section-btn {
+      background: none;
+      border: 1px solid rgba(248,113,113,0.4);
+      color: #f87171;
+      border-radius: var(--radius-sm);
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .remove-section-btn:hover { background: rgba(248,113,113,0.1); }
+    textarea.section-content {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem;
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    textarea.section-content:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    .add-section-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .char-counter { font-size: 0.75rem; opacity: 0.5; text-align: right; margin-top: 0.25rem; }
+    .preview-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    }
+    .instructions {
+      background: rgba(6,172,211,0.06);
+      border: 1px solid rgba(6,172,211,0.2);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .instructions h2 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--color-primary); }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">← Back to Blog</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-container">
+      <!-- Header -->
+      <div class="admin-header">
+        <div>
+          <h1>New Blog Post</h1>
+          <p>Fill in the details, build your content, then copy the generated files.</p>
+        </div>
+        <span class="admin-badge">Local Tool</span>
+      </div>
+
+      <!-- How it works -->
+      <div class="instructions">
+        <h2>How to publish a new post (3 steps)</h2>
+        <ol class="step-list">
+          <li>Fill in the metadata and content sections below, then click <strong>Generate</strong>.</li>
+          <li>Copy the <strong>Post HTML</strong> tab → save as <code>/post/your-slug.html</code>.</li>
+          <li>Copy the <strong>Registry Entry</strong> tab → paste at the <strong>top</strong> of <code>BLOG_POSTS</code> in <code>/js/posts-data.js</code>.</li>
+        </ol>
+      </div>
+
+      <div class="admin-grid">
+        <!-- LEFT: Form -->
+        <div>
+          <div class="admin-card">
+            <h2>Post Metadata</h2>
+            <div class="admin-form">
+
+              <div class="admin-field">
+                <label for="f-title">Title *</label>
+                <input type="text" id="f-title" placeholder="e.g. Getting Started with Spring Boot" />
+              </div>
+
+              <div class="admin-field">
+                <label for="f-slug">Slug (URL) *</label>
+                <input type="text" id="f-slug" placeholder="e.g. spring-boot-intro" />
+                <span style="font-size:0.75rem;opacity:0.5;margin-top:0.2rem;">Auto-filled from title. Use lowercase + hyphens only.</span>
+              </div>
+
+              <div class="admin-field">
+                <label for="f-summary">Summary / Excerpt *</label>
+                <textarea id="f-summary" rows="3" class="section-content" placeholder="One sentence describing the post (≤160 chars)…"></textarea>
+                <div class="char-counter"><span id="summary-count">0</span> / 160</div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="admin-field">
+                  <label for="f-date">Publish Date *</label>
+                  <input type="date" id="f-date" />
+                </div>
+                <div class="admin-field">
+                  <label for="f-readtime">Read Time (min)</label>
+                  <input type="number" id="f-readtime" placeholder="5" min="1" max="60" />
+                </div>
+              </div>
+
+              <div class="admin-field">
+                <label>Tags * <span style="opacity:0.5;font-weight:400;">(press Enter or comma to add)</span></label>
+                <div class="tag-input-wrapper" id="tag-wrapper">
+                  <input type="text" class="tag-text-input" id="tag-input" placeholder="Add tag…" />
+                </div>
+              </div>
+
+              <div class="admin-field">
+                <label for="f-featured">
+                  <input type="checkbox" id="f-featured" style="margin-right:0.4rem;" />
+                  Mark as Featured Post (hero on homepage)
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Content Builder -->
+          <div class="admin-card" style="margin-top:1.25rem;">
+            <h2>Content Sections</h2>
+            <div id="content-sections"></div>
+            <div class="add-section-bar">
+              <button class="btn-secondary" onclick="addSection('paragraph')">+ Paragraph</button>
+              <button class="btn-secondary" onclick="addSection('heading')">+ Heading</button>
+              <button class="btn-secondary" onclick="addSection('code')">+ Code Block</button>
+              <button class="btn-secondary" onclick="addSection('list')">+ List</button>
+              <button class="btn-secondary" onclick="addSection('blockquote')">+ Quote</button>
+            </div>
+            <button class="btn-primary" onclick="generate()" style="width:100%;">⚡ Generate Output</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Output + Preview -->
+        <div>
+          <!-- Live Card Preview -->
+          <div class="admin-card" style="margin-bottom:1.25rem;">
+            <h2>Card Preview</h2>
+            <div class="preview-card" id="card-preview">
+              <p style="opacity:0.4;font-size:0.875rem;">Fill in the form to see a preview…</p>
+            </div>
+          </div>
+
+          <!-- Generated Output -->
+          <div class="admin-card">
+            <h2>Generated Output</h2>
+            <div class="output-tabs">
+              <button class="output-tab active" onclick="switchTab('html', this)">Post HTML</button>
+              <button class="output-tab" onclick="switchTab('entry', this)">Registry Entry</button>
+            </div>
+            <pre class="output-box" id="output-html"><!-- Click Generate to produce output --></pre>
+            <pre class="output-box" id="output-entry" style="display:none;">// Click Generate to produce output</pre>
+            <div class="admin-actions">
+              <button class="btn-primary" onclick="copyActive()">📋 Copy to Clipboard</button>
+              <button class="btn-secondary" onclick="downloadActive()">⬇ Download File</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Digital Drift Admin — local tool only, not deployed.</p>
+    </footer>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+  <script>
+  (function () {
+    /* ── Helpers ──────────────────────────────────────────── */
+    let tags = [];
+    let sectionCounter = 0;
+    let activeTab = 'html';
+
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function slugify(str) {
+      return str.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
+    function formatDisplayDate(isoDate) {
+      if (!isoDate) return '';
+      const d = new Date(isoDate + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function nextId() {
+      const ids = (typeof BLOG_POSTS !== 'undefined') ? BLOG_POSTS.map(p => p.id) : [];
+      return ids.length ? Math.max(...ids) + 1 : 1;
+    }
+
+    /* ── Toast ────────────────────────────────────────────── */
+    function toast(msg, type) {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = 'toast ' + (type || '');
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+
+    /* ── Tag Input ────────────────────────────────────────── */
+    const tagInput   = document.getElementById('tag-input');
+    const tagWrapper = document.getElementById('tag-wrapper');
+
+    function renderTags() {
+      // Remove existing pills
+      tagWrapper.querySelectorAll('.tag-pill').forEach(el => el.remove());
+      tags.forEach((tag, i) => {
+        const pill = document.createElement('span');
+        pill.className = 'tag-pill';
+        pill.innerHTML = `${esc(tag)}<button onclick="removeTag(${i})" aria-label="Remove ${esc(tag)}">×</button>`;
+        tagWrapper.insertBefore(pill, tagInput);
+      });
+      updatePreview();
+    }
+
+    window.removeTag = function(i) {
+      tags.splice(i, 1);
+      renderTags();
+    };
+
+    function addTag(raw) {
+      const val = raw.trim().replace(/,$/, '').trim();
+      if (val && !tags.includes(val)) {
+        tags.push(val);
+        renderTags();
+      }
+      tagInput.value = '';
+    }
+
+    tagInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        addTag(tagInput.value);
+      } else if (e.key === 'Backspace' && tagInput.value === '' && tags.length > 0) {
+        tags.pop();
+        renderTags();
+      }
+    });
+    tagInput.addEventListener('blur', () => { if (tagInput.value) addTag(tagInput.value); });
+    tagWrapper.addEventListener('click', () => tagInput.focus());
+
+    /* ── Auto slug ────────────────────────────────────────── */
+    const titleInput = document.getElementById('f-title');
+    const slugInput  = document.getElementById('f-slug');
+    let slugEdited   = false;
+
+    titleInput.addEventListener('input', () => {
+      if (!slugEdited) slugInput.value = slugify(titleInput.value);
+      updatePreview();
+    });
+    slugInput.addEventListener('input', () => { slugEdited = true; });
+
+    /* ── Summary counter ──────────────────────────────────── */
+    const summaryEl = document.getElementById('f-summary');
+    const countEl   = document.getElementById('summary-count');
+    summaryEl.addEventListener('input', () => {
+      countEl.textContent = summaryEl.value.length;
+      updatePreview();
+    });
+
+    /* ── Default date (today) ─────────────────────────────── */
+    document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+
+    /* ── Live Preview ─────────────────────────────────────── */
+    function updatePreview() {
+      const title   = titleInput.value || 'Your Post Title';
+      const summary = summaryEl.value  || 'Your post summary will appear here.';
+      const date    = formatDisplayDate(document.getElementById('f-date').value) || 'Today';
+      const rt      = document.getElementById('f-readtime').value || '5';
+      const tagHtml = tags.map(t => `<span class="tag" data-tag="${esc(t)}">${esc(t)}</span>`).join('');
+
+      document.getElementById('card-preview').innerHTML = `
+        <div class="card-tags">${tagHtml || '<span class="tag">Tag</span>'}</div>
+        <h3 class="card-title" style="font-size:1.1rem;margin-bottom:.5rem;">${esc(title)}</h3>
+        <div class="card-meta">
+          <span>📅 ${esc(date)}</span>
+          <span class="read-time-badge">⏱ ${esc(rt)} min read</span>
+        </div>
+        <p class="card-summary" style="font-size:0.875rem;">${esc(summary)}</p>
+        <span class="card-link" style="cursor:default;">Read More →</span>
+      `;
+    }
+
+    ['f-date','f-readtime','f-featured'].forEach(id =>
+      document.getElementById(id).addEventListener('change', updatePreview)
+    );
+    updatePreview();
+
+    /* ── Content Sections ─────────────────────────────────── */
+    const sectionTypes = {
+      paragraph:  { label: 'Paragraph',   placeholder: 'Write your paragraph here…' },
+      heading:    { label: 'Section Heading (H2)', placeholder: 'Section title…' },
+      code:       { label: 'Code Block',   placeholder: '// paste your code here\nconst x = 1;' },
+      list:       { label: 'Bullet List',  placeholder: 'First item\nSecond item\nThird item' },
+      blockquote: { label: 'Blockquote',   placeholder: 'Quote or highlighted text…' }
+    };
+
+    window.addSection = function(type) {
+      const id     = ++sectionCounter;
+      const config = sectionTypes[type];
+      const container = document.getElementById('content-sections');
+
+      const block = document.createElement('div');
+      block.className = 'section-block';
+      block.dataset.type = type;
+      block.dataset.id   = id;
+      block.innerHTML = `
+        <div class="section-block-header">
+          <h3>${config.label}</h3>
+          <button class="remove-section-btn" onclick="removeSection(${id})">Remove</button>
+        </div>
+        <textarea class="section-content" id="sec-${id}" placeholder="${config.placeholder.replace(/"/g,'&quot;')}"></textarea>
+      `;
+      container.appendChild(block);
+    };
+
+    window.removeSection = function(id) {
+      const el = document.querySelector(`[data-id="${id}"]`);
+      if (el) el.remove();
+    };
+
+    /* ── HTML Generation ──────────────────────────────────── */
+    function buildContentHtml() {
+      let html = '';
+      document.querySelectorAll('#content-sections .section-block').forEach(block => {
+        const type  = block.dataset.type;
+        const value = block.querySelector('textarea').value.trim();
+        if (!value) return;
+
+        if (type === 'heading') {
+          html += `        <h2>${esc(value)}</h2>\n`;
+        } else if (type === 'paragraph') {
+          html += `        <p>${esc(value)}</p>\n`;
+        } else if (type === 'code') {
+          html += `        <pre><code>${esc(value)}</code></pre>\n`;
+        } else if (type === 'list') {
+          const items = value.split('\n').filter(l => l.trim());
+          html += '        <ul>\n' + items.map(i => `          <li>${esc(i.trim())}</li>`).join('\n') + '\n        </ul>\n';
+        } else if (type === 'blockquote') {
+          html += `        <blockquote>${esc(value)}</blockquote>\n`;
+        }
+      });
+      return html;
+    }
+
+    window.generate = function() {
+      const title    = titleInput.value.trim();
+      const slug     = slugInput.value.trim();
+      const summary  = summaryEl.value.trim();
+      const isoDate  = document.getElementById('f-date').value;
+      const readTime = parseInt(document.getElementById('f-readtime').value) || 5;
+      const featured = document.getElementById('f-featured').checked;
+
+      if (!title || !slug || !summary || !isoDate || tags.length === 0) {
+        toast('⚠ Please fill in title, slug, summary, date, and at least one tag.', 'error');
+        return;
+      }
+
+      const displayDate = formatDisplayDate(isoDate);
+      const id          = nextId();
+      const url         = `/post/${slug}.html`;
+      const tagStr      = tags.map(t => `<span class="tag" data-tag="${esc(t)}">${esc(t)}</span>`).join('\n            ');
+      const schemaTagsStr = tags.map(t => `"${t}"`).join(', ');
+      const contentHtml = buildContentHtml();
+
+      /* ── Full Post HTML ─────────────────────────────── */
+      const postHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${esc(title)} | Digital Drift</title>
+  <meta name="description" content="${esc(summary)}" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/${esc(slug)}.html" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta property="og:title" content="${esc(title)}" />
+  <meta property="og:description" content="${esc(summary)}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/${esc(slug)}.html" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${esc(title)}" />
+  <meta name="twitter:description" content="${esc(summary)}" />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "${esc(title)}",
+    "description": "${esc(summary)}",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "${esc(isoDate)}",
+    "dateModified": "${esc(isoDate)}",
+    "url": "https://blog.dhirajroy.com/post/${esc(slug)}.html",
+    "keywords": [${schemaTagsStr}],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  <\/script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"><\/script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  <\/script>
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+
+    <article class="blog-post">
+      <div class="tags">
+        ${tagStr}
+      </div>
+      <h1 class="post-title">${esc(title)}</h1>
+      <div class="post-meta">
+        <span>📅 ${esc(displayDate)}</span>
+        <span>⏱ ${readTime} min read</span>
+        <span>✍ Dhiraj Roy</span>
+      </div>
+
+      <div class="post-content">
+${contentHtml}
+      </div>
+
+      <div class="author-bio">
+        <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+        <div class="author-info">
+          <strong>Dhiraj Roy</strong>
+          <p>Backend developer & tech writer. Writing about Python, Java, Spring Boot, and AI at Digital Drift.</p>
+        </div>
+      </div>
+
+      <nav class="post-nav" aria-label="Post navigation">
+        <a href="/archive" class="nav-prev">
+          <span class="nav-label">← Browse</span>
+          <span class="nav-title">All Posts</span>
+        </a>
+        <a href="/" class="nav-next">
+          <span class="nav-label">Go to →</span>
+          <span class="nav-title">Home</span>
+        </a>
+      </nav>
+    </article>
+
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="/js/posts-data.js?v=3"><\/script>
+  <script src="/js/script.js?v=3"><\/script>
+</body>
+</html>`;
+
+      /* ── Registry Entry ──────────────────────────────── */
+      const tagsArrayStr = tags.map(t => `"${t}"`).join(', ');
+      const entry = `  {
+    id: ${id},
+    slug: "${slug}",
+    title: "${title.replace(/"/g, '\\"')}",
+    summary: "${summary.replace(/"/g, '\\"')}",
+    date: "${displayDate}",
+    dateISO: "${isoDate}",
+    url: "/post/${slug}.html",
+    tags: [${tagsArrayStr}],
+    readTime: ${readTime},
+    featured: ${featured}
+  },`;
+
+      document.getElementById('output-html').textContent  = postHtml;
+      document.getElementById('output-entry').textContent = entry;
+
+      toast('✓ Output generated! Copy one of the tabs.', 'success');
+    };
+
+    /* ── Tab switching ────────────────────────────────────── */
+    window.switchTab = function(tab, btn) {
+      activeTab = tab;
+      document.querySelectorAll('.output-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('output-html').style.display  = tab === 'html'  ? 'block' : 'none';
+      document.getElementById('output-entry').style.display = tab === 'entry' ? 'block' : 'none';
+    };
+
+    /* ── Copy ─────────────────────────────────────────────── */
+    window.copyActive = function() {
+      const el = activeTab === 'html'
+        ? document.getElementById('output-html')
+        : document.getElementById('output-entry');
+      navigator.clipboard.writeText(el.textContent)
+        .then(() => toast('✓ Copied to clipboard!', 'success'))
+        .catch(() => toast('⚠ Copy failed — select all and copy manually.', 'error'));
+    };
+
+    /* ── Download ─────────────────────────────────────────── */
+    window.downloadActive = function() {
+      const slug = slugInput.value.trim() || 'post';
+      let content, filename, type;
+      if (activeTab === 'html') {
+        content  = document.getElementById('output-html').textContent;
+        filename = slug + '.html';
+        type     = 'text/html';
+      } else {
+        content  = document.getElementById('output-entry').textContent;
+        filename = slug + '-registry.js';
+        type     = 'text/javascript';
+      }
+      if (!content || content.startsWith('//') || content.startsWith('<!--')) {
+        toast('⚠ Generate output first.', 'error');
+        return;
+      }
+      const blob = new Blob([content], { type });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = filename; a.click();
+      URL.revokeObjectURL(url);
+      toast(`✓ Downloaded ${filename}`, 'success');
+    };
+
+  })();
+  </script>
+</body>
+</html>
