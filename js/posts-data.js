@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 7,
+    slug: "docker-complete-guide",
+    title: "Docker Complete Guide: From Zero to Production Containers",
+    summary: "Master Docker end-to-end — containers vs VMs, Dockerfiles, volumes, networking, Docker Compose, multi-stage builds, and production best practices.",
+    date: "Apr 22, 2026",
+    dateISO: "2026-04-22",
+    url: "/post/docker-complete-guide",
+    tags: ["Backend", "Tech", "Productivity"],
+    readTime: 16,
+    featured: true
+  },
+  {
     id: 6,
     slug: "git-and-github-complete-guide",
     title: "Git & GitHub Complete Guide: From Zero to Production Workflow",
@@ -37,7 +49,7 @@ const BLOG_POSTS = [
     url: "/post/git-and-github-complete-guide",
     tags: ["Backend", "Tech", "Productivity"],
     readTime: 14,
-    featured: true
+    featured: false
   },
   {
     id: 5,

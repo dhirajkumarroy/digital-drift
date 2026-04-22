@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO ═══ -->
+  <title>Docker Complete Guide: From Zero to Production Containers | Digital Drift</title>
+  <meta name="description" content="A complete hands-on guide to Docker — containers vs VMs, images, Dockerfiles, volumes, networking, Docker Compose, and production best practices." />
+  <meta name="keywords" content="Docker, Containers, Dockerfile, Docker Compose, DevOps, Backend, Containerization, Kubernetes" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/docker-complete-guide" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Docker Complete Guide: From Zero to Production Containers" />
+  <meta property="og:description" content="Master Docker end-to-end — containers vs VMs, images, Dockerfiles, volumes, networking, Docker Compose, and production best practices." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/docker-complete-guide" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Docker Complete Guide: From Zero to Production Containers" />
+  <meta name="twitter:description" content="Master Docker end-to-end — containers vs VMs, images, Dockerfiles, volumes, networking, Docker Compose, and production best practices." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Docker Complete Guide: From Zero to Production Containers",
+    "description": "A complete hands-on guide to Docker — containers vs VMs, images, Dockerfiles, volumes, networking, Docker Compose, and production best practices.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-04-22",
+    "dateModified":  "2026-04-22",
+    "url": "https://blog.dhirajroy.com/post/docker-complete-guide",
+    "keywords": ["Docker", "Containers", "Dockerfile", "Docker Compose", "DevOps", "Backend"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+</head>
+<body>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ══════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ══════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile nav — do NOT edit -->
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- ══════════════════════════════════════════
+         ARTICLE
+         ══════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ── -->
+        <div class="tags">
+          <span class="tag" data-tag="Backend">Backend</span>
+          <span class="tag" data-tag="Tech">Tech</span>
+          <span class="tag" data-tag="Productivity">Productivity</span>
+        </div>
+
+        <!-- ── 2. TITLE ── -->
+        <h1 class="post-title">Docker Complete Guide: From Zero to Production Containers</h1>
+
+        <!-- ── 3. META ── -->
+        <div class="post-meta">
+          <span>📅 Apr 22, 2026</span>
+          <span>⏱ 16 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ── -->
+        <div class="post-content">
+
+          <p>
+            Docker changed how software is built, shipped, and run. Before Docker, "it works on my
+            machine" was a genuine crisis — dependencies, OS differences, and environment drift made
+            deployments unpredictable. Docker packages your application and everything it needs into
+            a single portable unit called a <strong>container</strong>, so it runs identically
+            everywhere: your laptop, a CI server, or a cloud VM. This guide takes you from zero to
+            running a production-ready multi-service application with Docker Compose.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Containers vs Virtual Machines</h2>
+          <p>
+            Both containers and virtual machines (VMs) isolate applications, but they do it at different
+            levels of the stack:
+          </p>
+          <ul>
+            <li>
+              <strong>Virtual Machine</strong> — runs a full guest OS on top of a hypervisor (VMware, VirtualBox).
+              Each VM gets its own kernel, drivers, and system libraries. Heavyweight: 1–10 GB per VM,
+              boots in minutes.
+            </li>
+            <li>
+              <strong>Container</strong> — shares the host OS kernel. Only the application and its
+              dependencies are packaged. Lightweight: 5–500 MB per image, starts in milliseconds.
+            </li>
+          </ul>
+          <blockquote>
+            A VM virtualises the <em>hardware</em>. A container virtualises the <em>operating system</em>.
+            You can run dozens of containers on the same machine you'd run 2–3 VMs on.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 1 — Install Docker</h2>
+          <p>
+            Install <strong>Docker Desktop</strong> on macOS and Windows (it bundles the Docker Engine,
+            CLI, and Compose). On Linux, install the Docker Engine directly:
+          </p>
+          <pre><code># Ubuntu / Debian — official install script (easiest)
+curl -fsSL https://get.docker.com | sh
+
+# Add your user to the docker group (avoid typing sudo every time)
+sudo usermod -aG docker $USER
+
+# Log out and back in, then verify
+docker --version
+docker compose version</code></pre>
+
+          <p>Test your installation with the classic hello-world container:</p>
+          <pre><code>docker run hello-world</code></pre>
+          <p>
+            Docker pulls the <code>hello-world</code> image from Docker Hub, creates a container,
+            runs it, prints a success message, and exits. That one command covered the entire
+            image → container → run lifecycle.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 2 — Core Concepts</h2>
+          <p>Five terms you must understand before everything else clicks:</p>
+
+          <h3>Image</h3>
+          <p>
+            A <strong>Docker image</strong> is a read-only template — a snapshot of a filesystem plus
+            metadata (environment variables, default command, exposed ports). Images are built in
+            layers; each instruction in a Dockerfile adds a layer. Images are stored in a
+            <strong>registry</strong> (Docker Hub is the default public one).
+          </p>
+
+          <h3>Container</h3>
+          <p>
+            A <strong>container</strong> is a running instance of an image. You can run many containers
+            from the same image simultaneously. Containers are ephemeral by default — when they stop,
+            any data written inside them is lost (unless you use volumes).
+          </p>
+
+          <h3>Dockerfile</h3>
+          <p>
+            A <strong>Dockerfile</strong> is a plain-text recipe that tells Docker how to build your image,
+            step by step. You commit this file to your repository alongside your code.
+          </p>
+
+          <h3>Volume</h3>
+          <p>
+            A <strong>volume</strong> is persistent storage that lives outside the container filesystem.
+            Data written to a volume survives container restarts and deletions. Essential for databases.
+          </p>
+
+          <h3>Registry</h3>
+          <p>
+            A <strong>registry</strong> is a storage and distribution system for images.
+            <strong>Docker Hub</strong> is the public default. Teams typically also run a private registry
+            (AWS ECR, GitHub Container Registry, or a self-hosted Registry).
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 3 — Essential Docker Commands</h2>
+
+          <h3>Images</h3>
+          <pre><code># Pull an image from Docker Hub
+docker pull node:20-alpine
+
+# List local images
+docker images
+
+# Remove an image
+docker rmi node:20-alpine
+
+# Build an image from a Dockerfile in the current directory
+docker build -t my-app:1.0 .
+
+# Tag an existing image
+docker tag my-app:1.0 my-app:latest
+
+# Push an image to Docker Hub
+docker push username/my-app:1.0</code></pre>
+
+          <h3>Containers</h3>
+          <pre><code># Run a container (pulls image if not local, then starts it)
+docker run nginx
+
+# Run in detached mode (background) and map host port 8080 → container port 80
+docker run -d -p 8080:80 nginx
+
+# Run with a name so you can reference it easily
+docker run -d -p 8080:80 --name my-nginx nginx
+
+# Run interactively with a shell (great for debugging)
+docker run -it ubuntu bash
+
+# List running containers
+docker ps
+
+# List ALL containers (including stopped)
+docker ps -a
+
+# Stop a running container
+docker stop my-nginx
+
+# Start a stopped container
+docker start my-nginx
+
+# Remove a stopped container
+docker rm my-nginx
+
+# Force-remove a running container
+docker rm -f my-nginx
+
+# View container logs
+docker logs my-nginx
+
+# Follow logs in real time
+docker logs -f my-nginx
+
+# Execute a command inside a running container
+docker exec -it my-nginx bash
+
+# Copy a file from a container to the host
+docker cp my-nginx:/etc/nginx/nginx.conf ./nginx.conf</code></pre>
+
+          <h3>System cleanup</h3>
+          <pre><code># Remove all stopped containers, dangling images, unused networks
+docker system prune
+
+# Also remove unused volumes (be careful — data loss possible)
+docker system prune --volumes
+
+# Show disk usage by Docker objects
+docker system df</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 4 — Writing a Dockerfile</h2>
+          <p>
+            A Dockerfile is where most of the real work happens. Here is a production-quality
+            Dockerfile for a Node.js application, with every instruction explained:
+          </p>
+          <pre><code># ── Stage 1: install dependencies ──────────────────────────────
+# Use the official Node 20 Alpine image as the base (small, secure)
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+
+# Copy package files first — Docker caches this layer separately.
+# If source code changes but package.json doesn't, this layer is reused.
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+
+# ── Stage 2: build ─────────────────────────────────────────────
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+
+# ── Stage 3: production image ───────────────────────────────────
+FROM node:20-alpine AS runner
+
+# Run as a non-root user for security
+RUN addgroup -S appgroup &amp;&amp; adduser -S appuser -G appgroup
+USER appuser
+
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=deps    /app/node_modules ./node_modules
+COPY package.json ./
+
+# Document which port the app listens on (does NOT publish it)
+EXPOSE 3000
+
+# Prefer CMD (runtime args can override) over ENTRYPOINT for apps
+CMD ["node", "dist/index.js"]</code></pre>
+
+          <h3>Dockerfile instruction reference</h3>
+          <ul>
+            <li><code>FROM</code> — base image; every Dockerfile starts with this</li>
+            <li><code>WORKDIR</code> — sets the working directory inside the image (creates it if missing)</li>
+            <li><code>COPY</code> — copies files from host into the image</li>
+            <li><code>ADD</code> — like COPY but also unpacks tar archives and supports URLs (prefer COPY for clarity)</li>
+            <li><code>RUN</code> — executes a shell command and commits the result as a new layer</li>
+            <li><code>ENV</code> — sets an environment variable available at build and runtime</li>
+            <li><code>ARG</code> — build-time variable (not available at runtime)</li>
+            <li><code>EXPOSE</code> — documents a port — does not actually publish it</li>
+            <li><code>VOLUME</code> — declares a mount point for persistent data</li>
+            <li><code>USER</code> — sets the user for subsequent RUN / CMD / ENTRYPOINT instructions</li>
+            <li><code>CMD</code> — default command when the container starts (overridable at <code>docker run</code>)</li>
+            <li><code>ENTRYPOINT</code> — fixed executable; CMD becomes its default arguments</li>
+            <li><code>HEALTHCHECK</code> — tells Docker how to test that the container is healthy</li>
+          </ul>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 5 — The .dockerignore File</h2>
+          <p>
+            Just like <code>.gitignore</code>, a <code>.dockerignore</code> file prevents files from
+            being sent to the Docker build context. A bloated build context dramatically slows builds.
+            Always create this file at your project root:
+          </p>
+          <pre><code># .dockerignore
+
+node_modules/
+.git/
+.gitignore
+dist/
+build/
+coverage/
+*.log
+.env
+.env.*
+.DS_Store
+Dockerfile
+docker-compose*.yml
+README.md
+*.md</code></pre>
+          <blockquote>
+            <strong>Pro tip:</strong> <code>node_modules/</code> in <code>.dockerignore</code> is critical.
+            Without it, your entire local node_modules (potentially gigabytes) gets sent to the Docker
+            daemon on every build, even though <code>RUN npm ci</code> will replace it anyway.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 6 — Volumes &amp; Bind Mounts</h2>
+          <p>
+            Containers are ephemeral. To persist data or share files between the host and a container,
+            use volumes or bind mounts:
+          </p>
+
+          <h3>Named volumes (recommended for production data)</h3>
+          <pre><code># Create a named volume
+docker volume create postgres-data
+
+# Use it when running a container
+docker run -d \
+  --name postgres \
+  -e POSTGRES_PASSWORD=secret \
+  -v postgres-data:/var/lib/postgresql/data \
+  postgres:16-alpine
+
+# List volumes
+docker volume ls
+
+# Inspect a volume (shows where data lives on the host)
+docker volume inspect postgres-data
+
+# Remove a volume (data is permanently deleted)
+docker volume rm postgres-data</code></pre>
+
+          <h3>Bind mounts (best for development — live-reload your source code)</h3>
+          <pre><code># Mount the current directory into /app inside the container
+# Changes on host are immediately reflected inside the container
+docker run -d \
+  -p 3000:3000 \
+  -v $(pwd):/app \
+  -v /app/node_modules \
+  --name dev-server \
+  my-app:dev</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 7 — Docker Networking</h2>
+          <p>
+            Docker containers are isolated by default. Networking connects them to each other and to
+            the outside world.
+          </p>
+
+          <h3>Port publishing</h3>
+          <pre><code># -p HOST_PORT:CONTAINER_PORT
+docker run -p 8080:80 nginx       # host 8080 → container 80
+docker run -p 127.0.0.1:8080:80  # bind to localhost only (more secure)
+docker run -P nginx               # publish ALL EXPOSE'd ports to random host ports</code></pre>
+
+          <h3>Networks</h3>
+          <pre><code># Create a custom bridge network
+docker network create my-network
+
+# Connect containers to the same network so they can reach each other by name
+docker run -d --network my-network --name api    my-api:latest
+docker run -d --network my-network --name db     postgres:16-alpine
+
+# From inside "api", you can now reach the DB at hostname "db" — no IP needed
+# e.g. DATABASE_URL=postgres://user:pass@db:5432/mydb
+
+# List networks
+docker network ls
+
+# Inspect a network
+docker network inspect my-network</code></pre>
+
+          <h3>Network driver types</h3>
+          <ul>
+            <li><code>bridge</code> — default for standalone containers. Containers on the same bridge network can communicate by name.</li>
+            <li><code>host</code> — container shares the host's network stack. Highest performance, least isolation.</li>
+            <li><code>none</code> — no networking at all. Maximum isolation.</li>
+            <li><code>overlay</code> — for Docker Swarm — spans multiple hosts.</li>
+          </ul>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 8 — Docker Compose</h2>
+          <p>
+            Running a single container with <code>docker run</code> is fine for experiments.
+            Real applications have multiple services — API, database, cache, queue.
+            <strong>Docker Compose</strong> lets you define and manage all of them in a single
+            <code>docker-compose.yml</code> file.
+          </p>
+
+          <h3>A production-ready Compose file</h3>
+          <pre><code># docker-compose.yml
+version: "3.9"
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:secret@db:5432/appdb
+      REDIS_URL: redis://cache:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_started
+    networks:
+      - app-net
+
+  db:
+    image: postgres:16-alpine
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: appdb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  cache:
+    image: redis:7-alpine
+    container_name: cache
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - api
+    networks:
+      - app-net
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  app-net:
+    driver: bridge</code></pre>
+
+          <h3>Essential Compose commands</h3>
+          <pre><code># Start all services (build images if needed)
+docker compose up
+
+# Start in detached mode
+docker compose up -d
+
+# Force rebuild images before starting
+docker compose up -d --build
+
+# Stop all services (containers remain)
+docker compose stop
+
+# Stop and remove containers, networks (volumes are preserved)
+docker compose down
+
+# Stop and remove everything including volumes (data loss!)
+docker compose down -v
+
+# View logs of all services
+docker compose logs
+
+# Follow logs of a specific service
+docker compose logs -f api
+
+# Scale a service to N replicas
+docker compose up -d --scale api=3
+
+# List running services
+docker compose ps
+
+# Execute a command in a running service container
+docker compose exec api sh
+
+# Run a one-off command in a new container
+docker compose run --rm api node scripts/seed.js</code></pre>
+
+          <h3>Override files for dev vs production</h3>
+          <pre><code># docker-compose.override.yml — auto-loaded on top of docker-compose.yml
+# Use for development settings: bind mounts, debug ports, hot reload
+
+services:
+  api:
+    build:
+      target: builder          # use the builder stage for dev (includes dev tools)
+    volumes:
+      - .:/app                 # live source code
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev       # override CMD with a dev server</code></pre>
+          <pre><code># In CI / production: use the base file only
+docker compose -f docker-compose.yml up -d</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 9 — Multi-Stage Builds</h2>
+          <p>
+            Multi-stage builds are the most important Dockerfile technique for production.
+            They let you use a heavy build image (with compilers, dev tools) and copy only the
+            compiled output into a tiny final image — without shipping the build tools.
+          </p>
+
+          <h3>Java / Spring Boot example</h3>
+          <pre><code># Stage 1: build the jar
+FROM maven:3.9-eclipse-temurin-21 AS build
+
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -q
+
+COPY src ./src
+RUN mvn package -DskipTests -q
+
+
+# Stage 2: run with minimal JRE image
+FROM eclipse-temurin:21-jre-alpine AS runner
+
+RUN addgroup -S spring &amp;&amp; adduser -S spring -G spring
+USER spring
+
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]</code></pre>
+          <p>
+            The final image contains only the JRE and your JAR — not Maven, not the JDK, not source code.
+            A typical Spring Boot image drops from ~600 MB (single-stage) to ~150 MB (multi-stage).
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 10 — Health Checks</h2>
+          <p>
+            Docker needs to know whether your container is actually healthy, not just running.
+            A healthy process can still be deadlocked or unable to serve requests.
+          </p>
+          <pre><code># In your Dockerfile
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1</code></pre>
+
+          <p>Or in Docker Compose (overrides the Dockerfile HEALTHCHECK):</p>
+          <pre><code>healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+  interval: 30s
+  timeout: 10s
+  start_period: 40s
+  retries: 3</code></pre>
+          <p>
+            Use <code>depends_on: condition: service_healthy</code> in Compose to make your API wait
+            until the database is ready — far more reliable than fixed <code>sleep</code> hacks.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 11 — Environment Variables &amp; Secrets</h2>
+          <p>
+            Never hard-code secrets in your Dockerfile or Compose file. Use environment variables
+            and <code>.env</code> files instead.
+          </p>
+          <pre><code># .env  (add to .gitignore AND .dockerignore)
+POSTGRES_PASSWORD=supersecret
+JWT_SECRET=myjwtsecret
+NODE_ENV=production</code></pre>
+
+          <pre><code># docker-compose.yml — reference .env automatically
+services:
+  api:
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+      - .env          # loads the entire file into the container</code></pre>
+
+          <pre><code># Pass a single variable at runtime
+docker run -e NODE_ENV=production my-app
+
+# Load from a file
+docker run --env-file .env my-app</code></pre>
+
+          <blockquote>
+            <strong>Production secret management:</strong> For real production workloads use
+            Docker Secrets (Swarm), Kubernetes Secrets, AWS Secrets Manager, or HashiCorp Vault.
+            Never commit <code>.env</code> files to Git — not even in private repos.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 12 — Docker in CI/CD (GitHub Actions)</h2>
+          <p>
+            A typical CI pipeline builds, tests, and pushes your image on every push to <code>main</code>.
+          </p>
+          <pre><code># .github/workflows/docker.yml
+name: Build &amp; Push Docker Image
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            username/my-app:latest
+            username/my-app:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max</code></pre>
+          <p>
+            The <code>cache-from/cache-to: type=gha</code> lines enable GitHub Actions layer caching —
+            unchanged layers are pulled from cache instead of rebuilt, cutting build times dramatically.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Production Dockerfile Best Practices</h2>
+          <ul>
+            <li><strong>Use specific image tags</strong> — never <code>FROM node:latest</code>. Pin to <code>node:20.12-alpine3.19</code> for reproducible builds.</li>
+            <li><strong>Run as a non-root user</strong> — create a dedicated user with <code>adduser</code> and switch with <code>USER</code>.</li>
+            <li><strong>Use multi-stage builds</strong> — keep final images small and free of build tools.</li>
+            <li><strong>Order layers by change frequency</strong> — copy dependency files before source code to maximise cache reuse.</li>
+            <li><strong>Combine RUN commands</strong> — each <code>RUN</code> creates a layer; chain commands with <code>&amp;&amp;</code> to reduce layers.</li>
+            <li><strong>Always have a .dockerignore</strong> — prevents large or sensitive files from entering the build context.</li>
+            <li><strong>Add a HEALTHCHECK</strong> — essential for orchestrators (Compose, Kubernetes) to know when your app is truly ready.</li>
+            <li><strong>Never store secrets in images</strong> — they appear in <code>docker history</code> and live forever in the layer cache.</li>
+            <li><strong>Scan images for vulnerabilities</strong> — use <code>docker scout cves my-app:latest</code> or integrate Trivy into CI.</li>
+          </ul>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Docker Commands Cheat Sheet</h2>
+          <pre><code># ── Images ────────────────────────────────────────────────────
+docker pull &lt;image&gt;              # download from registry
+docker images                    # list local images
+docker rmi &lt;image&gt;               # remove image
+docker build -t &lt;name:tag&gt; .     # build from Dockerfile
+docker push &lt;name:tag&gt;           # push to registry
+docker history &lt;image&gt;           # show image layers
+
+# ── Containers ────────────────────────────────────────────────
+docker run -d -p HOST:CTR &lt;img&gt;  # run detached with port map
+docker run -it &lt;img&gt; sh          # run interactively
+docker ps                        # list running containers
+docker ps -a                     # list all containers
+docker stop &lt;name&gt;               # graceful stop
+docker start &lt;name&gt;              # start stopped container
+docker rm &lt;name&gt;                 # remove stopped container
+docker rm -f &lt;name&gt;              # force-remove running container
+docker logs -f &lt;name&gt;            # follow logs
+docker exec -it &lt;name&gt; sh        # shell into running container
+docker inspect &lt;name&gt;            # full container metadata (JSON)
+docker stats                     # live CPU / memory usage
+
+# ── Volumes ───────────────────────────────────────────────────
+docker volume create &lt;name&gt;      # create named volume
+docker volume ls                 # list volumes
+docker volume rm &lt;name&gt;          # remove volume
+docker volume prune              # remove all unused volumes
+
+# ── Networks ──────────────────────────────────────────────────
+docker network create &lt;name&gt;     # create network
+docker network ls                # list networks
+docker network inspect &lt;name&gt;   # inspect network
+
+# ── Compose ───────────────────────────────────────────────────
+docker compose up -d             # start all services
+docker compose up -d --build     # rebuild and start
+docker compose down              # stop and remove containers
+docker compose down -v           # also remove volumes
+docker compose logs -f &lt;svc&gt;    # follow service logs
+docker compose exec &lt;svc&gt; sh    # shell into service container
+docker compose ps                # list service status
+
+# ── System ────────────────────────────────────────────────────
+docker system df                 # disk usage
+docker system prune              # remove all unused resources
+docker scout cves &lt;image&gt;        # scan image for CVEs</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Key Takeaways</h2>
+          <ul>
+            <li>A <strong>container</strong> is a running instance of an <strong>image</strong> — lightweight, isolated, and ephemeral.</li>
+            <li>The <strong>Dockerfile</strong> is the recipe; commit it with your code and every developer builds the same environment.</li>
+            <li><strong>Multi-stage builds</strong> keep production images small — build in a fat image, run in a slim one.</li>
+            <li>Always use a <strong>.dockerignore</strong> — it's the Dockerfile equivalent of <code>.gitignore</code>.</li>
+            <li><strong>Named volumes</strong> persist database data across container restarts; <strong>bind mounts</strong> give live-reload during development.</li>
+            <li><strong>Docker Compose</strong> is the right tool for multi-service local and staging environments — one <code>docker compose up -d</code> starts everything.</li>
+            <li>Use <code>depends_on: condition: service_healthy</code> + <code>HEALTHCHECK</code> instead of sleep hacks to sequence startup correctly.</li>
+            <li>Never put secrets in images or Compose files — use <code>.env</code> files locally and a secret manager in production.</li>
+          </ul>
+
+          <!-- ── Conclusion ── -->
+          <h2>What's Next?</h2>
+          <p>
+            You now have everything needed to containerise any application and run a full multi-service
+            stack locally. The natural next step is <strong>container orchestration</strong> —
+            when you need to run containers across multiple machines, handle automatic restarts,
+            rolling updates, and auto-scaling, you reach for <strong>Kubernetes</strong> (K8s).
+            Managed options like AWS ECS, Google Cloud Run, and Azure Container Apps let you run
+            containers in production without managing Kubernetes yourself.
+          </p>
+          <p>
+            Also worth exploring: <strong>Docker Scout</strong> for image vulnerability scanning,
+            <strong>BuildKit</strong> secrets for securely passing credentials during builds, and
+            <strong>Docker Extensions</strong> for developer tooling inside Docker Desktop.
+          </p>
+          <p>
+            Check out the <a href="/archive">archive</a> for more backend and DevOps guides,
+            or reach out via the <a href="/contact">contact page</a>.
+          </p>
+
+        </div>
+        <!-- END .post-content -->
+
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+
+        <!-- ── 6. POST NAVIGATION ── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/git-and-github-complete-guide" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Git &amp; GitHub Complete Guide</span>
+          </a>
+          <a href="/" class="nav-next">
+            <span class="nav-label">Home →</span>
+            <span class="nav-title">All Posts</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Back to top button — do NOT edit -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts — do NOT edit -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>
