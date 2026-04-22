@@ -46,7 +46,7 @@ const BLOG_POSTS = [
     summary: "A hands-on guide to Spring Boot — project setup, key annotations, controllers, and a working REST API in under 30 minutes.",
     date: "Apr 15, 2026",
     dateISO: "2026-04-15",
-    url: "/post/spring-boot-getting-started.html",
+    url: "/post/spring-boot-getting-started",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 7,
     featured: false
