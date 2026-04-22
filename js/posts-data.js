@@ -34,7 +34,7 @@ const BLOG_POSTS = [
     summary: "Master Git and GitHub end-to-end — version control fundamentals, essential commands, branching strategies, pull requests, and CI/CD workflows used in real teams.",
     date: "Apr 22, 2026",
     dateISO: "2026-04-22",
-    url: "/post/git-and-github-complete-guide.html",
+    url: "/post/git-and-github-complete-guide",
     tags: ["Backend", "Tech", "Productivity"],
     readTime: 14,
     featured: true
