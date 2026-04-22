@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO ═══ -->
+  <title>Git &amp; GitHub Complete Guide: From Zero to Production Workflow | Digital Drift</title>
+  <meta name="description" content="A complete, hands-on guide to Git and GitHub — version control fundamentals, essential commands, branching strategies, pull requests, and professional team workflows." />
+  <meta name="keywords" content="Git, GitHub, Version Control, Branching, Pull Request, DevOps, Git Commands, Git Workflow" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/git-and-github-complete-guide.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Git &amp; GitHub Complete Guide: From Zero to Production Workflow" />
+  <meta property="og:description" content="Master Git and GitHub from scratch — version control concepts, essential commands, branching strategies, pull requests, and team workflows used in real projects." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/git-and-github-complete-guide.html" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Git &amp; GitHub Complete Guide: From Zero to Production Workflow" />
+  <meta name="twitter:description" content="Master Git and GitHub from scratch — version control concepts, essential commands, branching strategies, pull requests, and team workflows used in real projects." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Git & GitHub Complete Guide: From Zero to Production Workflow",
+    "description": "A complete, hands-on guide to Git and GitHub — version control fundamentals, essential commands, branching strategies, pull requests, and professional team workflows.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-04-22",
+    "dateModified":  "2026-04-22",
+    "url": "https://blog.dhirajroy.com/post/git-and-github-complete-guide.html",
+    "keywords": ["Git", "GitHub", "Version Control", "Branching", "Pull Request", "DevOps"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+</head>
+<body>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ══════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ══════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile nav — do NOT edit -->
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- ══════════════════════════════════════════
+         ARTICLE
+         ══════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ── -->
+        <div class="tags">
+          <span class="tag" data-tag="Backend">Backend</span>
+          <span class="tag" data-tag="Tech">Tech</span>
+          <span class="tag" data-tag="Productivity">Productivity</span>
+        </div>
+
+        <!-- ── 2. TITLE ── -->
+        <h1 class="post-title">Git &amp; GitHub Complete Guide: From Zero to Production Workflow</h1>
+
+        <!-- ── 3. META ── -->
+        <div class="post-meta">
+          <span>📅 Apr 22, 2026</span>
+          <span>⏱ 14 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ── -->
+        <div class="post-content">
+
+          <p>
+            Every professional developer uses Git every single day — yet most tutorials only scratch
+            the surface. This guide covers Git and GitHub end-to-end: from installing Git on your
+            machine and making your first commit, all the way to the branching strategies and
+            pull-request workflows used in real production teams. No prior version control experience
+            is required.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Git vs GitHub — What's the Difference?</h2>
+          <p>
+            This is the most common point of confusion for beginners. They are two entirely different things:
+          </p>
+          <ul>
+            <li><strong>Git</strong> is a free, open-source <em>version control system</em> that runs locally on your machine. It tracks changes to your files over time and lets you travel back to any previous state.</li>
+            <li><strong>GitHub</strong> is a <em>cloud platform</em> that hosts Git repositories remotely, adds a web UI, and provides collaboration features like Pull Requests, Issues, and Actions. GitLab and Bitbucket are popular alternatives.</li>
+          </ul>
+          <blockquote>
+            Think of Git as the engine and GitHub as the garage — you can drive without the garage,
+            but the garage makes it far easier to collaborate and ship.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 1 — Install Git &amp; First-Time Setup</h2>
+          <p>Download Git from <strong>git-scm.com</strong> (Windows installer) or install via your package manager:</p>
+          <pre><code># macOS (Homebrew)
+brew install git
+
+# Ubuntu / Debian
+sudo apt update &amp;&amp; sudo apt install git -y
+
+# Fedora / RHEL
+sudo dnf install git -y</code></pre>
+
+          <p>After installation, tell Git who you are. These values are stamped on every commit you make:</p>
+          <pre><code>git config --global user.name  "Your Name"
+git config --global user.email "you@example.com"
+
+# Set VS Code as the default editor (optional but recommended)
+git config --global core.editor "code --wait"
+
+# Verify your config
+git config --list</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 2 — Core Concepts You Must Understand</h2>
+          <p>Before running any commands, lock in these four concepts — everything else builds on them:</p>
+
+          <h3>Repository (repo)</h3>
+          <p>
+            A <strong>repository</strong> is the folder Git is tracking. It contains your project files plus
+            a hidden <code>.git/</code> directory where Git stores the entire history.
+            There are two kinds: a <em>local</em> repo on your machine and a <em>remote</em> repo on GitHub.
+          </p>
+
+          <h3>Commit</h3>
+          <p>
+            A <strong>commit</strong> is a snapshot of your files at a specific moment in time.
+            Every commit has a unique SHA hash (e.g., <code>a3f8c21</code>), an author, a timestamp, and a message.
+            Git history is just a chain of commits.
+          </p>
+
+          <h3>Branch</h3>
+          <p>
+            A <strong>branch</strong> is a lightweight, movable pointer to a commit. The default branch is called
+            <code>main</code> (or <code>master</code> in older repos). Creating a branch lets you develop a feature
+            in isolation without touching stable code.
+          </p>
+
+          <h3>Staging Area (Index)</h3>
+          <p>
+            The <strong>staging area</strong> is a preparation zone between your working directory and a commit.
+            You explicitly choose which changes to stage with <code>git add</code> before sealing them into
+            a commit with <code>git commit</code>. This gives you fine-grained control over what goes into each snapshot.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 3 — Start a Repository</h2>
+          <p>There are two ways to get a local Git repository:</p>
+
+          <h3>Option A — Initialise a new project</h3>
+          <pre><code># Create a folder and enter it
+mkdir my-project &amp;&amp; cd my-project
+
+# Initialise Git
+git init
+
+# You'll see: Initialized empty Git repository in .../my-project/.git/</code></pre>
+
+          <h3>Option B — Clone an existing remote repo</h3>
+          <pre><code># Clone over HTTPS (easiest for beginners)
+git clone https://github.com/username/repository-name.git
+
+# Clone over SSH (recommended for daily use — no password prompts)
+git clone git@github.com:username/repository-name.git
+
+# Clone then immediately enter the folder
+git clone https://github.com/username/repo.git &amp;&amp; cd repo</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 4 — The Daily Git Loop</h2>
+          <p>
+            Every working day with Git follows the same rhythm: check what changed, stage what you want,
+            commit it, and push to the remote. Here's the full flow with every command you'll use:
+          </p>
+
+          <h3>Check the state of your working tree</h3>
+          <pre><code># See which files are modified, staged, or untracked
+git status
+
+# See the actual line-by-line diff of unstaged changes
+git diff
+
+# See the diff of what's already staged (about to be committed)
+git diff --staged</code></pre>
+
+          <h3>Stage changes</h3>
+          <pre><code># Stage a specific file
+git add src/app.js
+
+# Stage multiple files
+git add src/app.js src/utils.js
+
+# Stage all changes in the current directory (use carefully)
+git add .
+
+# Stage parts of a file interactively (powerful — lets you split one file into multiple commits)
+git add -p src/app.js</code></pre>
+
+          <h3>Commit staged changes</h3>
+          <pre><code># Commit with an inline message
+git commit -m "feat: add user authentication endpoint"
+
+# Open your editor to write a multi-line commit message
+git commit
+
+# Stage all tracked files AND commit in one step (skips untracked files)
+git commit -am "fix: correct off-by-one error in pagination"</code></pre>
+
+          <h3>View history</h3>
+          <pre><code># Full log
+git log
+
+# Compact one-line-per-commit view
+git log --oneline
+
+# Visualise branches as a graph
+git log --oneline --graph --all --decorate
+
+# Show what changed in a specific commit
+git show a3f8c21</code></pre>
+
+          <h3>Push &amp; pull from GitHub</h3>
+          <pre><code># Push your local branch to the remote (first time: set upstream)
+git push -u origin main
+
+# Push subsequent commits (once upstream is set)
+git push
+
+# Fetch remote changes and merge them into your current branch
+git pull
+
+# Fetch without merging (inspect changes before integrating)
+git fetch origin</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 5 — Branching &amp; Merging</h2>
+          <p>
+            Branches are where Git gets powerful. The golden rule: <strong>never commit directly to
+            <code>main</code></strong>. Always work on a feature branch and merge it in when it's ready.
+          </p>
+
+          <h3>Create and switch branches</h3>
+          <pre><code># Create a new branch
+git branch feature/login-page
+
+# Switch to it
+git checkout feature/login-page
+
+# Create AND switch in one command (modern shorthand)
+git switch -c feature/login-page
+
+# List all local branches (* marks the current one)
+git branch
+
+# List remote branches too
+git branch -a</code></pre>
+
+          <h3>Merge a branch into main</h3>
+          <pre><code># Switch to the branch you want to merge INTO
+git switch main
+
+# Pull the latest remote changes first (important!)
+git pull origin main
+
+# Merge your feature branch
+git merge feature/login-page
+
+# Delete the branch once merged (keeps things tidy)
+git branch -d feature/login-page
+
+# Delete the remote branch too
+git push origin --delete feature/login-page</code></pre>
+
+          <h3>Rebase (a cleaner alternative to merge)</h3>
+          <pre><code># While on your feature branch, replay its commits on top of main
+git switch feature/login-page
+git rebase main
+
+# Interactive rebase — reorder, squash, or edit the last 3 commits
+git rebase -i HEAD~3</code></pre>
+          <blockquote>
+            <strong>Merge vs Rebase:</strong> <code>merge</code> preserves history exactly as it happened (good for shared branches).
+            <code>rebase</code> rewrites history for a cleaner, linear log (good for local feature branches before a PR).
+            Never rebase commits that have already been pushed and shared.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 6 — Undoing Mistakes</h2>
+          <p>Git's superpower is that almost nothing is permanent. Here's your rescue toolkit:</p>
+
+          <h3>Undo before committing</h3>
+          <pre><code># Discard unstaged changes in a file (destructive — cannot be undone)
+git restore src/app.js
+
+# Unstage a file (keeps your changes, just removes from staging area)
+git restore --staged src/app.js</code></pre>
+
+          <h3>Undo after committing</h3>
+          <pre><code># Create a new commit that reverses a previous commit (safe for shared history)
+git revert a3f8c21
+
+# Move HEAD back N commits, keep changes staged
+git reset --soft HEAD~1
+
+# Move HEAD back N commits, keep changes unstaged
+git reset --mixed HEAD~1
+
+# Move HEAD back N commits and DISCARD all changes (destructive)
+git reset --hard HEAD~1</code></pre>
+
+          <h3>Stash work in progress</h3>
+          <pre><code># Save dirty working tree without committing
+git stash
+
+# Give the stash a descriptive name
+git stash push -m "WIP: half-done login form"
+
+# List all stashes
+git stash list
+
+# Apply the most recent stash and keep it in the list
+git stash apply
+
+# Apply AND remove from the list
+git stash pop
+
+# Apply a specific stash
+git stash apply stash@{2}</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 7 — The .gitignore File</h2>
+          <p>
+            A <code>.gitignore</code> file tells Git which files and folders to <em>never track</em>.
+            You should always create one at the project root before your first commit.
+          </p>
+          <pre><code># ── .gitignore example for a Node.js project ──
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.next/
+
+# Environment variables (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*</code></pre>
+          <blockquote>
+            <strong>Pro tip:</strong> Use <strong>gitignore.io</strong> to generate a <code>.gitignore</code>
+            tailored to your language and IDE in seconds. Commit the <code>.gitignore</code> as the very first
+            file in every new project.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 8 — GitHub: Remotes, Forks &amp; Pull Requests</h2>
+          <p>
+            GitHub layers collaboration on top of Git. Here's the complete open-source contribution
+            and team workflow:
+          </p>
+
+          <h3>Connect a local repo to GitHub</h3>
+          <pre><code># Add GitHub as a remote named "origin"
+git remote add origin https://github.com/username/repo.git
+
+# Verify remotes
+git remote -v
+
+# Push for the first time and set the upstream tracking branch
+git push -u origin main</code></pre>
+
+          <h3>SSH key setup (do this once — saves typing your password forever)</h3>
+          <pre><code># Generate an Ed25519 key (modern, preferred over RSA)
+ssh-keygen -t ed25519 -C "you@example.com"
+
+# Start the SSH agent and add your key
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+# Copy the public key to your clipboard
+# macOS:
+cat ~/.ssh/id_ed25519.pub | pbcopy
+# Linux:
+cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+
+# Paste it into: GitHub → Settings → SSH and GPG keys → New SSH key</code></pre>
+
+          <h3>Fork → Clone → PR (open-source workflow)</h3>
+          <ol>
+            <li>On GitHub, click <strong>Fork</strong> on the repo you want to contribute to — this copies it to your account.</li>
+            <li>Clone your fork locally: <code>git clone git@github.com:your-username/repo.git</code></li>
+            <li>Add the original repo as <code>upstream</code> so you can sync updates: <code>git remote add upstream git@github.com:original-owner/repo.git</code></li>
+            <li>Create a feature branch: <code>git switch -c fix/typo-in-readme</code></li>
+            <li>Make your changes, stage, and commit them.</li>
+            <li>Push to your fork: <code>git push -u origin fix/typo-in-readme</code></li>
+            <li>Go to GitHub and click <strong>Compare &amp; pull request</strong>. Write a clear description and submit.</li>
+            <li>Respond to review comments, push additional commits — the PR updates automatically.</li>
+            <li>Once approved, a maintainer merges your PR. Your contribution is live!</li>
+          </ol>
+
+          <h3>Sync your fork with the original</h3>
+          <pre><code># Fetch changes from the original repo
+git fetch upstream
+
+# Merge them into your local main
+git switch main
+git merge upstream/main
+
+# Push the updated main to your fork
+git push origin main</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 9 — Writing Great Commit Messages</h2>
+          <p>
+            A well-written commit message is a gift to your future self and your teammates.
+            The most widely adopted convention is <strong>Conventional Commits</strong>:
+          </p>
+          <pre><code>&lt;type&gt;(&lt;optional scope&gt;): &lt;short summary in present tense&gt;
+
+&lt;optional body — explain WHY, not WHAT&gt;
+
+&lt;optional footer — e.g. "Closes #42"&gt;</code></pre>
+
+          <p>Common types and when to use them:</p>
+          <ul>
+            <li><code>feat</code> — a new feature visible to users</li>
+            <li><code>fix</code> — a bug fix</li>
+            <li><code>docs</code> — documentation changes only</li>
+            <li><code>style</code> — formatting, missing semicolons — no logic change</li>
+            <li><code>refactor</code> — code change that neither fixes a bug nor adds a feature</li>
+            <li><code>test</code> — adding or updating tests</li>
+            <li><code>chore</code> — build process, dependency updates, tooling</li>
+            <li><code>perf</code> — performance improvement</li>
+          </ul>
+
+          <p>Real examples — bad vs good:</p>
+          <pre><code># Bad — tells you nothing
+git commit -m "fix stuff"
+git commit -m "update"
+git commit -m "wip"
+
+# Good — clear, scannable, professional
+git commit -m "fix(auth): prevent session token from expiring prematurely"
+git commit -m "feat(api): add paginated /users endpoint"
+git commit -m "chore(deps): upgrade axios from 1.4.0 to 1.7.2"
+git commit -m "docs: add SSH setup instructions to README"</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 10 — Professional Git Branching Strategy</h2>
+          <p>
+            Individual projects can get away with a simple branch-per-feature approach.
+            Teams typically adopt one of two strategies:
+          </p>
+
+          <h3>GitHub Flow (simple — ideal for CI/CD teams)</h3>
+          <pre><code>main                  ← always deployable, protected
+  └── feature/X       ← your work
+  └── fix/Y           ← a bug fix
+  └── chore/Z         ← tooling change</code></pre>
+          <ol>
+            <li>Create a branch from <code>main</code>.</li>
+            <li>Commit often, push often.</li>
+            <li>Open a PR when ready for review.</li>
+            <li>Merge to <code>main</code> after approval — this triggers automated deployment.</li>
+          </ol>
+
+          <h3>Git Flow (structured — ideal for release-based products)</h3>
+          <pre><code>main                  ← production releases only (tagged v1.0, v1.1, …)
+develop               ← integration branch — all features merge here
+  └── feature/login   ← new feature
+  └── feature/search  ← another feature
+release/1.2           ← pre-release stabilisation branch
+hotfix/1.1.1          ← urgent production bug fix (branches from main)</code></pre>
+          <blockquote>
+            <strong>Which to choose?</strong> Start with <strong>GitHub Flow</strong> — it's simpler and works for
+            most modern teams that deploy continuously. Switch to Git Flow only if you manage multiple
+            concurrent release versions.
+          </blockquote>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Step 11 — GitHub Actions (CI/CD in 60 Seconds)</h2>
+          <p>
+            GitHub Actions lets you automate workflows — run tests on every push, lint on every PR,
+            or deploy on every merge to <code>main</code>. Workflows live in <code>.github/workflows/</code>
+            as YAML files.
+          </p>
+          <pre><code># .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test</code></pre>
+          <p>
+            Once this file is committed, every push and pull request will trigger the workflow.
+            GitHub shows a green checkmark or red cross directly on the PR — reviewers can see
+            at a glance whether the tests pass.
+          </p>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Useful Git Commands Cheat Sheet</h2>
+          <pre><code># ── Repository ──────────────────────────────────────
+git init                        # create a new local repo
+git clone &lt;url&gt;                 # clone a remote repo
+
+# ── Staging &amp; Committing ──────────────────────────
+git status                      # show working tree status
+git diff                        # unstaged changes
+git diff --staged               # staged changes
+git add &lt;file&gt;                  # stage a file
+git add .                       # stage everything
+git commit -m "message"         # commit with message
+git commit --amend              # edit the last commit (local only!)
+
+# ── Branches ──────────────────────────────────────
+git branch                      # list local branches
+git switch -c &lt;branch&gt;          # create + switch
+git switch &lt;branch&gt;             # switch branch
+git merge &lt;branch&gt;              # merge into current
+git rebase &lt;branch&gt;             # rebase onto branch
+git branch -d &lt;branch&gt;          # delete merged branch
+
+# ── Remote ────────────────────────────────────────
+git remote -v                   # list remotes
+git remote add origin &lt;url&gt;     # add remote
+git push -u origin &lt;branch&gt;     # push + set upstream
+git push                        # push current branch
+git pull                        # fetch + merge
+git fetch                       # fetch only
+
+# ── Undoing ───────────────────────────────────────
+git restore &lt;file&gt;              # discard unstaged changes
+git restore --staged &lt;file&gt;     # unstage a file
+git revert &lt;sha&gt;                # safe undo (new commit)
+git reset --soft HEAD~1         # undo commit, keep staged
+git reset --hard HEAD~1         # undo commit, discard changes
+
+# ── Stash ─────────────────────────────────────────
+git stash                       # save WIP
+git stash pop                   # restore latest WIP
+git stash list                  # list all stashes
+
+# ── Inspection ────────────────────────────────────
+git log --oneline --graph --all # visual branch history
+git blame &lt;file&gt;                # who changed which line
+git bisect start                # binary search for a bug
+git shortlog -sn                # top contributors by commit count</code></pre>
+
+          <!-- ─────────────────────────────────────── -->
+          <h2>Key Takeaways</h2>
+          <ul>
+            <li><strong>Git</strong> is local version control; <strong>GitHub</strong> is the cloud platform that hosts it and adds collaboration tools.</li>
+            <li>The core daily loop is: <code>git pull</code> → make changes → <code>git add</code> → <code>git commit</code> → <code>git push</code>.</li>
+            <li>Always work on a <strong>feature branch</strong> — never commit directly to <code>main</code>.</li>
+            <li>Write <strong>Conventional Commit</strong> messages: <code>type(scope): summary</code>. Future-you will thank present-you.</li>
+            <li>A <code>.gitignore</code> committed at project creation prevents secrets and build artefacts from ever entering history.</li>
+            <li><code>git revert</code> is the safe way to undo shared history; <code>git reset --hard</code> is a last resort on local-only commits.</li>
+            <li><strong>GitHub Actions</strong> can automate tests, linting, and deployment with a single YAML file — add it early.</li>
+            <li>SSH keys eliminate password prompts — set them up once and forget about them.</li>
+          </ul>
+
+          <!-- ── Conclusion ── -->
+          <h2>What's Next?</h2>
+          <p>
+            You now have the complete toolkit for working with Git and GitHub like a professional.
+            The next steps are practice and muscle memory — the commands will become second nature
+            within a week of daily use.
+          </p>
+          <p>
+            From here, explore <strong>GitHub Issues</strong> for project management,
+            <strong>GitHub Projects</strong> (kanban boards built into your repo),
+            and <strong>GitHub Packages</strong> for publishing libraries.
+            On the Git side, dig deeper into <code>git bisect</code> for hunting bugs across history,
+            and <code>git worktree</code> for maintaining multiple checked-out branches simultaneously
+            without cloning twice.
+          </p>
+          <p>
+            Check out the <a href="/archive">archive</a> for more backend and DevOps guides,
+            or reach out via the <a href="/contact">contact page</a> — always happy to help
+            you level up your workflow.
+          </p>
+
+        </div>
+        <!-- END .post-content -->
+
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+
+        <!-- ── 6. POST NAVIGATION ── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/spring-boot-getting-started.html" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Getting Started with Spring Boot</span>
+          </a>
+          <a href="/" class="nav-next">
+            <span class="nav-label">Home →</span>
+            <span class="nav-title">All Posts</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Back to top button — do NOT edit -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts — do NOT edit -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>

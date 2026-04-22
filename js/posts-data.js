@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 6,
+    slug: "git-and-github-complete-guide",
+    title: "Git & GitHub Complete Guide: From Zero to Production Workflow",
+    summary: "Master Git and GitHub end-to-end — version control fundamentals, essential commands, branching strategies, pull requests, and CI/CD workflows used in real teams.",
+    date: "Apr 22, 2026",
+    dateISO: "2026-04-22",
+    url: "/post/git-and-github-complete-guide.html",
+    tags: ["Backend", "Tech", "Productivity"],
+    readTime: 14,
+    featured: true
+  },
+  {
     id: 5,
     slug: "spring-boot-getting-started",
     title: "Getting Started with Spring Boot: Build Your First REST API",
