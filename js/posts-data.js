@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 8,
+    slug: "nodejs-complete-guide",
+    title: "Node.js Complete Guide: From Zero to Production Backend Development",
+    summary: "Master Node.js end-to-end — runtime basics, npm, modules, async programming, Express APIs, debugging, and production best practices.",
+    date: "Apr 24, 2026",
+    dateISO: "2026-04-24",
+    url: "/post/nodejs-complete-guide",
+    tags: ["Backend", "Tech", "Programming"],
+    readTime: 15,
+    featured: false
+  },
+  {
     id: 7,
     slug: "docker-complete-guide",
     title: "Docker Complete Guide: From Zero to Production Containers",
