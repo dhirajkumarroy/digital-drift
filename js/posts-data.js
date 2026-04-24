@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 9,
+    slug: "what-is-backend",
+    title: "What is Backend Development? The Complete Beginner's Guide",
+    summary: "Understand what backend development really is — servers, APIs, databases, authentication, and how all the pieces fit together to power every app you use.",
+    date: "Apr 24, 2026",
+    dateISO: "2026-04-24",
+    url: "/post/what-is-backend",
+    tags: ["Backend", "Education", "Roadmap"],
+    readTime: 12,
+    featured: true
+  },
+  {
     id: 8,
     slug: "nodejs-complete-guide",
     title: "Node.js Complete Guide: From Zero to Production Backend Development",
@@ -49,7 +61,7 @@ const BLOG_POSTS = [
     url: "/post/docker-complete-guide",
     tags: ["Backend", "Tech", "Productivity"],
     readTime: 16,
-    featured: true
+    featured: false
   },
   {
     id: 6,
