@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Digital Drift</title>
+    <link>https://blog.dhirajroy.com</link>
+    <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
+    <language>en-us</language>
+    <pubDate>Mon, 04 May 2026 22:38:37 GMT</pubDate>
+    <lastBuildDate>Mon, 04 May 2026 22:38:37 GMT</lastBuildDate>
+    <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>What is Backend Development? The Complete Beginner&apos;s Guide</title>
+      <link>https://blog.dhirajroy.com/post/what-is-backend</link>
+      <guid>https://blog.dhirajroy.com/post/what-is-backend</guid>
+      <pubDate>Thu, 23 Apr 2026 18:30:00 GMT</pubDate>
+      <description>Understand what backend development really is — servers, APIs, databases, authentication, and how all the pieces fit together to power every app you use.</description>
+      <category>Backend</category>
+      <category>Education</category>
+      <category>Roadmap</category>
+    </item>
+
+    <item>
+      <title>Node.js Backend Development (2026) – Build a Production-Ready REST API</title>
+      <link>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api.html</link>
+      <guid>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api.html</guid>
+      <pubDate>Thu, 23 Apr 2026 18:30:00 GMT</pubDate>
+      <description>Learn Node.js backend development from scratch. Master Express.js, async programming, and build a production-ready REST API. Complete 2026 developer guide.</description>
+      <category>Node.js backend</category>
+      <category>Tech</category>
+      <category>Programming</category>
+    </item>
+
+    <item>
+      <title>Docker Complete Guide: From Zero to Production Containers</title>
+      <link>https://blog.dhirajroy.com/post/docker-complete-guide</link>
+      <guid>https://blog.dhirajroy.com/post/docker-complete-guide</guid>
+      <pubDate>Tue, 21 Apr 2026 18:30:00 GMT</pubDate>
+      <description>Master Docker end-to-end — containers vs VMs, Dockerfiles, volumes, networking, Docker Compose, multi-stage builds, and production best practices.</description>
+      <category>Backend</category>
+      <category>Tech</category>
+      <category>Productivity</category>
+    </item>
+
+    <item>
+      <title>Git &amp; GitHub Complete Guide: From Zero to Production Workflow</title>
+      <link>https://blog.dhirajroy.com/post/git-and-github-complete-guide</link>
+      <guid>https://blog.dhirajroy.com/post/git-and-github-complete-guide</guid>
+      <pubDate>Tue, 21 Apr 2026 18:30:00 GMT</pubDate>
+      <description>Master Git and GitHub end-to-end — version control fundamentals, essential commands, branching strategies, pull requests, and CI/CD workflows used in real teams.</description>
+      <category>Backend</category>
+      <category>Tech</category>
+      <category>Productivity</category>
+    </item>
+
+    <item>
+      <title>Getting Started with Spring Boot: Build Your First REST API</title>
+      <link>https://blog.dhirajroy.com/post/spring-boot-getting-started</link>
+      <guid>https://blog.dhirajroy.com/post/spring-boot-getting-started</guid>
+      <pubDate>Tue, 14 Apr 2026 18:30:00 GMT</pubDate>
+      <description>A hands-on guide to Spring Boot — project setup, key annotations, controllers, and a working REST API in under 30 minutes.</description>
+      <category>Java</category>
+      <category>Spring Boot</category>
+      <category>Backend</category>
+    </item>
+
+  </channel>
+</rss>

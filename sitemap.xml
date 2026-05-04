@@ -3,30 +3,65 @@
 
   <url>
     <loc>https://blog.dhirajroy.com/</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://blog.dhirajroy.com/about</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://blog.dhirajroy.com/contact</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://blog.dhirajroy.com/archive</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/what-is-backend</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api.html</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/docker-complete-guide</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/git-and-github-complete-guide</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/spring-boot-getting-started</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
 </urlset>

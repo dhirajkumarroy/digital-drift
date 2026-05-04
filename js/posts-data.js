@@ -41,14 +41,14 @@ const BLOG_POSTS = [
   },
   {
     id: 8,
-    slug: "nodejs-complete-guide",
-    title: "Node.js Complete Guide: From Zero to Production Backend Development",
-    summary: "Master Node.js end-to-end — runtime basics, npm, modules, async programming, Express APIs, debugging, and production best practices.",
+    slug: "nodejs-backend-development-production-api",
+    title: "Node.js Backend Development (2026) – Build a Production-Ready REST API",
+    summary: "Learn Node.js backend development from scratch. Master Express.js, async programming, and build a production-ready REST API. Complete 2026 developer guide.",
     date: "Apr 24, 2026",
     dateISO: "2026-04-24",
-    url: "/post/nodejs-complete-guide",
-    tags: ["Backend", "Tech", "Programming"],
-    readTime: 15,
+    url: "/post/nodejs-backend-development-production-api.html",
+    tags: ["Node.js backend", "Tech", "Programming"],
+    readTime: 20,
     featured: false
   },
   {
