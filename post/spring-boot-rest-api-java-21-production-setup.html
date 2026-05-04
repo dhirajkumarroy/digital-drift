@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO ═══ -->
+  <title>Spring Boot REST API (2026) – Java 21 Production Setup | Digital Drift</title>
+  <meta name="description" content="Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture." />
+  <meta name="keywords" content="Spring Boot, Java 21, REST API, Backend Development, Spring Boot 3, Virtual Threads, Production Setup" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Spring Boot REST API (2026) – Java 21 Production Setup" />
+  <meta property="og:description" content="Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot REST API (2026) – Java 21 Production Setup" />
+  <meta name="twitter:description" content="Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Spring Boot REST API (2026) – Java 21 Production Setup",
+    "description": "Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-05-05",
+    "dateModified":  "2026-05-05",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html",
+    "keywords": ["Spring Boot", "Java 21", "REST API", "Backend", "Production Setup"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+
+    <main role="main">
+      <article class="blog-post">
+
+        <div class="tags">
+          <span class="tag" data-tag="Java">Java</span>
+          <span class="tag" data-tag="Spring Boot">Spring Boot</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+
+        <h1 class="post-title">Spring Boot REST API (2026) – Java 21 Production Setup</h1>
+
+        <div class="post-meta">
+          <span>📅 May 05, 2026</span>
+          <span>⏱ 18 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <div class="post-content">
+
+          <p>
+            Java is not the verbose, clunky language it was ten years ago. With the release of Java 21 and Spring Boot 3, building enterprise backends is leaner, faster, and highly scalable. The introduction of features like Virtual Threads and Records has completely revolutionized how we approach web architecture.
+          </p>
+          
+          <div style="background: rgba(6,172,211,0.06); border-left: 4px solid var(--color-primary); padding: 1.5rem; margin: 2rem 0; border-radius: 0 var(--radius) var(--radius) 0;">
+            <p style="margin-top: 0;"><strong>In this guide, you won't just copy-paste "Hello World" code. You will build a scalable, production-grade REST API.</strong></p>
+            <p style="margin-bottom: 0;">We will leverage the modern capabilities of <strong>Java 21</strong> combined with <strong>Spring Boot 3</strong>. Whether you're upgrading legacy microservices or starting fresh, mastering this exact stack makes you incredibly valuable to modern enterprises. Let's start coding.</p>
+          </div>
+
+          <h2>What is a Spring Boot REST API?</h2>
+          <p>
+            <strong>Spring Boot</strong> is an opinionated framework built on top of the Spring ecosystem. It eliminates the complex XML configurations that used to plague Java developers, giving you a ready-to-run environment (complete with an embedded Tomcat server) right out of the box.
+          </p>
+          <ul>
+            <li><strong>Java 21</strong> is the modern LTS (Long Term Support) release bringing massive performance boosts.</li>
+            <li><strong>Spring Boot 3</strong> is the backend framework optimized for cloud-native deployment.</li>
+            <li>A <strong>REST API</strong> is the interface that allows your frontend (like React or a mobile app) to communicate with your database through JSON.</li>
+          </ul>
+          <blockquote>
+            Spring Boot powers the backends of Netflix, LinkedIn, and countless banking systems. If you want to understand where this fits into the big picture, read my <a href="/post/what-is-backend.html">Complete Beginner's Guide to Backend Development</a>.
+          </blockquote>
+
+          <h2>Why Java 21 and Spring Boot 3 Matter in Real-World Projects</h2>
+          <p>
+            Many developers ask: "Why use Java when I can use Node.js or Python?" The answer lies in stability, massive ecosystem support, and recent game-changing performance updates.
+          </p>
+          <ul>
+            <li><strong>Virtual Threads (Project Loom):</strong> Java 21 introduced virtual threads, allowing your API to handle millions of concurrent requests using a fraction of the memory previously required.</li>
+            <li><strong>Records:</strong> Immutable data carriers (DTOs) are now a one-liner in Java, eliminating the need for libraries like Lombok to generate getters and setters.</li>
+            <li><strong>Type Safety & Ecosystem:</strong> The Java compiler catches bugs before they ever reach production, and Maven/Gradle provides the most mature dependency management in the industry.</li>
+          </ul>
+
+          <h2>Step-by-Step Implementation: Building a REST API</h2>
+          <p>
+            We are going to build a production-ready "Employee Management" API. We will implement clean architecture by separating our Controllers, Services, and Repositories.
+          </p>
+
+          <h3>Step 1 — Project Initialization (Spring Initializr)</h3>
+          <p>
+            The easiest way to bootstrap a Spring Boot project is via <a href="https://start.spring.io/" target="_blank" rel="noopener noreferrer">Spring Initializr</a>. Use the following settings:
+          </p>
+          <ul>
+            <li><strong>Project:</strong> Maven</li>
+            <li><strong>Language:</strong> Java</li>
+            <li><strong>Spring Boot:</strong> 3.2.x (or latest stable)</li>
+            <li><strong>Java Version:</strong> 21</li>
+            <li><strong>Dependencies:</strong> Spring Web, Spring Data JPA, H2 Database (or PostgreSQL)</li>
+          </ul>
+          <p>Generate, download, and open the project in your favorite IDE (like IntelliJ IDEA).</p>
+
+          <h3>Step 2 — Enabling Java 21 Virtual Threads</h3>
+          <p>
+            To get the massive scalability benefits of Java 21, you simply need to tell Tomcat to use Virtual Threads. Open your <code>application.properties</code> (or <code>application.yml</code>) and add this single magical line:
+          </p>
+          <pre><code># src/main/resources/application.properties
+spring.threads.virtual.enabled=true
+spring.datasource.url=jdbc:h2:mem:employeedb
+spring.jpa.hibernate.ddl-auto=update</code></pre>
+
+          <h3>Step 3 — Domain Model and Record Classes (DTOs)</h3>
+          <p>
+            First, let's create our Entity. This is the object that maps directly to our database table.
+          </p>
+          <pre><code>package com.drift.api.model;
+
+import jakarta.persistence.*;
+
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    private String role;
+
+    // Getters and Setters (or use your IDE to generate them)
+    public Long getId() { return id; }
+    public void setId(Long id) { this id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+}</code></pre>
+          <p>
+            Instead of exposing our Entity directly to the client, we use <strong>Java 21 Records</strong> for our Data Transfer Objects (DTOs). They are immutable and clean:
+          </p>
+          <pre><code>package com.drift.api.dto;
+
+public record EmployeeDTO(String name, String role) {}</code></pre>
+
+          <h3>Step 4 — Creating the Repository</h3>
+          <p>
+            Spring Data JPA removes the need to write raw SQL queries. By simply extending an interface, we get all CRUD (Create, Read, Update, Delete) operations for free.
+          </p>
+          <pre><code>package com.drift.api.repository;
+
+import com.drift.api.model.Employee;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface EmployeeRepository extends JpaRepository&lt;Employee, Long&gt; {
+    // Spring Boot automatically implements this!
+}</code></pre>
+
+          <h3>Step 5 — Service Layer Logic</h3>
+          <p>
+            Never put business logic inside a Controller. The <strong>Service Layer</strong> is where your API makes decisions, throws errors, and processes data.
+          </p>
+          <pre><code>package com.drift.api.service;
+
+import com.drift.api.model.Employee;
+import com.drift.api.dto.EmployeeDTO;
+import com.drift.api.repository.EmployeeRepository;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    // Constructor injection is best practice
+    public EmployeeService(EmployeeRepository repository) {
+        this.repository = repository;
+    }
+
+    public List&lt;Employee&gt; getAllEmployees() {
+        return repository.findAll();
+    }
+
+    public Employee createEmployee(EmployeeDTO dto) {
+        Employee employee = new Employee();
+        employee.setName(dto.name());
+        employee.setRole(dto.role());
+        return repository.save(employee);
+    }
+    
+    public Employee getEmployeeById(Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -&gt; new RuntimeException("Employee not found with id: " + id));
+    }
+}</code></pre>
+
+          <h3>Step 6 — The REST Controller</h3>
+          <p>
+            Finally, we expose our endpoints over HTTP. The <code>@RestController</code> annotation tells Spring to automatically serialize the returned objects into JSON format.
+          </p>
+          <pre><code>package com.drift.api.controller;
+
+import com.drift.api.model.Employee;
+import com.drift.api.dto.EmployeeDTO;
+import com.drift.api.service.EmployeeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/employees")
+public class EmployeeController {
+
+    private final EmployeeService service;
+
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List&lt;Employee&gt; getAll() {
+        return service.getAllEmployees();
+    }
+    
+    @GetMapping("/{id}")
+    public Employee getById(@PathVariable Long id) {
+        return service.getEmployeeById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Employee create(@RequestBody EmployeeDTO dto) {
+        return service.createEmployee(dto);
+    }
+}</code></pre>
+
+          <h2>Production-Level Improvements</h2>
+          <p>
+            To take this API from a local tutorial to a production-grade enterprise system, you must implement the following architectural patterns:
+          </p>
+          <ul>
+            <li><strong>Global Exception Handling:</strong> Never return raw 500 server stack traces to users. Use <code>@ControllerAdvice</code> to map exceptions (like "User Not Found") to clean JSON 404 responses.</li>
+            <li><strong>Input Validation:</strong> Use <code>spring-boot-starter-validation</code> to annotate your DTOs (e.g., <code>@NotBlank</code>, <code>@Email</code>) so bad data is blocked before it even hits your Service layer.</li>
+            <li><strong>Containerization:</strong> For cloud deployment on AWS or Kubernetes, wrap your Spring Boot jar in a Docker image. Learn how in my <a href="/post/docker-complete-guide.html">Docker Complete Guide</a>.</li>
+            <li><strong>CI/CD Pipelines:</strong> Manage your codebase securely using GitHub Actions. Check out my <a href="/post/git-and-github-complete-guide.html">Git Workflow Guide</a>.</li>
+          </ul>
+
+          <h2>Common Mistakes in Spring Boot</h2>
+          <p>Watch out for these classic pitfalls that trip up junior Java developers:</p>
+          <ul>
+            <li><strong>Using <code>@Autowired</code> on Fields:</strong> Field injection makes unit testing difficult. Always use Constructor Injection (like we did in the Service layer above).</li>
+            <li><strong>Returning Entities Directly in Production:</strong> While we did it for simplicity here, in large apps you should map Entities to DTOs before returning them to avoid infinite recursion and leaking sensitive database fields.</li>
+            <li><strong>Heavy Logic in Controllers:</strong> Controllers should ONLY handle HTTP routing. Business logic belongs in the <code>@Service</code>.</li>
+          </ul>
+
+          <h2>Real-World Use Cases for Spring Boot</h2>
+          <p>When should you actively choose Spring Boot over other frameworks?</p>
+          <ul>
+            <li><strong>Banking and FinTech:</strong> When transactional integrity and strict type safety are non-negotiable, Java's ecosystem is unparalleled.</li>
+            <li><strong>High-Traffic Microservices:</strong> With Java 21 Virtual Threads, Spring Boot handles massive concurrent traffic (e.g., streaming apps, booking engines) with tiny memory footprints.</li>
+            <li><strong>Enterprise Integration:</strong> If you need to connect to Kafka, Redis, active directories, and legacy SQL databases simultaneously, Spring Boot has a pre-built starter for everything.</li>
+          </ul>
+
+          <h2>Frequently Asked Questions (FAQ)</h2>
+          
+          <div class="faq-section" style="margin-top: 1.5rem;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Is Spring Boot still relevant in 2026?</h3>
+            <p style="margin-top: 0;">Yes, more than ever. The release of Spring Boot 3 alongside Java 21 has revitalized the ecosystem. It is the dominant backend framework for Fortune 500 companies.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Do I need to know Spring before learning Spring Boot?</h3>
+            <p style="margin-top: 0;">No. Spring Boot is essentially "Spring with pre-configured defaults." You can start learning Spring Boot directly to build APIs faster, though understanding core Spring concepts (like Dependency Injection) helps later.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Are Virtual Threads faster than Reactive programming (WebFlux)?</h3>
+            <p style="margin-top: 0;">Virtual Threads offer the same high scalability as Reactive programming but let you write simple, synchronous, easy-to-read code. For most new projects, Virtual Threads are the preferred choice over WebFlux.</p>
+          </div>
+
+          <h2>What's Next in Your Backend Journey?</h2>
+          <p>
+            You have successfully built a clean, scalable REST API using modern Java 21 patterns. The next logical step is securing your endpoints. You should look into implementing <strong>Spring Security</strong> with JWT (JSON Web Tokens) to protect your application.
+          </p>
+          <p>
+            Additionally, if you want to see how this compares to other backend ecosystems, read my <a href="/post/nodejs-backend-development-production-api.html">Node.js Production REST API Guide</a> to understand the differences between Java and JavaScript on the server.
+          </p>
+
+          <!-- Conversion CTA -->
+          <div style="background: var(--color-card); border: 2px solid var(--color-primary); padding: 2rem; border-radius: var(--radius); margin-top: 3rem; text-align: center; box-shadow: 0 4px 20px rgba(6,172,211,0.15);">
+            <h3 style="margin-top: 0; color: var(--color-primary); font-size: 1.5rem;">🚀 Need help building robust Java architectures?</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">I design scalable, production-ready Spring Boot systems for enterprise clients.</p>
+            <a href="https://dhirajroy.com" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: var(--color-primary); color: #fff; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: bold; transition: opacity 0.2s;">👉 Contact Me</a>
+          </div>
+
+        </div>
+
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer & tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/what-is-backend.html" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">What is Backend Development?</span>
+          </a>
+          <!-- No next post because this is the newest one -->
+        </nav>
+
+      </article>
+    </main>
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Back to top button — do NOT edit -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts — do NOT edit -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>

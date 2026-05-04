@@ -5,9 +5,20 @@
     <link>https://blog.dhirajroy.com</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <pubDate>Mon, 04 May 2026 22:38:37 GMT</pubDate>
-    <lastBuildDate>Mon, 04 May 2026 22:38:37 GMT</lastBuildDate>
+    <pubDate>Mon, 04 May 2026 22:45:34 GMT</pubDate>
+    <lastBuildDate>Mon, 04 May 2026 22:45:34 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>Spring Boot REST API (2026) – Java 21 Production Setup</title>
+      <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html</link>
+      <guid>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html</guid>
+      <pubDate>Mon, 04 May 2026 18:30:00 GMT</pubDate>
+      <description>Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture.</description>
+      <category>Java</category>
+      <category>Spring Boot</category>
+      <category>Backend</category>
+    </item>
 
     <item>
       <title>What is Backend Development? The Complete Beginner&apos;s Guide</title>

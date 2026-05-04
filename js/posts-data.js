@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 10,
+    slug: "spring-boot-rest-api-java-21-production-setup",
+    title: "Spring Boot REST API (2026) – Java 21 Production Setup",
+    summary: "Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture.",
+    date: "May 05, 2026",
+    dateISO: "2026-05-05",
+    url: "/post/spring-boot-rest-api-java-21-production-setup.html",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 18,
+    featured: false
+  },
+  {
     id: 9,
     slug: "what-is-backend",
     title: "What is Backend Development? The Complete Beginner's Guide",
