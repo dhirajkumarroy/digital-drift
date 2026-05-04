@@ -28,6 +28,18 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 11,
+    slug: "nodejs-jwt-auth",
+    title: "Node.js JWT Authentication (2026) – Build Secure Backend APIs",
+    summary: "Learn Node.js JWT Authentication from scratch. Master secure tokens, refresh flows, and build production-ready secure backend APIs.",
+    date: "May 05, 2026",
+    dateISO: "2026-05-05",
+    url: "/post/nodejs-jwt-auth",
+    tags: ["Node.js", "Backend", "Security"],
+    readTime: 12,
+    featured: false
+  },
+  {
     id: 10,
     slug: "spring-boot-rest-api-java-21-production-setup",
     title: "Spring Boot REST API (2026) – Java 21 Production Setup",
