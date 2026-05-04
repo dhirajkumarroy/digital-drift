@@ -5,14 +5,14 @@
     <link>https://blog.dhirajroy.com</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <pubDate>Mon, 04 May 2026 22:45:34 GMT</pubDate>
-    <lastBuildDate>Mon, 04 May 2026 22:45:34 GMT</lastBuildDate>
+    <pubDate>Mon, 04 May 2026 22:57:55 GMT</pubDate>
+    <lastBuildDate>Mon, 04 May 2026 22:57:55 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
 
     <item>
       <title>Spring Boot REST API (2026) – Java 21 Production Setup</title>
-      <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html</link>
-      <guid>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup.html</guid>
+      <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup</link>
+      <guid>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup</guid>
       <pubDate>Mon, 04 May 2026 18:30:00 GMT</pubDate>
       <description>Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture.</description>
       <category>Java</category>
@@ -33,8 +33,8 @@
 
     <item>
       <title>Node.js Backend Development (2026) – Build a Production-Ready REST API</title>
-      <link>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api.html</link>
-      <guid>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api.html</guid>
+      <link>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api</link>
+      <guid>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api</guid>
       <pubDate>Thu, 23 Apr 2026 18:30:00 GMT</pubDate>
       <description>Learn Node.js backend development from scratch. Master Express.js, async programming, and build a production-ready REST API. Complete 2026 developer guide.</description>
       <category>Node.js backend</category>

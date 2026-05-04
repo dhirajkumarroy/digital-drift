@@ -34,7 +34,7 @@ const BLOG_POSTS = [
     summary: "Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture.",
     date: "May 05, 2026",
     dateISO: "2026-05-05",
-    url: "/post/spring-boot-rest-api-java-21-production-setup.html",
+    url: "/post/spring-boot-rest-api-java-21-production-setup",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 18,
     featured: false
@@ -58,7 +58,7 @@ const BLOG_POSTS = [
     summary: "Learn Node.js backend development from scratch. Master Express.js, async programming, and build a production-ready REST API. Complete 2026 developer guide.",
     date: "Apr 24, 2026",
     dateISO: "2026-04-24",
-    url: "/post/nodejs-backend-development-production-api.html",
+    url: "/post/nodejs-backend-development-production-api",
     tags: ["Node.js backend", "Tech", "Programming"],
     readTime: 20,
     featured: false
