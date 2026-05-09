@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO — edit every line in this block ═══ -->
+  <title>Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions | Digital Drift</title>
+  <meta name="description" content="Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js and Node.js roles and permissions." />
+  <meta name="keywords" content="RBAC in Node.js, Role-Based Access Control Node.js, Node.js roles and permissions, secure API authorization Node.js, Backend, Production Ready" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions" />
+
+  <!-- Favicon — do NOT edit -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph — edit title, description, url -->
+  <meta property="og:title" content="Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions" />
+  <meta property="og:description" content="Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card — edit title, description -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions" />
+  <meta name="twitter:description" content="Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data (Article) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions",
+    "description": "Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-05-10",
+    "dateModified":  "2026-05-10",
+    "url": "https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions",
+    "keywords": ["RBAC in Node.js", "Role-Based Access Control Node.js", "Node.js roles and permissions"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Structured Data (FAQ) - RANKING BOOST -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is RBAC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "RBAC (Role-Based Access Control) is a method of restricting network access based on the roles of individual users within an enterprise. In Node.js, it typically involves assigning roles like Admin or User, and checking those roles before granting access to specific API routes."
+      }
+    }, {
+      "@type": "Question",
+      "name": "RBAC vs ABAC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "RBAC restricts access based on a user's role (e.g., Admin). ABAC (Attribute-Based Access Control) is more granular, restricting access based on attributes of the user, resource, or environment (e.g., 'only the author of this post can edit it')."
+      }
+    }, {
+      "@type": "Question",
+      "name": "Is RBAC scalable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, RBAC is highly scalable. By grouping permissions into roles, you only need to manage a few roles rather than assigning specific permissions to thousands of individual users."
+      }
+    }, {
+      "@type": "Question",
+      "name": "How secure is RBAC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "RBAC is very secure when implemented correctly on the backend. Never trust frontend permission checks; always enforce RBAC at the API middleware level to prevent unauthorized access."
+      }
+    }, {
+      "@type": "Question",
+      "name": "JWT authentication vs RBAC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They solve different problems. JWT authentication verifies WHO a user is. RBAC authorization verifies WHAT that authenticated user is allowed to do."
+      }
+    }]
+  }
+  </script>
+
+  <!-- Google Analytics — do NOT edit -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <!-- CSS — do NOT edit -->
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <!-- Reading progress bar — do NOT edit -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ════════════════════════════════════════ -->
+
+    <!-- ════════════════════════════════════════
+         ARTICLE — only edit inside <article>
+         ════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ─────────────────────────────────────── -->
+        <div class="tags">
+          <span class="tag" data-tag="Node.js">Node.js</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+          <span class="tag" data-tag="Security">Security</span>
+        </div>
+
+        <!-- ── 2. TITLE ────────────────────────────────────── -->
+        <h1 class="post-title">Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions</h1>
+
+        <!-- ── 3. META ─────────────────────────────────────── -->
+        <div class="post-meta">
+          <span>📅 May 10, 2026</span>
+          <span>⏱ 14 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ─────────────────────────────── -->
+        <div class="post-content">
+
+          <p>
+            Logging a user into your application is only half the battle. Authentication verifies <em>who</em> you are, but it does absolutely nothing to restrict <em>what</em> you can access. If your API relies solely on basic token verification, any authenticated user could potentially delete users, wipe databases, or access admin panels. That is where <strong>RBAC in Node.js</strong> becomes essential for surviving in production.
+          </p>
+
+          <div style="background: rgba(6,172,211,0.06); border-left: 4px solid var(--color-primary); padding: 1.5rem; margin: 2rem 0; border-radius: 0 var(--radius) var(--radius) 0;">
+            <p style="margin-top: 0;"><strong>In this guide, you will build a production-ready RBAC system in Node.js using JWT authentication, middleware, and role-based permissions.</strong></p>
+            <p style="margin-bottom: 0;">Whether you are building Enterprise APIs, robust Admin dashboards, or highly Secure backend systems, understanding how to lock down routes is mandatory. By the end of this guide, your APIs will be tightly secured against unauthorized horizontal and vertical access.</p>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;">
+            <strong>📌 Table of Contents</strong>
+            <ul style="margin-top: 1rem;">
+              <li><a href="#what-is-rbac">What is RBAC in Node.js?</a></li>
+              <li><a href="#why-rbac">Why RBAC in Node.js Matters in Production</a></li>
+              <li><a href="#implementation">Step-by-Step Implementation</a></li>
+              <li><a href="#production">Production-Level Improvements</a></li>
+              <li><a href="#mistakes">Common Mistakes</a></li>
+              <li><a href="#use-cases">Real-World Use Cases</a></li>
+              <li><a href="#faq">Frequently Asked Questions (FAQ)</a></li>
+            </ul>
+          </div>
+
+          <blockquote>
+            Missing the basics? Read our guide on <a href="/post/nodejs-jwt-auth">Node.js Refresh Token Authentication</a> before diving into authorization.
+          </blockquote>
+
+          <h2 id="what-is-rbac">What is RBAC in Node.js?</h2>
+          <p>
+            Role-Based Access Control (RBAC) is an authorization paradigm that restricts system access to authorized users based on their assigned role. Instead of assigning individual permissions to every single user, you group permissions into roles.
+          </p>
+          <ul>
+            <li><strong>Roles:</strong> A defined job function or title (e.g., <code>Admin</code>, <code>User</code>, <code>Moderator</code>).</li>
+            <li><strong>Permissions:</strong> The specific actions allowed (e.g., <code>delete:users</code>, <code>read:posts</code>, <code>edit:comments</code>).</li>
+            <li><strong>Access Control:</strong> The middleware that actively checks if the user's role has the required permission before executing the controller logic.</li>
+          </ul>
+
+          <h2 id="why-rbac">Why RBAC in Node.js Matters in Production</h2>
+          <p>
+            When scaling an application beyond a simple hobby project, authorization becomes the backbone of your API security. 
+          </p>
+          <ul>
+            <li><strong>API Security:</strong> Prevents vertical privilege escalation (a standard user accessing an admin endpoint).</li>
+            <li><strong>Permission Management:</strong> Changing an <code>Admin</code>'s rights updates everyone with that role instantly.</li>
+            <li><strong>Scalability:</strong> Managing 5 roles is exponentially easier than managing 500,000 unique user permissions.</li>
+            <li><strong>Team Systems & SaaS Applications:</strong> Platforms like GitHub (Owner, Maintainer, Contributor), Netflix (Kids profile vs Adult), and Banking dashboards all rely heavily on strict RBAC models to isolate data and actions.</li>
+          </ul>
+
+          <h2 id="implementation">Step-by-Step Implementation</h2>
+          <p>
+            We will implement a clean, middleware-driven secure API authorization Node.js structure.
+          </p>
+
+          <h3>1. Project Setup</h3>
+          <p>Install the required packages to handle JWTs and Express middleware.</p>
+          <pre><code>npm install express jsonwebtoken dotenv mongoose</code></pre>
+
+          <h3>2. User Role Model</h3>
+          <p>Your database schema must define the user's role. Here is how it looks in Mongoose (MongoDB):</p>
+          <pre><code>// models/User.js
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { 
+    type: String, 
+    enum: ['user', 'moderator', 'admin'], 
+    default: 'user' 
+  }
+});
+
+module.exports = mongoose.model('User', userSchema);</code></pre>
+
+          <h3>3. JWT Authentication Middleware</h3>
+          <p>Before checking <em>roles</em>, we must establish <em>identity</em>. This middleware verifies the token and attaches the user payload (which includes their role) to the request.</p>
+          <pre><code>// middleware/auth.middleware.js
+const jwt = require('jsonwebtoken');
+
+exports.requireAuth = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Contains { userId, role }
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};</code></pre>
+
+          <h3>4. Role Middleware (The RBAC Engine)</h3>
+          <p>Now, we create a dynamic middleware factory that accepts allowed roles and blocks anyone else.</p>
+          <pre><code>// middleware/role.middleware.js
+
+exports.requireRole = (...allowedRoles) => {
+  return (req, res, next) => {
+    // req.user is set by the requireAuth middleware
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ 
+        error: 'Forbidden: You do not have the required permissions.' 
+      });
+    }
+    next();
+  };
+};</code></pre>
+
+          <h3>5. Protected Routes & Admin-Only Routes</h3>
+          <p>Combine both middlewares in your Express router to securely lock down endpoints.</p>
+          <pre><code>// routes/api.js
+const express = require('express');
+const router = express.Router();
+const { requireAuth } = require('../middleware/auth.middleware');
+const { requireRole } = require('../middleware/role.middleware');
+
+// 🟢 Accessible to any authenticated user
+router.get('/profile', requireAuth, (req, res) => {
+  res.json({ message: 'Welcome to your profile.' });
+});
+
+// 🟡 Accessible to Moderators and Admins
+router.delete('/comments/:id', requireAuth, requireRole('moderator', 'admin'), (req, res) => {
+  res.json({ message: 'Comment deleted successfully.' });
+});
+
+// 🔴 Admin-only route
+router.get('/dashboard', requireAuth, requireRole('admin'), (req, res) => {
+  res.json({ message: 'Welcome to the super secret admin dashboard.' });
+});
+
+module.exports = router;</code></pre>
+
+          <h2 id="production">Production-Level Improvements</h2>
+          <p>
+            The setup above is excellent, but to achieve a truly enterprise-grade system, consider these Node.js roles and permissions upgrades:
+          </p>
+          <ul>
+            <li><strong>Database-Driven Permissions:</strong> Instead of hardcoding <code>requireRole('admin')</code>, fetch a permissions matrix from the database. This allows you to add new roles without redeploying code.</li>
+            <li><strong>Dynamic Roles:</strong> Support users holding multiple roles simultaneously (e.g., an array of roles `['editor', 'moderator']`).</li>
+            <li><strong>Permission Caching:</strong> If using database-driven roles, cache the permissions matrix in Redis to avoid querying your SQL/NoSQL database on every single API request.</li>
+            <li><strong>Audit Logging:</strong> Log every time an <code>Admin</code> performs a destructive action (like deleting a user). This is critical for compliance and security forensics.</li>
+            <li><strong>Rate Limiting:</strong> Apply stricter rate limits to authentication and high-privilege endpoints to thwart brute-force attacks.</li>
+          </ul>
+
+          <h2 id="mistakes">Common Mistakes</h2>
+          <p>Watch out for these severe security vulnerabilities:</p>
+          <ul>
+            <li><strong>Trusting Frontend Permissions:</strong> Hiding a "Delete" button in React does NOT secure your app. An attacker can easily use Postman to hit the API endpoint directly. Always enforce RBAC on the backend.</li>
+            <li><strong>No Middleware Separation:</strong> Checking roles directly inside your controller logic creates messy, unmaintainable code that is prone to human error. Keep it in middleware.</li>
+            <li><strong>Weak Admin Route Protection:</strong> Forgetting to add <code>requireAuth</code> before <code>requireRole</code>. The role middleware will crash or fail open if <code>req.user</code> is undefined.</li>
+          </ul>
+
+          <div style="background:#1e293b; border-left:4px solid #ef4444; padding:1rem; margin:1.5rem 0; color: #f8fafc;">
+            ⚠️ <strong>Warning:</strong> If you include the user's role directly in the JWT payload, remember that JWTs are immutable. If you demote an Admin to a User, their existing JWT will still say 'admin' until it expires. You must handle token revocation for privilege changes!
+          </div>
+
+          <h2 id="use-cases">Real-World Use Cases</h2>
+          <p>RBAC is the foundation of digital collaboration:</p>
+          <ul>
+            <li><strong>SaaS Dashboards:</strong> Differentiating between "Account Owner", "Billing Manager", and "Viewer".</li>
+            <li><strong>E-commerce Admin Systems:</strong> Allowing support staff to refund orders without giving them access to the global product catalog.</li>
+            <li><strong>Team Collaboration Platforms:</strong> Project managers can invite users, while standard members can only upload files.</li>
+            <li><strong>Banking Systems:</strong> Tellers can view balances, but only branch managers can approve large wire transfers.</li>
+          </ul>
+
+          <h2 id="faq">Frequently Asked Questions (FAQ)</h2>
+          <div class="faq-section" style="margin-top: 1.5rem;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">What is RBAC?</h3>
+            <p style="margin-top: 0;">RBAC (Role-Based Access Control) is a method of restricting network access based on the roles of individual users within an enterprise. In Node.js, it typically involves assigning roles like Admin or User, and checking those roles before granting access to specific API routes.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">RBAC vs ABAC?</h3>
+            <p style="margin-top: 0;">RBAC restricts access based on a user's role (e.g., Admin). ABAC (Attribute-Based Access Control) is more granular, restricting access based on attributes of the user, resource, or environment (e.g., 'only the author of this post can edit it').</p>
+            
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Is RBAC scalable?</h3>
+            <p style="margin-top: 0;">Yes, RBAC is highly scalable. By grouping permissions into roles, you only need to manage a few roles rather than assigning specific permissions to thousands of individual users.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">How secure is RBAC?</h3>
+            <p style="margin-top: 0;">RBAC is very secure when implemented correctly on the backend. Never trust frontend permission checks; always enforce RBAC at the API middleware level to prevent unauthorized access.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">JWT authentication vs RBAC?</h3>
+            <p style="margin-top: 0;">They solve different problems. JWT authentication verifies WHO a user is. RBAC authorization verifies WHAT that authenticated user is allowed to do.</p>
+          </div>
+
+          <h2 id="takeaways">Key Takeaways</h2>
+          <ul>
+            <li>Authentication (Identity) must be paired with Authorization (Permissions).</li>
+            <li>Use Express middleware to cleanly abstract role-checking logic away from your controllers.</li>
+            <li>Never rely on frontend UI hiding to secure sensitive actions.</li>
+            <li>For enterprise scale, evolve from hardcoded roles to a database-driven permissions matrix cached in Redis.</li>
+          </ul>
+
+          <!-- Conclusion — required, always last section -->
+          <h2 id="next">What's Next in Your Backend Journey?</h2>
+          <p>
+            Securing routes is a massive milestone. The next steps involve protecting your infrastructure from abuse using API rate limiting, delegating access using OAuth2, locking down Microservices security, and mastering Docker deployment to ship your application reliably.
+          </p>
+          
+          <!-- INTERNAL LINK STRATEGY -->
+          <p>Check out our related guides:</p>
+          <ul>
+            <li><a href="/post/nodejs-jwt-auth">Refresh Token Authentication Guide</a></li>
+            <li><a href="/post/what-is-backend">Backend Roadmap</a></li>
+            <li><a href="/post/docker-complete-guide">Docker Guide</a></li>
+          </ul>
+
+          <!-- CTA (CONVERSION LAYER) -->
+          <div style="background: var(--color-card); border: 2px solid var(--color-primary); padding: 2rem; border-radius: var(--radius); margin-top: 3rem; text-align: center; box-shadow: 0 4px 20px rgba(6,172,211,0.15);">
+            <h3 style="margin-top: 0; color: var(--color-primary); font-size: 1.5rem;">🚀 Need help building backend or AI-powered systems?</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 0; font-weight: bold;">👉 <a href="https://dhirajroy.com" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary);">https://dhirajroy.com</a></p>
+          </div>
+
+        </div>
+        <!-- END .post-content -->
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ──────────────── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+        <!-- ── 6. POST NAVIGATION ──────────────────────────── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/nodejs-jwt-auth" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Node.js JWT Refresh Tokens</span>
+          </a>
+          <!-- No next post -->
+        </nav>
+
+      </article>
+    </main>
+    <!-- ════════════════════════════════════════ -->
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- do NOT edit these three lines -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+
+</body>
+</html>

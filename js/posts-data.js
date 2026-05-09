@@ -28,12 +28,25 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 12,
+    slug: "nodejs-rbac-roles-permissions",
+    title: "Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions",
+    summary: "Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js and Node.js roles and permissions.",
+    date: "May 10, 2026",
+    dateISO: "2026-05-10",
+    url: "/post/nodejs-rbac-roles-permissions",
+    tags: ["Node.js", "Backend", "Security"],
+    readTime: 14,
+    featured: false
+  },
+
+  {
     id: 11,
     slug: "nodejs-jwt-auth",
-    title: "Node.js JWT Authentication (2026) – Build Secure Backend APIs",
-    summary: "Learn Node.js JWT Authentication from scratch. Master secure tokens, refresh flows, and build production-ready secure backend APIs.",
-    date: "May 05, 2026",
-    dateISO: "2026-05-05",
+    title: "Node.js Refresh Token Authentication (2026) – Secure Scalable Login Systems",
+    summary: "Master Node.js Refresh Token Authentication. Build a secure authentication Node.js system with JWT refresh token Node.js and a scalable refresh token implementation.",
+    date: "May 10, 2026",
+    dateISO: "2026-05-10",
     url: "/post/nodejs-jwt-auth",
     tags: ["Node.js", "Backend", "Security"],
     readTime: 12,
