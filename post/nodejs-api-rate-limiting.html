@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO — edit every line in this block ═══ -->
+  <title>API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse | Digital Drift</title>
+  <meta name="description" content="Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js." />
+  <meta name="keywords" content="API Rate Limiting in Node.js, Node.js rate limiting, Protect APIs from abuse, Express rate limit, API security Node.js, Backend, Production Ready" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/nodejs-api-rate-limiting" />
+
+  <!-- Favicon — do NOT edit -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph — edit title, description, url -->
+  <meta property="og:title" content="API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse" />
+  <meta property="og:description" content="Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/nodejs-api-rate-limiting" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card — edit title, description -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse" />
+  <meta name="twitter:description" content="Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data (Article) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse",
+    "description": "Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-05-18",
+    "dateModified":  "2026-05-18",
+    "url": "https://blog.dhirajroy.com/post/nodejs-api-rate-limiting",
+    "keywords": ["API Rate Limiting in Node.js", "Node.js rate limiting", "Protect APIs from abuse", "Express rate limit", "API security Node.js"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Structured Data (FAQ) - RANKING BOOST -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is API rate limiting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "API rate limiting is a technique used to control the amount of incoming traffic to a server. It restricts the number of requests a user or IP can make within a specific time window, protecting the system from overload and abuse."
+      }
+    }, {
+      "@type": "Question",
+      "name": "How does express-rate-limit work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The express-rate-limit middleware intercepts incoming HTTP requests in a Node.js Express application, checks the requester's IP or user ID against a tracking store, and blocks the request with a 429 status code if the limit for the configured time window is exceeded."
+      }
+    }, {
+      "@type": "Question",
+      "name": "Can rate limiting stop DDoS attacks?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Rate limiting can mitigate small-scale application-layer DDoS attacks and accidental traffic spikes. However, for massive network-level DDoS attacks, you need dedicated infrastructure solutions like Cloudflare or AWS Shield."
+      }
+    }, {
+      "@type": "Question",
+      "name": "Redis vs memory store for rate limiting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A memory store works for single-server setups, but if your API scales across multiple instances or pods, memory stores fail to sync limits. Redis provides a centralized, extremely fast, distributed store necessary for production environments."
+      }
+    }, {
+      "@type": "Question",
+      "name": "What is the best rate limiting strategy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best strategy involves multi-layered limits: a generous global limit for IP addresses, strict limits for sensitive endpoints like login and password reset, and user-based limits to ensure fair usage across authenticated accounts."
+      }
+    }]
+  }
+  </script>
+
+  <!-- Google Analytics — do NOT edit -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <!-- CSS — do NOT edit -->
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <!-- Reading progress bar — do NOT edit -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ════════════════════════════════════════ -->
+
+    <!-- ════════════════════════════════════════
+         ARTICLE — only edit inside <article>
+         ════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ─────────────────────────────────────── -->
+        <div class="tags">
+          <span class="tag" data-tag="Node.js">Node.js</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+          <span class="tag" data-tag="Security">Security</span>
+        </div>
+
+        <!-- ── 2. TITLE ────────────────────────────────────── -->
+        <h1 class="post-title">API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse</h1>
+
+        <!-- ── 3. META ─────────────────────────────────────── -->
+        <div class="post-meta">
+          <span>📅 May 18, 2026</span>
+          <span>⏱ 14 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ─────────────────────────────── -->
+        <div class="post-content">
+
+          <p>
+            Building a robust backend isn't just about making endpoints work; it's about keeping them alive under immense pressure. Without proper safeguards, public APIs are incredibly vulnerable. From malicious brute-force attacks and DDoS (Distributed Denial of Service) to simple accidental traffic spikes caused by a buggy client, API abuse can bring down your entire infrastructure. That's why implementing <strong>API Rate Limiting in Node.js</strong> is a non-negotiable requirement for any production environment.
+          </p>
+
+          <div style="background: rgba(6,172,211,0.06); border-left: 4px solid var(--color-primary); padding: 1.5rem; margin: 2rem 0; border-radius: 0 var(--radius) var(--radius) 0;">
+            <p style="margin-top: 0;"><strong>In this guide, you will build a production-ready rate limiting system in Node.js to protect APIs from abuse, brute-force attacks, and excessive traffic.</strong></p>
+            <p style="margin-bottom: 0;">We will explore real-world backend architecture, scalable infrastructure techniques, and the API security measures deployed by modern enterprise systems.</p>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;">
+            <strong>📌 Table of Contents</strong>
+            <ul style="margin-top: 1rem;">
+              <li><a href="#what-is-api-rate-limiting">What is API Rate Limiting in Node.js?</a></li>
+              <li><a href="#why-it-matters">Why Rate Limiting Matters in Production</a></li>
+              <li><a href="#implementation">Step-by-Step Implementation with Express</a></li>
+              <li><a href="#production-improvements">Production-Level API Rate Limiting in Node.js</a></li>
+              <li><a href="#common-mistakes">Common Mistakes to Avoid</a></li>
+              <li><a href="#real-world-cases">Real-World Use Cases</a></li>
+              <li><a href="#faq">Frequently Asked Questions (FAQ)</a></li>
+            </ul>
+          </div>
+
+          <h2 id="what-is-api-rate-limiting">What is API Rate Limiting in Node.js?</h2>
+          <p>
+            Rate limiting is a foundational networking strategy used to control the rate of traffic sent or received by a system. In the context of web development, <strong>Node.js rate limiting</strong> means restricting the number of requests a client (identified by IP address, user ID, or API key) can make within a specified time window.
+          </p>
+          <p>
+            Think of it like a bouncer at a nightclub. The bouncer ensures the club doesn't exceed its maximum capacity, preventing chaos inside. If a single person tries to enter 50 times in one minute, the bouncer steps in and says, <em>"Hold on, you need to wait."</em> In API terms, this translates to returning an HTTP status code <code>429 Too Many Requests</code>.
+          </p>
+          <ul>
+            <li><strong>Request limits:</strong> The maximum number of API calls allowed.</li>
+            <li><strong>Time windows:</strong> The duration in which requests are tracked (e.g., 100 requests per 15 minutes).</li>
+            <li><strong>IP-based limits:</strong> Tracking requests via the client's IP address (useful for unauthenticated routes).</li>
+            <li><strong>User-based limits:</strong> Tracking requests via an authenticated user ID to prevent account abuse across multiple IPs.</li>
+          </ul>
+
+          <h2 id="why-it-matters">Why Rate Limiting Matters in Production</h2>
+          <p>
+            To <strong>protect APIs from abuse</strong>, you cannot rely on hoping users behave. Real-world systems constantly face automated scrapers, bad actors, and runaway client scripts. Here is why rate limiting is essential for API scalability:
+          </p>
+          <ul>
+            <li><strong>Preventing Abuse and Scraping:</strong> Without limits, someone could scrape your entire database via your public REST API in seconds.</li>
+            <li><strong>Preventing Brute-Force Attacks:</strong> Attackers often try thousands of passwords per second on login endpoints. Strict rate limits (e.g., 5 attempts per 15 minutes) stop them cold.</li>
+            <li><strong>Server Stability:</strong> Traffic spikes can exhaust CPU, memory, or database connections, causing cascading failures. Rate limits ensure your Node.js event loop remains responsive.</li>
+            <li><strong>Cost Reduction:</strong> If you use serverless functions or pay-per-query databases, unbound traffic translates to massive infrastructure bills.</li>
+          </ul>
+          <p>
+            Major tech companies heavily rely on this. The <em>GitHub API</em> strictly limits unauthenticated requests to 60 per hour. The <em>Stripe API</em> guarantees consistent performance during massive sales events by imposing precise rate limits. Infrastructure giants like <em>Cloudflare</em> operate extensive rate limiting at the network edge.
+          </p>
+
+          <h2 id="implementation">Step-by-Step Implementation</h2>
+          <p>
+            Let's get our hands dirty. We will build a robust middleware architecture using the popular <strong>Express rate limit</strong> library.
+          </p>
+
+          <h3>Step 1: Project Setup</h3>
+          <p>Initialize your Node.js environment and install the required packages. We will use Express, express-rate-limit, and dotenv.</p>
+          <pre><code>npm install express express-rate-limit dotenv</code></pre>
+
+          <h3>Step 2: Configure Global Rate Limiting</h3>
+          <p>First, create a global middleware to protect your entire backend from basic volumetric abuse. We will set this up in our main <code>server.js</code> or <code>app.js</code> file.</p>
+          <pre><code>// server.js
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+require('dotenv').config();
+
+const app = express();
+app.use(express.json());
+
+// 1. Define the Global Rate Limiter
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too many requests from this IP, please try again after 15 minutes'
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+// Apply global limiter to all routes
+app.use(globalLimiter);
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'API is running smoothly' });
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+</code></pre>
+
+          <h3>Step 3: Auth Route Protection (Strict Limits)</h3>
+          <p>Global limits are great, but authentication endpoints require much stricter rules to prevent brute-force attacks.</p>
+          <pre><code>// routes/auth.js
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const router = express.Router();
+
+// 2. Define strict limits for login
+const loginLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 5, // Start blocking after 5 requests
+  message: {
+    error: 'Too many login attempts, please try again after an hour'
+  }
+});
+
+// Apply ONLY to the login route
+router.post('/login', loginLimiter, async (req, res) => {
+  const { email, password } = req.body;
+  // ... authentication logic ...
+  res.json({ message: 'Login successful' });
+});
+
+module.exports = router;
+</code></pre>
+
+          <div style="background:#0f172a; border-left:4px solid #22c55e; padding:1rem; margin:1.5rem 0; color: #f8fafc;">
+            💡 <strong>Pro Tip:</strong> To properly integrate this with a comprehensive auth flow, check out our guide on <a href="/post/nodejs-jwt-auth" style="color: #38bdf8;">JWT Authentication and Refresh Tokens</a>.
+          </div>
+
+          <h2 id="production-improvements">Production-Level API Rate Limiting in Node.js</h2>
+          <p>
+            The basic implementation above stores request data in memory. This is fine for development or single-server setups, but it completely breaks down in modern, highly available environments.
+          </p>
+          
+          <h3>1. Redis-Based Distributed Rate Limiting</h3>
+          <p>If you run your API across multiple instances (e.g., using Kubernetes or PM2 cluster mode), a client could hit Server A and exhaust its limit, but still have full access to Server B. To solve this, you need a centralized store. Redis is the industry standard for this.</p>
+          <pre><code>// Install: npm install redis rate-limit-redis
+const redis = require('redis');
+const RedisStore = require('rate-limit-redis');
+
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL
+});
+// Don't forget to connect!
+await redisClient.connect();
+
+const distributedLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  // 3. Use Redis as the distributed store
+  store: new RedisStore({
+    sendCommand: (...args) => redisClient.sendCommand(args),
+  }),
+});
+</code></pre>
+
+          <h3>2. Reverse Proxy Handling</h3>
+          <p>If your Node.js app is behind a reverse proxy like Nginx, AWS ALB, or Cloudflare, <code>req.ip</code> will return the IP of the proxy, not the actual user. This means one bad user will cause everyone on the proxy to get rate-limited.</p>
+          <p>To fix this, configure Express to trust the proxy, which allows it to correctly read the <code>X-Forwarded-For</code> header.</p>
+          <pre><code>// Enable trust proxy in Express
+app.set('trust proxy', 1 /* number of proxies between user and server */);
+</code></pre>
+
+          <h3>3. User-Based Limits</h3>
+          <p>Instead of just IP limiting, track limits based on the user's ID or API Key. This guarantees fair usage and prevents authenticated users from bypassing limits by cycling through VPNs.</p>
+          <pre><code>const apiTierLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: (req, res) => {
+    // Determine limit dynamically based on user subscription tier
+    if (req.user.tier === 'premium') return 1000;
+    return 100;
+  },
+  keyGenerator: (req, res) => {
+    // 4. Use User ID instead of IP
+    return req.user.id || req.ip; 
+  }
+});
+</code></pre>
+
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <p>Even senior engineers can misconfigure <strong>API security in Node.js</strong>. Watch out for these pitfalls:</p>
+          <ul>
+            <li><strong>Using Only IP Limits:</strong> Attackers can easily rotate IPs using botnets or proxies. Combine IP limits with user-based limits and CAPTCHAs for critical endpoints.</li>
+            <li><strong>No Distributed Storage:</strong> Relying on the default memory store in a multi-container deployment makes your limits meaningless.</li>
+            <li><strong>Blocking Legitimate Users:</strong> Setting global limits too low will cause legitimate users (like an office sharing a single IP) to be blocked. Monitor your metrics before enforcing strict limits.</li>
+            <li><strong>Weak Limit Configurations:</strong> Setting the brute-force limit to 100 attempts per minute on a login route is practically useless.</li>
+          </ul>
+
+          <h2 id="real-world-cases">Real-World Use Cases</h2>
+          <p>Different endpoints require entirely different rate limiting strategies:</p>
+          <ul>
+            <li><strong>Authentication APIs:</strong> Strictly limit <code>/login</code>, <code>/forgot-password</code>, and <code>/register</code> to prevent credential stuffing and spam accounts.</li>
+            <li><strong>Payment Gateways:</strong> When hitting third-party APIs (like Stripe), rate limit your own outbound requests to ensure you don't hit the provider's limits.</li>
+            <li><strong>Public REST APIs:</strong> Offer a generous IP-based limit for unauthenticated users, and a higher, API key-bound limit for registered developers.</li>
+            <li><strong>AI APIs:</strong> Since AI text generation (like OpenAI integrations) is computationally expensive, implement strict user-based limits to control costs.</li>
+          </ul>
+
+          <h2 id="faq">Frequently Asked Questions (FAQ)</h2>
+          <div class="faq-section" style="margin-top: 1.5rem;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">What is API rate limiting?</h3>
+            <p style="margin-top: 0;">API rate limiting is a technique used to control the amount of incoming traffic to a server. It restricts the number of requests a user or IP can make within a specific time window, protecting the system from overload and abuse.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">How does express-rate-limit work?</h3>
+            <p style="margin-top: 0;">The express-rate-limit middleware intercepts incoming HTTP requests in a Node.js Express application, checks the requester's IP or user ID against a tracking store, and blocks the request with a 429 status code if the limit for the configured time window is exceeded.</p>
+            
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Can rate limiting stop DDoS attacks?</h3>
+            <p style="margin-top: 0;">Rate limiting can mitigate small-scale application-layer DDoS attacks and accidental traffic spikes. However, for massive network-level DDoS attacks, you need dedicated infrastructure solutions like Cloudflare or AWS Shield.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Redis vs memory store for rate limiting?</h3>
+            <p style="margin-top: 0;">A memory store works for single-server setups, but if your API scales across multiple instances or pods, memory stores fail to sync limits. Redis provides a centralized, extremely fast, distributed store necessary for production environments.</p>
+
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">What is the best rate limiting strategy?</h3>
+            <p style="margin-top: 0;">The best strategy involves multi-layered limits: a generous global limit for IP addresses, strict limits for sensitive endpoints like login and password reset, and user-based limits to ensure fair usage across authenticated accounts.</p>
+          </div>
+
+          <h2 id="takeaways">Key Takeaways</h2>
+          <ul>
+            <li>Public APIs must have rate limiting to survive brute-force attacks and traffic spikes.</li>
+            <li>Use <code>express-rate-limit</code> for quick middleware integration.</li>
+            <li>Always use Redis or a distributed store when running multiple server instances.</li>
+            <li>Configure <code>trust proxy</code> when running behind Nginx or Cloudflare.</li>
+            <li>Apply strict, specialized limits to sensitive routes like authentication and payments.</li>
+          </ul>
+
+          <!-- Conclusion — required, always last section -->
+          <h2 id="next">What's Next in Your Backend Journey?</h2>
+          <p>
+            Now that you have protected your API from brute-force attacks and excessive traffic, you should ensure that authenticated users have the correct permissions. Explore implementing robust user roles and privileges, or dive deeper into infrastructure management.
+          </p>
+          
+          <!-- INTERNAL LINK STRATEGY -->
+          <p>Check out our related guides:</p>
+          <ul>
+            <li><a href="/post/nodejs-rbac-roles-permissions">Node.js RBAC Guide (Role-Based Access Control)</a></li>
+            <li><a href="/post/nodejs-jwt-auth">Secure JWT Refresh Token Auth</a></li>
+            <li><a href="/post/docker-complete-guide">Docker Guide for Backend Deployment</a></li>
+          </ul>
+
+          <!-- CTA (CONVERSION LAYER) -->
+          <div style="background: var(--color-card); border: 2px solid var(--color-primary); padding: 2rem; border-radius: var(--radius); margin-top: 3rem; text-align: center; box-shadow: 0 4px 20px rgba(6,172,211,0.15);">
+            <h3 style="margin-top: 0; color: var(--color-primary); font-size: 1.5rem;">🚀 Need help building backend or AI-powered systems?</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 0; font-weight: bold;">👉 <a href="https://dhirajroy.com" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary);">https://dhirajroy.com</a></p>
+          </div>
+
+        </div>
+        <!-- END .post-content -->
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ──────────────── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+        <!-- ── 6. POST NAVIGATION ──────────────────────────── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/nodejs-rbac-roles-permissions" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Node.js RBAC Guide</span>
+          </a>
+          <!-- No next post -->
+        </nav>
+
+      </article>
+    </main>
+    <!-- ════════════════════════════════════════ -->
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- do NOT edit these three lines -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+
+</body>
+</html>

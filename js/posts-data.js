@@ -28,6 +28,19 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 13,
+    slug: "nodejs-api-rate-limiting",
+    title: "API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse",
+    summary: "Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js.",
+    date: "May 18, 2026",
+    dateISO: "2026-05-18",
+    url: "/post/nodejs-api-rate-limiting",
+    tags: ["Node.js", "Backend", "Security"],
+    readTime: 14,
+    featured: false
+  },
+
+  {
     id: 12,
     slug: "nodejs-rbac-roles-permissions",
     title: "Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions",
