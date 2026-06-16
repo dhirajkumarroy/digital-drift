@@ -28,6 +28,19 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 14,
+    slug: "spring-boot-rest-api-30-minutes",
+    title: "How to Build a REST API with Spring Boot in 30 Minutes",
+    summary: "Build a Spring Boot REST API in 30 minutes with CRUD endpoints, Java records, JSON requests, and curl testing.",
+    date: "Jun 16, 2026",
+    dateISO: "2026-06-16",
+    url: "/post/spring-boot-rest-api-30-minutes",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 10,
+    featured: false
+  },
+
+  {
     id: 13,
     slug: "nodejs-api-rate-limiting",
     title: "API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse",

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO — edit every line in this block ═══ -->
+  <title>How to Build a REST API with Spring Boot in 30 Minutes | Digital Drift</title>
+  <meta name="description" content="Build a REST API with Spring Boot in 30 minutes. Create a Java project, add CRUD endpoints, test with curl, and understand the core annotations." />
+  <meta name="keywords" content="Spring Boot REST API, Java REST API, Spring Boot, Backend, CRUD API, Spring Web" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph — edit title, description, url -->
+  <meta property="og:title" content="How to Build a REST API with Spring Boot in 30 Minutes" />
+  <meta property="og:description" content="A practical 30-minute guide to building a Spring Boot REST API with CRUD endpoints, JSON responses, and curl tests." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="How to Build a REST API with Spring Boot in 30 Minutes" />
+  <meta name="twitter:description" content="A practical 30-minute guide to building a Spring Boot REST API with CRUD endpoints, JSON responses, and curl tests." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data — edit headline, description, datePublished, dateModified, url, keywords -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Build a REST API with Spring Boot in 30 Minutes",
+    "description": "Build a REST API with Spring Boot in 30 minutes using Spring Web, Java records, CRUD endpoints, and curl tests.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-06-16",
+    "dateModified":  "2026-06-16",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes",
+    "keywords": ["Spring Boot REST API", "Java", "REST API", "CRUD API", "Backend"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <!-- Reading progress bar (fixed, top of viewport) -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ══════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ══════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile nav — do NOT edit -->
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- ══════════════════════════════════════════
+         ARTICLE — edit everything inside <article>
+         ══════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ──────────────────────────────────────
+             Use data-tag="X" to get automatic colour coding.
+             Supported colours: Java · Spring Boot · Python · AI
+             · Backend · Education · Roadmap · Productivity · Tech
+             ─────────────────────────────────────────────────── -->
+        <div class="tags">
+          <span class="tag" data-tag="Java">Java</span>
+          <span class="tag" data-tag="Spring Boot">Spring Boot</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+
+        <!-- ── 2. TITLE ─────────────────────────────────── -->
+        <h1 class="post-title">How to Build a REST API with Spring Boot in 30 Minutes</h1>
+
+        <!-- ── 3. META ──────────────────────────────────────
+             Format: 📅 Month DD, YYYY · ⏱ X min read · ✍ Author
+             ─────────────────────────────────────────────────── -->
+        <div class="post-meta">
+          <span>📅 Jun 16, 2026</span>
+          <span>⏱ 10 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ──────────────────────────────
+             Allowed elements inside .post-content:
+               <p>             — paragraph
+               <h2>            — section heading
+               <h3>            — sub-section heading
+               <ul><li>        — bullet list
+               <ol><li>        — numbered list
+               <pre><code>     — code block (gets a Copy button automatically)
+               <code>          — inline code (inside a <p>)
+               <blockquote>    — pull quote / callout
+               <strong>        — bold emphasis
+               <em>            — italic emphasis
+               <a href="">     — hyperlink
+             ─────────────────────────────────────────────────── -->
+        <div class="post-content">
+
+          <p>
+            If you know basic Java, you can build a REST API with Spring Boot in 30 minutes.
+            In this guide, we will create a small <strong>Task API</strong> with endpoints to list,
+            create, update, and delete tasks. We will keep the project simple: no database, no
+            security, and no heavy architecture. The goal is to understand the moving parts first,
+            then you can replace the in-memory storage with a real database later.
+          </p>
+
+          <blockquote>
+            <strong>What you will build:</strong> a working JSON API at <code>/api/tasks</code>
+            using Spring Boot, Spring Web, Java records, and standard HTTP methods.
+          </blockquote>
+
+          <h2>Prerequisites</h2>
+          <p>
+            Before starting, make sure you have Java installed and an editor ready. Java 17 or
+            newer is recommended for modern Spring Boot projects. You should also have a terminal
+            available so you can run the app and test the endpoints with <code>curl</code>.
+          </p>
+          <ul>
+            <li>Java 17 or newer</li>
+            <li>IntelliJ IDEA, VS Code, or another Java editor</li>
+            <li>Maven wrapper from the generated Spring Boot project</li>
+            <li>Basic knowledge of classes, methods, and HTTP requests</li>
+          </ul>
+
+          <h2>Minute 0-5: Create the Spring Boot Project</h2>
+          <p>
+            Open <a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">Spring Initializr</a>
+            and create a project with these options:
+          </p>
+          <ul>
+            <li><strong>Project:</strong> Maven</li>
+            <li><strong>Language:</strong> Java</li>
+            <li><strong>Spring Boot:</strong> latest stable version</li>
+            <li><strong>Java:</strong> 17 or newer</li>
+            <li><strong>Dependency:</strong> Spring Web</li>
+          </ul>
+          <p>
+            Download the project, unzip it, and open it in your editor. The important dependency
+            is <code>spring-boot-starter-web</code>, which gives you Spring MVC, JSON support,
+            and an embedded Tomcat server.
+          </p>
+          <pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+
+          <h2>Minute 5-8: Understand the Project Structure</h2>
+          <p>
+            A fresh Spring Boot project looks small because most configuration is automatic.
+            For this tutorial, we will add three files inside the main package.
+          </p>
+          <pre><code>src/
+├── main/
+│   ├── java/com/example/demo/
+│   │   ├── DemoApplication.java
+│   │   ├── Task.java
+│   │   └── TaskController.java
+│   └── resources/
+│       └── application.properties
+└── test/</code></pre>
+          <p>
+            Keep new Java files in the same package as <code>DemoApplication.java</code> or in
+            a child package. That lets Spring Boot discover your controller automatically.
+          </p>
+
+          <h2>Minute 8-12: Create the Task Model</h2>
+          <p>
+            Create a file named <code>Task.java</code>. A Java record is perfect for a simple
+            API response because it is concise, immutable, and automatically serialised to JSON
+            by Spring Boot.
+          </p>
+          <pre><code>package com.example.demo;
+
+public record Task(
+    Long id,
+    String title,
+    boolean completed
+) {}</code></pre>
+          <p>
+            When a controller returns a <code>Task</code>, Spring Boot converts it into JSON like this:
+          </p>
+          <pre><code>{
+  "id": 1,
+  "title": "Learn Spring Boot",
+  "completed": false
+}</code></pre>
+
+          <h2>Minute 12-22: Build the REST Controller</h2>
+          <p>
+            Now create <code>TaskController.java</code>. This controller stores tasks in a
+            <code>Map</code> so you can focus on REST API design without setting up a database.
+          </p>
+          <pre><code>package com.example.demo;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+@RestController
+@RequestMapping("/api/tasks")
+public class TaskController {
+
+    private final Map&lt;Long, Task&gt; tasks = new LinkedHashMap&lt;&gt;();
+    private final AtomicLong nextId = new AtomicLong(1);
+
+    @GetMapping
+    public List&lt;Task&gt; getAllTasks() {
+        return new ArrayList&lt;&gt;(tasks.values());
+    }
+
+    @GetMapping("/{id}")
+    public Task getTaskById(@PathVariable Long id) {
+        Task task = tasks.get(id);
+
+        if (task == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+        }
+
+        return task;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Task createTask(@RequestBody CreateTaskRequest request) {
+        Long id = nextId.getAndIncrement();
+        Task task = new Task(id, request.title(), false);
+        tasks.put(id, task);
+        return task;
+    }
+
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest request) {
+        if (!tasks.containsKey(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+        }
+
+        Task updatedTask = new Task(id, request.title(), request.completed());
+        tasks.put(id, updatedTask);
+        return updatedTask;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTask(@PathVariable Long id) {
+        if (tasks.remove(id) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+        }
+    }
+
+    public record CreateTaskRequest(String title) {}
+
+    public record UpdateTaskRequest(String title, boolean completed) {}
+}</code></pre>
+
+          <h3>What the Annotations Mean</h3>
+          <p>
+            The code above may look compact, but it covers the core Spring Boot REST API concepts:
+          </p>
+          <ul>
+            <li><code>@RestController</code> tells Spring this class returns API responses, not HTML views.</li>
+            <li><code>@RequestMapping("/api/tasks")</code> sets the base URL for every method.</li>
+            <li><code>@GetMapping</code>, <code>@PostMapping</code>, <code>@PutMapping</code>, and <code>@DeleteMapping</code> map HTTP methods to Java methods.</li>
+            <li><code>@PathVariable</code> reads values from the URL, such as <code>/api/tasks/1</code>.</li>
+            <li><code>@RequestBody</code> converts incoming JSON into a Java record.</li>
+            <li><code>@ResponseStatus</code> controls the HTTP status code returned by the endpoint.</li>
+          </ul>
+
+          <h2>Minute 22-25: Run the Application</h2>
+          <p>
+            Start the API from the project root. The Maven wrapper means you do not need Maven
+            installed globally.
+          </p>
+          <pre><code>./mvnw spring-boot:run</code></pre>
+          <p>
+            On Windows, use:
+          </p>
+          <pre><code>mvnw.cmd spring-boot:run</code></pre>
+          <p>
+            When the logs say Tomcat started on port 8080, your REST API is live at
+            <code>http://localhost:8080</code>.
+          </p>
+
+          <h2>Minute 25-30: Test the REST API</h2>
+          <p>
+            Use <code>curl</code> or Postman to test each endpoint. First, create a task:
+          </p>
+          <pre><code>curl -X POST http://localhost:8080/api/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Build my first Spring Boot API"}'</code></pre>
+          <p>You should get a response like this:</p>
+          <pre><code>{
+  "id": 1,
+  "title": "Build my first Spring Boot API",
+  "completed": false
+}</code></pre>
+          <p>List all tasks:</p>
+          <pre><code>curl http://localhost:8080/api/tasks</code></pre>
+          <p>Get one task by ID:</p>
+          <pre><code>curl http://localhost:8080/api/tasks/1</code></pre>
+          <p>Update a task:</p>
+          <pre><code>curl -X PUT http://localhost:8080/api/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Finish the REST API","completed":true}'</code></pre>
+          <p>Delete a task:</p>
+          <pre><code>curl -X DELETE http://localhost:8080/api/tasks/1</code></pre>
+
+          <h2>REST API Endpoint Summary</h2>
+          <p>
+            Your Spring Boot REST API now supports the standard CRUD workflow:
+          </p>
+          <ul>
+            <li><code>GET /api/tasks</code> - list all tasks</li>
+            <li><code>GET /api/tasks/{id}</code> - fetch one task</li>
+            <li><code>POST /api/tasks</code> - create a new task</li>
+            <li><code>PUT /api/tasks/{id}</code> - update an existing task</li>
+            <li><code>DELETE /api/tasks/{id}</code> - delete a task</li>
+          </ul>
+
+          <h2>Common Beginner Mistakes</h2>
+          <ul>
+            <li>Putting the controller outside the package scanned by <code>@SpringBootApplication</code>.</li>
+            <li>Forgetting <code>@RequestBody</code> on methods that accept JSON.</li>
+            <li>Using <code>GET</code> for operations that create, update, or delete data.</li>
+            <li>Expecting in-memory data to survive after restarting the application.</li>
+            <li>Forgetting the <code>Content-Type: application/json</code> header during POST and PUT requests.</li>
+          </ul>
+
+          <h2>Key Takeaways</h2>
+          <ul>
+            <li>Spring Boot can expose REST endpoints with very little setup.</li>
+            <li><code>spring-boot-starter-web</code> gives you controllers, JSON support, and an embedded server.</li>
+            <li>Java records are a clean way to model request and response data.</li>
+            <li>Use the correct HTTP method for each action: GET, POST, PUT, and DELETE.</li>
+            <li>An in-memory API is great for learning, but production apps should use a real database.</li>
+          </ul>
+
+          <h2>What's Next?</h2>
+          <p>
+            You now have a working REST API with Spring Boot in about 30 minutes. The next step
+            is to replace the <code>Map</code> with a database using <strong>Spring Data JPA</strong>,
+            add validation with <code>spring-boot-starter-validation</code>, and secure endpoints
+            with <strong>Spring Security</strong>. Once you understand controllers and JSON flow,
+            those upgrades become much easier.
+          </p>
+          <p>
+            If you want a more production-focused version, read the
+            <a href="/post/spring-boot-rest-api-java-21-production-setup">Spring Boot REST API Java 21 production setup</a>
+            guide next.
+          </p>
+
+        </div>
+        <!-- END .post-content -->
+
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+
+        <!-- ── 6. POST NAVIGATION ───────────────────────────
+             Update href values to link to the prev / next post.
+             If there's no prev or next, remove that <a> block.
+             ─────────────────────────────────────────────────── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/nodejs-api-rate-limiting" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">API Rate Limiting in Node.js</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Back to top button — do NOT edit -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts — do NOT edit -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>
