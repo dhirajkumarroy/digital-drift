@@ -28,6 +28,19 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 15,
+    slug: "spring-boot-jwt-authentication-complete-guide",
+    title: "Spring Boot JWT Authentication — Complete Guide",
+    summary: "Master spring boot jwt authentication with Java 21, Spring Boot 3.x, Spring Security, Gradle, complete code, tests, and production tips.",
+    date: "Jun 17",
+    dateISO: "2026-06-17",
+    url: "/post/spring-boot-jwt-authentication-complete-guide",
+    tags: ["Java", "Spring Boot", "Security"],
+    readTime: 16,
+    featured: false
+  },
+
+  {
     id: 14,
     slug: "spring-boot-rest-api-30-minutes",
     title: "How to Build a REST API with Spring Boot in 30 Minutes",

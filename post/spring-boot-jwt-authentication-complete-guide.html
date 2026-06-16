@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO — edit every line in this block ═══ -->
+  <title>Spring Boot JWT Authentication — Complete Guide | Digital Drift</title>
+  <meta name="description" content="Complete Spring Boot JWT authentication guide for Java developers. Build secure login APIs with Java 21, Spring Boot 3.x, Spring Security, and Gradle." />
+  <meta name="keywords" content="spring boot jwt authentication, Spring Boot 3 JWT, Java 21, Spring Security JWT, Gradle, Backend Security" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph — edit title, description, url -->
+  <meta property="og:title" content="Spring Boot JWT Authentication — Complete Guide" />
+  <meta property="og:description" content="Learn spring boot jwt authentication with Java 21, Spring Boot 3.x, Spring Security, Gradle, complete code snippets, tests, and production tips." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot JWT Authentication — Complete Guide" />
+  <meta name="twitter:description" content="A practical Spring Boot JWT authentication tutorial using Java 21, Spring Boot 3.x, Spring Security, and Gradle." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <!-- Structured Data — edit headline, description, datePublished, dateModified, url, keywords -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Spring Boot JWT Authentication — Complete Guide",
+    "description": "Complete Spring Boot JWT authentication guide using Java 21, Spring Boot 3.x, Spring Security, and Gradle.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-06-17",
+    "dateModified":  "2026-06-17",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide",
+    "keywords": ["spring boot jwt authentication", "Java 21", "Spring Boot 3", "Spring Security", "JWT", "Gradle"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Structured Data — FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is spring boot jwt authentication good for beginners?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Java developers who understand basic REST controllers can learn Spring Boot JWT authentication by starting with a simple login flow, then adding refresh tokens, roles, and permissions later."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I store JWT in localStorage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LocalStorage is common in demos, but secure HttpOnly cookies are often safer for sensitive browser applications because they reduce token exposure during XSS attacks."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use PostgreSQL instead of H2?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Replace the H2 dependency and datasource configuration with PostgreSQL settings. The Spring Security, JWT, service, and controller code can stay mostly the same."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <!-- Reading progress bar (fixed, top of viewport) -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <!-- ══════════════════════════════════════════
+         HEADER — do NOT edit this block
+         ══════════════════════════════════════════ -->
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile nav — do NOT edit -->
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- ══════════════════════════════════════════
+         ARTICLE — edit everything inside <article>
+         ══════════════════════════════════════════ -->
+    <main role="main">
+      <article class="blog-post">
+
+        <!-- ── 1. TAGS ──────────────────────────────────────
+             Use data-tag="X" to get automatic colour coding.
+             Supported colours: Java · Spring Boot · Python · AI
+             · Backend · Education · Roadmap · Productivity · Tech
+             ─────────────────────────────────────────────────── -->
+        <div class="tags">
+          <span class="tag" data-tag="Java">Java</span>
+          <span class="tag" data-tag="Spring Boot">Spring Boot</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+
+        <!-- ── 2. TITLE ─────────────────────────────────── -->
+        <h1 class="post-title">Spring Boot JWT Authentication — Complete Guide</h1>
+
+        <!-- ── 3. META ──────────────────────────────────────
+             Format: 📅 Month DD, YYYY · ⏱ X min read · ✍ Author
+             ─────────────────────────────────────────────────── -->
+        <div class="post-meta">
+          <span>📅 Jun 17</span>
+          <span>⏱ 16 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- ── 4. POST CONTENT ──────────────────────────────
+             Allowed elements inside .post-content:
+               <p>             — paragraph
+               <h2>            — section heading
+               <h3>            — sub-section heading
+               <ul><li>        — bullet list
+               <ol><li>        — numbered list
+               <pre><code>     — code block (gets a Copy button automatically)
+               <code>          — inline code (inside a <p>)
+               <blockquote>    — pull quote / callout
+               <strong>        — bold emphasis
+               <em>            — italic emphasis
+               <a href="">     — hyperlink
+             ─────────────────────────────────────────────────── -->
+        <div class="post-content">
+
+          <p>
+            <strong>Spring boot jwt authentication</strong> is one of the most common security
+            patterns in modern Java backend development. If you are building REST APIs for a web
+            app, mobile app, SaaS dashboard, or microservice, you need a way to authenticate users
+            without storing server-side sessions for every request. JSON Web Tokens, usually called
+            JWTs, solve that problem by letting the server issue a signed token after login and
+            verify that token on future API calls.
+          </p>
+          <p>
+            In this complete guide, you will build JWT authentication with <strong>Java 21</strong>,
+            <strong>Spring Boot 3.x</strong>, <strong>Spring Security 6</strong>, and
+            <strong>Gradle</strong>. We will create a user entity, repository layer, request and
+            response DTOs, JWT utility class, security configuration, authentication filter,
+            service layer, controller, Postman tests, curl commands, common errors, best practices,
+            production notes, interview questions, and an FAQ section.
+          </p>
+
+          <blockquote>
+            <strong>Goal:</strong> by the end, you will understand how JWT login works, how Spring
+            Security validates a bearer token, and how to protect REST endpoints in a real backend.
+          </blockquote>
+
+          <h2>What is JWT?</h2>
+          <p>
+            JWT stands for <strong>JSON Web Token</strong>. It is a compact token format used to
+            safely send claims between systems. A claim is simply a piece of information, such as
+            a username, user ID, role, issue time, or expiration time. A JWT has three parts:
+          </p>
+          <ul>
+            <li><strong>Header</strong> - describes the token type and signing algorithm.</li>
+            <li><strong>Payload</strong> - stores claims such as subject, roles, and expiration.</li>
+            <li><strong>Signature</strong> - proves the token was created by a trusted server.</li>
+          </ul>
+          <p>
+            A JWT looks like a long string with three dot-separated sections. The payload is encoded,
+            not encrypted, so never put passwords, secrets, credit card data, or private user data
+            inside a JWT. The signature prevents tampering, but it does not hide the payload.
+          </p>
+
+          <h2>Why JWT is Used in Modern Applications</h2>
+          <p>
+            JWT is popular because it fits REST APIs well. Traditional session authentication stores
+            session data on the server. That works beautifully for many server-rendered apps, but API
+            platforms often need to serve browsers, mobile apps, third-party clients, and multiple
+            backend services. JWT makes authentication stateless: the client sends the token with
+            each request, and the server verifies it without reading a session table.
+          </p>
+          <p>
+            This makes JWT useful for horizontal scaling, API gateways, mobile clients, and systems
+            where multiple services need to trust the same login result. JWT is not magic security,
+            though. You still need HTTPS, strong signing keys, short expiration times, password
+            hashing, careful refresh-token design, and proper authorization checks.
+          </p>
+
+          <h2>How JWT Authentication Works</h2>
+          <p>
+            The login flow is simple. A user sends credentials to an authentication endpoint. The
+            server verifies the email and password. If the credentials are valid, the server generates
+            an access token and returns it to the client. The client stores that token and sends it in
+            the <code>Authorization</code> header on future requests.
+          </p>
+          <pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...</code></pre>
+          <p>
+            The access token is usually short-lived. A common expiration is 15 minutes to 1 hour,
+            depending on the risk level of your application. For this beginner-friendly tutorial, we
+            will create an access token only. In production, you usually add refresh tokens so users
+            can stay logged in without issuing long-lived access tokens.
+          </p>
+          <p>
+            Stateless authentication means the API does not need to remember the user between
+            requests. Every request carries the token. The JWT filter reads the token, validates the
+            signature and expiration, extracts the username, loads the user, and places an
+            authentication object into Spring Security's context.
+          </p>
+
+          <h2>Project Setup</h2>
+          <p>
+            Create a new Spring Boot project from Spring Initializr or your IDE. Use these choices:
+          </p>
+          <ul>
+            <li><strong>Language:</strong> Java</li>
+            <li><strong>Java version:</strong> 21</li>
+            <li><strong>Build tool:</strong> Gradle</li>
+            <li><strong>Spring Boot:</strong> 3.x</li>
+            <li><strong>Dependencies:</strong> Spring Web, Spring Security, Spring Data JPA, Validation, H2 Database</li>
+          </ul>
+          <p>
+            H2 keeps the tutorial easy to run. Later, you can replace it with PostgreSQL. For a
+            broader API foundation, read the
+            <a href="/post/spring-boot-rest-api-30-minutes">Spring Boot REST API Tutorial</a>.
+            For database-focused work, add a
+            <a href="/post/spring-boot-postgresql-crud-guide">Spring Boot PostgreSQL CRUD Guide</a>
+            to your next reading list.
+          </p>
+
+          <h2>Gradle Configuration</h2>
+          <p>
+            Here is a complete <code>build.gradle</code> for Spring Boot 3.x, Java 21, Spring
+            Security, JPA, validation, H2, and the JJWT library.
+          </p>
+          <pre><code>plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'com.digitaldrift'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    runtimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}</code></pre>
+
+          <h2>Application Configuration</h2>
+          <p>
+            Add these values to <code>src/main/resources/application.properties</code>. The JWT secret
+            below is only for local development. Use an environment variable or secret manager in
+            production.
+          </p>
+          <pre><code>spring.application.name=spring-boot-jwt-auth
+
+spring.datasource.url=jdbc:h2:mem:authdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+jwt.secret=change-this-local-secret-key-change-this-local-secret-key
+jwt.expiration-ms=3600000</code></pre>
+
+          <h2>Project Structure</h2>
+          <p>
+            Keep the security code separated by responsibility. A clear package structure helps
+            beginners understand where each piece belongs.
+          </p>
+          <pre><code>src/main/java/com/digitaldrift/auth/
+├── SpringBootJwtAuthApplication.java
+├── config/
+│   └── SecurityConfig.java
+├── controller/
+│   └── AuthController.java
+├── dto/
+│   ├── LoginRequest.java
+│   ├── LoginResponse.java
+│   └── RegisterRequest.java
+├── entity/
+│   └── AppUser.java
+├── repository/
+│   └── UserRepository.java
+├── security/
+│   ├── JwtAuthenticationFilter.java
+│   └── JwtUtil.java
+└── service/
+    └── AuthService.java</code></pre>
+
+          <h2>Create User Entity</h2>
+          <p>
+            The user entity stores login identity, hashed password, and role. Avoid naming the table
+            <code>user</code> because some databases reserve that word.
+          </p>
+          <pre><code>package com.digitaldrift.auth.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "app_users")
+public class AppUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String role = "ROLE_USER";
+
+    protected AppUser() {
+    }
+
+    public AppUser(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+}</code></pre>
+
+          <h2>Create Repository Layer</h2>
+          <p>
+            Spring Data JPA creates the query implementation at runtime. We need one method for
+            finding users by email and one method for checking duplicates during registration.
+          </p>
+          <pre><code>package com.digitaldrift.auth.repository;
+
+import com.digitaldrift.auth.entity.AppUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository&lt;AppUser, Long&gt; {
+    Optional&lt;AppUser&gt; findByEmail(String email);
+    boolean existsByEmail(String email);
+}</code></pre>
+
+          <h2>Create DTOs</h2>
+          <p>
+            DTOs keep external API payloads separate from database entities. This is especially
+            important in authentication because you never want to accidentally return a password hash.
+          </p>
+          <pre><code>package com.digitaldrift.auth.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record RegisterRequest(
+    @Email(message = "Email must be valid")
+    @NotBlank(message = "Email is required")
+    String email,
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
+    String password
+) {}</code></pre>
+          <pre><code>package com.digitaldrift.auth.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+    @Email(message = "Email must be valid")
+    @NotBlank(message = "Email is required")
+    String email,
+
+    @NotBlank(message = "Password is required")
+    String password
+) {}</code></pre>
+          <pre><code>package com.digitaldrift.auth.dto;
+
+public record LoginResponse(
+    String accessToken,
+    String tokenType,
+    long expiresIn
+) {}</code></pre>
+
+          <h2>JWT Utility Class</h2>
+          <p>
+            The JWT utility class is responsible for generating tokens, validating tokens, and
+            extracting the username. In this guide, the username is the user's email address. The
+            signing key is created from the configured secret.
+          </p>
+          <pre><code>package com.digitaldrift.auth.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
+
+@Component
+public class JwtUtil {
+
+    private final SecretKey signingKey;
+    private final long expirationMs;
+
+    public JwtUtil(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration-ms}") long expirationMs
+    ) {
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = expirationMs;
+    }
+
+    public String generateToken(String username) {
+        Instant now = Instant.now();
+
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(expirationMs)))
+                .signWith(signingKey)
+                .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            getClaims(token);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public String extractUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public long getExpirationSeconds() {
+        return expirationMs / 1000;
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(signingKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+}</code></pre>
+
+          <h2>Spring Security Configuration</h2>
+          <p>
+            Spring Security 6 uses bean-based configuration. We disable CSRF for stateless APIs,
+            allow registration and login, protect everything else, configure stateless session
+            management, expose an authentication manager, and add our JWT filter before the standard
+            username-password filter.
+          </p>
+          <pre><code>package com.digitaldrift.auth.config;
+
+import com.digitaldrift.auth.security.JwtAuthenticationFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            AuthenticationProvider authenticationProvider
+    ) throws Exception {
+        return http
+                .csrf(csrf -&gt; csrf.disable())
+                .sessionManagement(session -&gt;
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(auth -&gt; auth
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder
+    ) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(
+            com.digitaldrift.auth.repository.UserRepository userRepository
+    ) {
+        return username -&gt; userRepository.findByEmail(username)
+                .map(user -&gt; org.springframework.security.core.userdetails.User
+                        .withUsername(user.getEmail())
+                        .password(user.getPassword())
+                        .roles(user.getRole().replace("ROLE_", ""))
+                        .build()
+                )
+                .orElseThrow(() -&gt;
+                        new org.springframework.security.core.userdetails.UsernameNotFoundException(
+                                "User not found"
+                        )
+                );
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration
+    ) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+}</code></pre>
+
+          <h2>JWT Authentication Filter</h2>
+          <p>
+            The filter runs once per request. It checks whether the request has a bearer token. If
+            the token is present and valid, it loads the user and sets authentication in the security
+            context. After that, protected controllers can execute normally.
+          </p>
+          <pre><code>package com.digitaldrift.auth.security;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = authHeader.substring(7);
+
+        if (!jwtUtil.validateToken(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String username = jwtUtil.extractUsername(token);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}</code></pre>
+
+          <h2>Authentication Service</h2>
+          <p>
+            The service owns registration and login logic. Registration hashes the password before
+            saving. Login delegates credential verification to Spring Security's authentication
+            manager. If authentication succeeds, the service generates a JWT access token.
+          </p>
+          <pre><code>package com.digitaldrift.auth.service;
+
+import com.digitaldrift.auth.dto.LoginRequest;
+import com.digitaldrift.auth.dto.LoginResponse;
+import com.digitaldrift.auth.dto.RegisterRequest;
+import com.digitaldrift.auth.entity.AppUser;
+import com.digitaldrift.auth.repository.UserRepository;
+import com.digitaldrift.auth.security.JwtUtil;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import static org.springframework.http.HttpStatus.CONFLICT;
+
+@Service
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+
+    public AuthService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JwtUtil jwtUtil
+    ) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+    }
+
+    public void register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new ResponseStatusException(CONFLICT, "Email is already registered");
+        }
+
+        AppUser user = new AppUser(
+                request.email(),
+                passwordEncoder.encode(request.password()),
+                "ROLE_USER"
+        );
+
+        userRepository.save(user);
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+
+        String token = jwtUtil.generateToken(request.email());
+        return new LoginResponse(token, "Bearer", jwtUtil.getExpirationSeconds());
+    }
+}</code></pre>
+
+          <h2>Authentication Controller</h2>
+          <p>
+            The controller exposes two public endpoints: register and login. Notice that validation
+            runs before the service is called because the request body uses <code>@Valid</code>.
+          </p>
+          <pre><code>package com.digitaldrift.auth.controller;
+
+import com.digitaldrift.auth.dto.LoginRequest;
+import com.digitaldrift.auth.dto.LoginResponse;
+import com.digitaldrift.auth.dto.RegisterRequest;
+import com.digitaldrift.auth.service.AuthService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map&lt;String, String&gt; register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
+        return Map.of("message", "User registered successfully");
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+        return authService.login(request);
+    }
+}</code></pre>
+
+          <h2>Add a Protected Test Endpoint</h2>
+          <p>
+            To confirm authentication works, create a small controller that requires a valid JWT.
+          </p>
+          <pre><code>package com.digitaldrift.auth.controller;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/profile")
+public class ProfileController {
+
+    @GetMapping
+    public Map&lt;String, String&gt; profile(Authentication authentication) {
+        return Map.of(
+                "email", authentication.getName(),
+                "message", "You accessed a protected endpoint"
+        );
+    }
+}</code></pre>
+
+          <h2>Testing with Postman</h2>
+          <p>
+            Start the application with Gradle:
+          </p>
+          <pre><code>./gradlew bootRun</code></pre>
+          <p>
+            In Postman, create three requests. First, register a user with
+            <code>POST http://localhost:8080/api/auth/register</code>. Set the body type to JSON and
+            send an email and password. Second, call the login endpoint and copy the returned access
+            token. Third, call <code>GET /api/profile</code> and add the token under Authorization
+            as a Bearer Token.
+          </p>
+
+          <h2>Example Requests and Responses</h2>
+          <p>Register a user:</p>
+          <pre><code>curl -X POST http://localhost:8080/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"dhiraj@example.com","password":"StrongPass123"}'</code></pre>
+          <pre><code>{
+  "message": "User registered successfully"
+}</code></pre>
+          <p>Login and receive a token:</p>
+          <pre><code>curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"dhiraj@example.com","password":"StrongPass123"}'</code></pre>
+          <pre><code>{
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+  "tokenType": "Bearer",
+  "expiresIn": 3600
+}</code></pre>
+          <p>Call a protected endpoint:</p>
+          <pre><code>curl http://localhost:8080/api/profile \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9..."</code></pre>
+          <pre><code>{
+  "email": "dhiraj@example.com",
+  "message": "You accessed a protected endpoint"
+}</code></pre>
+
+          <h2>Common Errors and Fixes</h2>
+          <ul>
+            <li><strong>403 Forbidden on login:</strong> make sure <code>/api/auth/login</code> is listed in <code>permitAll()</code>.</li>
+            <li><strong>WeakKeyException:</strong> your JWT secret is too short. Use a longer secret for HS256.</li>
+            <li><strong>401 Unauthorized on protected endpoint:</strong> check the <code>Authorization: Bearer</code> header format.</li>
+            <li><strong>Password never matches:</strong> store encoded passwords with <code>BCryptPasswordEncoder</code>, not plain text.</li>
+            <li><strong>User not found:</strong> confirm your login email matches the email stored during registration.</li>
+          </ul>
+
+          <h2>Common JWT Mistakes</h2>
+          <p>
+            The most common mistake is treating JWT as encrypted storage. Anyone with the token can
+            decode the payload, so keep it minimal. Another mistake is using a long-lived access
+            token. If a token leaks, the attacker can use it until it expires. Keep access tokens
+            short-lived and use refresh tokens carefully.
+          </p>
+          <p>
+            Developers also forget authorization. Authentication proves who the user is; authorization
+            decides what the user can do. A valid JWT should not automatically grant access to every
+            resource. Always check ownership, roles, and permissions at the service or method level.
+          </p>
+
+          <h2>Security Best Practices</h2>
+          <ul>
+            <li>Use HTTPS everywhere so tokens are not exposed in transit.</li>
+            <li>Use strong secrets or asymmetric keys managed outside the codebase.</li>
+            <li>Keep access token expiration short.</li>
+            <li>Hash passwords with BCrypt, Argon2, or another proven password hashing algorithm.</li>
+            <li>Do not store JWTs in localStorage for high-risk browser apps; consider secure HttpOnly cookies.</li>
+            <li>Validate issuer, audience, expiration, and signature in larger systems.</li>
+            <li>Log authentication failures, but never log raw tokens or passwords.</li>
+          </ul>
+
+          <h2>Production Considerations</h2>
+          <p>
+            A production-grade Spring Boot JWT authentication system usually needs refresh tokens,
+            token rotation, logout behavior, device/session tracking, account lockout, rate limiting,
+            audit logs, and centralized secret management. If you use microservices, consider whether
+            every service should verify JWTs directly or whether an API gateway should handle
+            authentication first.
+          </p>
+          <p>
+            Move secrets out of <code>application.properties</code>. Use environment variables,
+            Kubernetes secrets, AWS Secrets Manager, HashiCorp Vault, or your platform's secret store.
+            For teams, asymmetric signing with public/private keys can be easier to distribute safely
+            than one shared HMAC secret.
+          </p>
+
+          <h2>Interview Questions</h2>
+          <ul>
+            <li><strong>What is JWT?</strong> A signed token format used to carry claims between systems.</li>
+            <li><strong>Is JWT encrypted?</strong> Not by default. It is encoded and signed.</li>
+            <li><strong>Where should the token be sent?</strong> Usually in the <code>Authorization: Bearer</code> header.</li>
+            <li><strong>What is stateless authentication?</strong> The server verifies each request from the token instead of reading a session.</li>
+            <li><strong>What is the difference between authentication and authorization?</strong> Authentication identifies the user; authorization checks permissions.</li>
+            <li><strong>Why use BCrypt?</strong> It is designed for password hashing and includes salting and configurable work factor.</li>
+            <li><strong>Why should access tokens expire?</strong> Expiration limits damage if a token is stolen.</li>
+          </ul>
+
+          <h2>FAQ</h2>
+          <h3>Is spring boot jwt authentication good for beginners?</h3>
+          <p>
+            Yes, if you already understand basic REST controllers. Start with a simple login flow,
+            then add refresh tokens, roles, and database-backed permissions later.
+          </p>
+          <h3>Should I store JWT in localStorage?</h3>
+          <p>
+            It is common in simple demos, but it increases risk if your app has an XSS bug. For
+            sensitive browser apps, secure HttpOnly cookies are often safer.
+          </p>
+          <h3>Do I need a database for JWT authentication?</h3>
+          <p>
+            JWT validation itself does not require a database, but login usually does because you
+            must verify the user's password and account status.
+          </p>
+          <h3>Can I use PostgreSQL instead of H2?</h3>
+          <p>
+            Yes. Replace the H2 dependency and datasource settings with PostgreSQL configuration.
+            The entity, repository, service, and security code can stay mostly the same.
+          </p>
+
+          <h2>Conclusion</h2>
+          <p>
+            Spring Boot JWT authentication is a practical skill for real-world Java backend
+            development. In this guide, you built a complete login flow with Java 21, Spring Boot 3.x,
+            Gradle, Spring Security, JPA, validation, and JWT. You created a user entity, repository,
+            DTOs, token utility, security configuration, authentication filter, service, controller,
+            protected endpoint, and test requests.
+          </p>
+          <p>
+            The next step is to make this production-ready: add refresh tokens, connect PostgreSQL,
+            add role-based authorization, rate-limit login attempts, and move secrets out of your
+            local configuration. Once those pieces are in place, you will have a strong foundation
+            for secure backend APIs.
+          </p>
+
+        </div>
+        <!-- END .post-content -->
+
+
+        <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+
+        <!-- ── 6. POST NAVIGATION ───────────────────────────
+             Update href values to link to the prev / next post.
+             If there's no prev or next, remove that <a> block.
+             ─────────────────────────────────────────────────── -->
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/spring-boot-rest-api-30-minutes" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">How to Build a REST API with Spring Boot in 30 Minutes</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+    <!-- ══════════════════════════════════════════ -->
+
+
+    <!-- FOOTER — do NOT edit -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Back to top button — do NOT edit -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- Scripts — do NOT edit -->
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>
