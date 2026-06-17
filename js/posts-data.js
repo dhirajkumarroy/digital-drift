@@ -28,6 +28,19 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 16,
+    slug: "spring-boot-postgresql-crud-jpa-hibernate",
+    title: "Spring Boot PostgreSQL CRUD with JPA and Hibernate",
+    summary: "Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, and complete source code.",
+    date: "Jun 17, 2026",
+    dateISO: "2026-06-17",
+    url: "/post/spring-boot-postgresql-crud-jpa-hibernate",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 20,
+    featured: false
+  },
+
+  {
     id: 15,
     slug: "spring-boot-jwt-authentication-complete-guide",
     title: "Spring Boot JWT Authentication — Complete Guide",

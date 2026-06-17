@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Spring Boot PostgreSQL CRUD with JPA and Hibernate | Digital Drift</title>
+  <meta name="description" content="Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, sorting, and complete source code." />
+  <meta name="keywords" content="spring boot postgresql crud, spring boot jpa tutorial, hibernate crud example, spring boot postgresql example, spring data jpa tutorial, Java 21, Spring Boot 3, Gradle" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate" />
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <meta property="og:title" content="Spring Boot PostgreSQL CRUD with JPA and Hibernate" />
+  <meta property="og:description" content="A beginner-friendly spring boot postgresql crud guide with Java 21, Spring Boot 3.x, Gradle, DTOs, validation, exceptions, pagination, sorting, and production tips." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot PostgreSQL CRUD with JPA and Hibernate" />
+  <meta name="twitter:description" content="Build a production-focused CRUD REST API using Spring Boot 3.x, PostgreSQL, Spring Data JPA, Hibernate, Java 21, and Gradle." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Spring Boot PostgreSQL CRUD with JPA and Hibernate",
+    "description": "Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, sorting, and complete source code.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-06-17",
+    "dateModified":  "2026-06-17",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate",
+    "keywords": ["spring boot postgresql crud", "spring boot jpa tutorial", "hibernate crud example", "spring boot postgresql example", "spring data jpa tutorial", "Java 21", "Spring Boot 3", "Gradle"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Spring Boot good for PostgreSQL CRUD APIs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Spring Boot, Spring Data JPA, Hibernate, and PostgreSQL are a common production stack for CRUD APIs because they reduce boilerplate while still supporting transactions, validation, pagination, and query optimization."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between JPA and Hibernate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "JPA is a Java persistence specification. Hibernate is a popular ORM implementation of that specification and provides extra features beyond the JPA standard."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should beginners use DTOs in Spring Boot CRUD projects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. DTOs keep API request and response shapes separate from database entities, make validation cleaner, and prevent accidental exposure of internal fields."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <div class="container">
+
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme">
+          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <nav id="mobile-menu" class="nav-mobile">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+    </nav>
+
+    <main role="main">
+      <article class="blog-post">
+
+        <div class="tags">
+          <span class="tag" data-tag="Java">Java</span>
+          <span class="tag" data-tag="Spring Boot">Spring Boot</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+
+        <h1 class="post-title">Spring Boot PostgreSQL CRUD with JPA and Hibernate</h1>
+
+        <div class="post-meta">
+          <span>📅 Jun 17, 2026</span>
+          <span>⏱ 20 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <div class="post-content">
+
+          <p>
+            <strong>Spring boot postgresql crud</strong> is one of the most practical skills for Java backend developers. Almost every business application needs to create, read, update, and delete data: products in an ecommerce dashboard, customers in a CRM, invoices in an accounting system, tickets in a support tool, or orders in a food delivery platform. Spring Boot gives you the application foundation, PostgreSQL gives you a reliable relational database, JPA gives you a standard persistence API, and Hibernate turns Java objects into database rows without forcing you to write repetitive SQL for every simple operation.
+          </p>
+          <p>
+            In this beginner-friendly but production-focused guide, you will build a complete CRUD REST API using <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, <strong>PostgreSQL</strong>, <strong>Spring Data JPA</strong>, <strong>Hibernate</strong>, validation, DTOs, global exception handling, pagination, sorting, and <strong>Gradle</strong>. This is more than a tiny demo. You will see the folder structure, full source code, JSON request and response samples, Postman examples, cURL commands, common Hibernate mistakes, best practices, production considerations, FAQs, and interview questions.
+          </p>
+
+          <blockquote>
+            New to Spring Boot? Start with <a href="/post/spring-boot-getting-started">Spring Boot Getting Started</a>, then come back here to connect your API to PostgreSQL.
+          </blockquote>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;">
+            <strong>Table of Contents</strong>
+            <ul style="margin-top: 1rem;">
+              <li><a href="#introduction">Introduction</a></li>
+              <li><a href="#jpa">What is JPA?</a></li>
+              <li><a href="#hibernate">What is Hibernate?</a></li>
+              <li><a href="#setup">Project Setup</a></li>
+              <li><a href="#postgresql">Installing PostgreSQL</a></li>
+              <li><a href="#code">Complete Source Code</a></li>
+              <li><a href="#apis">CRUD APIs</a></li>
+              <li><a href="#pagination">Pagination and Sorting</a></li>
+              <li><a href="#exceptions">Global Exception Handling</a></li>
+              <li><a href="#testing">Testing APIs</a></li>
+              <li><a href="#mistakes">Common Hibernate Mistakes</a></li>
+              <li><a href="#production">Production Considerations</a></li>
+              <li><a href="#faq">FAQ</a></li>
+              <li><a href="#interview">Interview Questions</a></li>
+            </ul>
+          </div>
+
+          <h2 id="introduction">Introduction</h2>
+          <p>
+            PostgreSQL is popular because it is stable, open source, standards-friendly, and trusted in serious production systems. It supports transactions, indexes, constraints, JSON columns, full-text search, window functions, extensions, and strong data integrity. For many teams, PostgreSQL hits the sweet spot: it is friendly enough for small projects and powerful enough for large systems.
+          </p>
+          <p>
+            JPA and Hibernate are used because Java applications often work with domain objects, while relational databases store rows and tables. Without an ORM, you write SQL queries, map result sets into objects, manage inserts and updates manually, and repeat similar boilerplate across many features. With JPA and Hibernate, you model a table as an entity class, define a repository, and let the framework handle the common persistence work.
+          </p>
+          <p>
+            Real-world use cases for a Spring Boot PostgreSQL example include inventory management, product catalogs, employee directories, banking ledgers, booking systems, learning platforms, hospital systems, and admin dashboards. CRUD sounds simple, but it is the foundation of most backend features. The difference between a toy CRUD app and a useful backend is how you handle validation, errors, transactions, pagination, sorting, database constraints, and maintainable layers.
+          </p>
+
+          <h2 id="jpa">What is JPA?</h2>
+          <p>
+            JPA stands for <strong>Java Persistence API</strong>. In modern Spring Boot 3.x applications, the packages use <code>jakarta.persistence</code> because Java EE moved to Jakarta EE. JPA is not a library by itself in the way many beginners expect. It is a specification: a set of interfaces, annotations, and rules that describe how Java objects should be mapped to relational database tables.
+          </p>
+          <p>
+            The main benefit of JPA is portability and consistency. You can mark a class with <code>@Entity</code>, map it to a table, define a primary key with <code>@Id</code>, and use a repository to persist it. Your code talks to the JPA model instead of hard-coding low-level JDBC logic everywhere.
+          </p>
+          <h3>Core JPA Concepts</h3>
+          <ul>
+            <li><strong>Entity:</strong> A Java class mapped to a database table.</li>
+            <li><strong>Id:</strong> The primary key field that uniquely identifies each row.</li>
+            <li><strong>Column:</strong> A field-to-column mapping, often customized with <code>@Column</code>.</li>
+            <li><strong>EntityManager:</strong> The lower-level JPA API that manages entity lifecycle.</li>
+            <li><strong>Persistence context:</strong> A unit of managed entity instances tracked during a transaction.</li>
+            <li><strong>Repository:</strong> In Spring Data JPA, an interface that gives you common database operations.</li>
+            <li><strong>Transaction:</strong> A boundary where database work either succeeds together or rolls back together.</li>
+          </ul>
+          <p>
+            In a typical spring data jpa tutorial, you will rarely use <code>EntityManager</code> directly at first. Spring Data JPA provides repositories that make common queries readable and compact. Later, when your application needs custom queries or performance tuning, understanding the lower-level JPA concepts becomes very useful.
+          </p>
+
+          <h2 id="hibernate">What is Hibernate?</h2>
+          <p>
+            Hibernate is an ORM, which means <strong>Object Relational Mapping</strong>. ORM is the practice of mapping object-oriented code to relational database structures. In our case, a <code>Product</code> Java object maps to a <code>products</code> PostgreSQL table, and fields like <code>name</code>, <code>price</code>, and <code>stockQuantity</code> map to columns.
+          </p>
+          <p>
+            Hibernate is the default JPA provider used by Spring Boot when you add Spring Data JPA. JPA defines what should happen; Hibernate provides the implementation that actually generates SQL, manages entity state, handles lazy loading, tracks changes, and coordinates database interaction.
+          </p>
+          <h3>JPA vs Hibernate</h3>
+          <p>
+            The short version is simple: <strong>JPA is the specification, Hibernate is an implementation</strong>. If you use <code>@Entity</code>, <code>@Table</code>, and <code>@Id</code>, you are using JPA annotations. When the application runs and SQL is executed, Hibernate is usually the engine doing the work. Hibernate also provides extra features that are not part of standard JPA, but beginners should first learn the standard JPA model before depending on provider-specific behavior.
+          </p>
+
+          <h2 id="setup">Project Setup</h2>
+          <p>
+            Open <a href="https://start.spring.io/" target="_blank" rel="noopener noreferrer">Spring Initializr</a> and create a project with these settings:
+          </p>
+          <ul>
+            <li><strong>Project:</strong> Gradle - Groovy</li>
+            <li><strong>Language:</strong> Java</li>
+            <li><strong>Spring Boot:</strong> 3.x</li>
+            <li><strong>Java:</strong> 21</li>
+            <li><strong>Group:</strong> <code>com.digitaldrift</code></li>
+            <li><strong>Artifact:</strong> <code>product-api</code></li>
+            <li><strong>Packaging:</strong> Jar</li>
+          </ul>
+          <p>
+            Add these dependencies:
+          </p>
+          <ul>
+            <li><strong>Spring Web:</strong> Build REST APIs.</li>
+            <li><strong>Spring Data JPA:</strong> Repository abstraction and JPA integration.</li>
+            <li><strong>PostgreSQL Driver:</strong> Connect Spring Boot to PostgreSQL.</li>
+            <li><strong>Validation:</strong> Validate request DTOs with annotations.</li>
+            <li><strong>Lombok:</strong> Optional, but this guide avoids Lombok so beginners can see the full code clearly.</li>
+          </ul>
+          <p>
+            If you want a REST-only warm-up before database work, read <a href="/post/spring-boot-rest-api-30-minutes">How to Build a REST API with Spring Boot in 30 Minutes</a>.
+          </p>
+
+          <h3>Gradle Configuration</h3>
+          <pre><code class="language-groovy">plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.digitaldrift'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}</code></pre>
+
+          <h2 id="postgresql">Installing PostgreSQL</h2>
+          <p>
+            You can install PostgreSQL using the official installer, Docker, Homebrew on macOS, or your operating system's package manager. For beginners, using a local PostgreSQL service is fine. For team projects, Docker Compose is often easier because everyone runs the same database version.
+          </p>
+          <h3>Create Database, User, and Permissions</h3>
+          <p>
+            Open <code>psql</code> as a PostgreSQL admin user and run:
+          </p>
+          <pre><code class="language-sql">CREATE DATABASE product_db;
+
+CREATE USER product_user WITH PASSWORD 'product_password';
+
+GRANT ALL PRIVILEGES ON DATABASE product_db TO product_user;</code></pre>
+          <p>
+            PostgreSQL 15 and newer may also require schema privileges after you connect to the database:
+          </p>
+          <pre><code class="language-sql">\c product_db
+
+GRANT ALL ON SCHEMA public TO product_user;</code></pre>
+          <p>
+            In production, do not use weak passwords like this. Use a secret manager or environment variables, rotate credentials, and give the application only the permissions it needs.
+          </p>
+
+          <h2>Configure application.yml</h2>
+          <p>
+            Create <code>src/main/resources/application.yml</code>. This configuration connects Spring Boot to PostgreSQL, lets Hibernate create or update tables during local development, and enables readable SQL logs while you are learning.
+          </p>
+          <pre><code class="language-yaml">spring:
+  application:
+    name: product-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_db
+    username: product_user
+    password: product_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080</code></pre>
+          <blockquote>
+            Use <code>ddl-auto: update</code> only for local learning and early development. In production, use database migration tools such as Flyway or Liquibase.
+          </blockquote>
+
+          <h2>Project Structure</h2>
+          <p>
+            Keep the project organized by responsibility. A clean structure helps beginners understand the flow and helps teams maintain the code later.
+          </p>
+          <pre><code class="language-text">product-api/
+├── build.gradle
+└── src/
+    └── main/
+        ├── java/
+        │   └── com/
+        │       └── digitaldrift/
+        │           └── productapi/
+        │               ├── ProductApiApplication.java
+        │               ├── controller/
+        │               │   └── ProductController.java
+        │               ├── dto/
+        │               │   ├── ProductRequest.java
+        │               │   └── ProductResponse.java
+        │               ├── entity/
+        │               │   └── Product.java
+        │               ├── exception/
+        │               │   ├── ErrorResponse.java
+        │               │   ├── GlobalExceptionHandler.java
+        │               │   └── ResourceNotFoundException.java
+        │               ├── repository/
+        │               │   └── ProductRepository.java
+        │               └── service/
+        │                   └── ProductService.java
+        └── resources/
+            └── application.yml</code></pre>
+
+          <h2 id="code">Complete Source Code</h2>
+          <p>
+            This section contains the complete source code for the hibernate crud example. You can create these files in the same package names and run the application with <code>./gradlew bootRun</code>.
+          </p>
+
+          <h3>Application Class</h3>
+          <pre><code class="language-java">package com.digitaldrift.productapi;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ProductApiApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ProductApiApplication.class, args);
+    }
+}</code></pre>
+
+          <h3>Create Entity: Product Entity with Validation-Friendly Constraints</h3>
+          <p>
+            The entity represents the database table. Validation annotations belong mainly on DTOs, but database constraints on the entity are still useful because they protect data integrity at the persistence layer.
+          </p>
+          <pre><code class="language-java">package com.digitaldrift.productapi.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+@Entity
+@Table(name = "products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String name;
+
+    @Column(nullable = false, length = 500)
+    private String description;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private Integer stockQuantity;
+
+    @Column(nullable = false, length = 80)
+    private String category;
+
+    @Column(nullable = false)
+    private Instant createdAt;
+
+    @Column(nullable = false)
+    private Instant updatedAt;
+
+    protected Product() {
+    }
+
+    public Product(String name, String description, BigDecimal price, Integer stockQuantity, String category) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
+
+    public void update(String name, String description, BigDecimal price, Integer stockQuantity, String category) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+        this.updatedAt = Instant.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Integer getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+}</code></pre>
+
+          <h3>Create DTOs: ProductRequest</h3>
+          <p>
+            DTOs protect your entity from direct API exposure. <code>ProductRequest</code> defines what the client is allowed to send. Validation annotations make bad requests fail before they reach the service layer.
+          </p>
+          <pre><code class="language-java">package com.digitaldrift.productapi.dto;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
+
+public record ProductRequest(
+        @NotBlank(message = "Product name is required")
+        @Size(min = 2, max = 120, message = "Product name must be between 2 and 120 characters")
+        String name,
+
+        @NotBlank(message = "Description is required")
+        @Size(max = 500, message = "Description must not exceed 500 characters")
+        String description,
+
+        @NotNull(message = "Price is required")
+        @DecimalMin(value = "0.01", message = "Price must be greater than zero")
+        BigDecimal price,
+
+        @NotNull(message = "Stock quantity is required")
+        @Min(value = 0, message = "Stock quantity cannot be negative")
+        Integer stockQuantity,
+
+        @NotBlank(message = "Category is required")
+        @Size(max = 80, message = "Category must not exceed 80 characters")
+        String category
+) {
+}</code></pre>
+
+          <h3>Create DTOs: ProductResponse</h3>
+          <pre><code class="language-java">package com.digitaldrift.productapi.dto;
+
+import com.digitaldrift.productapi.entity.Product;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+public record ProductResponse(
+        Long id,
+        String name,
+        String description,
+        BigDecimal price,
+        Integer stockQuantity,
+        String category,
+        Instant createdAt,
+        Instant updatedAt
+) {
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStockQuantity(),
+                product.getCategory(),
+                product.getCreatedAt(),
+                product.getUpdatedAt()
+        );
+    }
+}</code></pre>
+
+          <h3>Create Repository Layer</h3>
+          <p>
+            The repository layer talks to the database. By extending <code>JpaRepository</code>, you get methods like <code>save</code>, <code>findById</code>, <code>findAll</code>, <code>existsById</code>, and <code>delete</code> without writing SQL.
+          </p>
+          <pre><code class="language-java">package com.digitaldrift.productapi.repository;
+
+import com.digitaldrift.productapi.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository&lt;Product, Long&gt; {
+
+    boolean existsByNameIgnoreCase(String name);
+}</code></pre>
+
+          <h3>Custom Exception</h3>
+          <pre><code class="language-java">package com.digitaldrift.productapi.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}</code></pre>
+
+          <h3>Error Response DTO</h3>
+          <pre><code class="language-java">package com.digitaldrift.productapi.exception;
+
+import java.time.Instant;
+import java.util.Map;
+
+public record ErrorResponse(
+        Instant timestamp,
+        int status,
+        String error,
+        String message,
+        String path,
+        Map&lt;String, String&gt; validationErrors
+) {
+}</code></pre>
+
+          <h3 id="exceptions">Global Exception Handling with @ControllerAdvice</h3>
+          <p>
+            A global exception handler keeps controller methods clean and gives clients consistent error responses. Validation errors return field-level messages, while missing records return a clear <code>404 Not Found</code>.
+          </p>
+          <pre><code class="language-java">package com.digitaldrift.productapi.exception;
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleResourceNotFound(
+            ResourceNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse response = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleValidationErrors(
+            MethodArgumentNotValidException exception,
+            HttpServletRequest request
+    ) {
+        Map&lt;String, String&gt; validationErrors = new HashMap&lt;&gt;();
+
+        exception.getBindingResult().getFieldErrors().forEach(error ->
+                validationErrors.put(error.getField(), error.getDefaultMessage())
+        );
+
+        ErrorResponse response = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                "Validation failed",
+                request.getRequestURI(),
+                validationErrors
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleUnexpectedErrors(
+            Exception exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse response = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "An unexpected error occurred",
+                request.getRequestURI(),
+                Map.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+}</code></pre>
+
+          <h3>Create Service Layer</h3>
+          <p>
+            The service layer contains business logic. Controllers should handle HTTP concerns; repositories should handle persistence; services should coordinate application behavior. This separation keeps your Spring Boot PostgreSQL CRUD project easier to test and evolve.
+          </p>
+          <pre><code class="language-java">package com.digitaldrift.productapi.service;
+
+import com.digitaldrift.productapi.dto.ProductRequest;
+import com.digitaldrift.productapi.dto.ProductResponse;
+import com.digitaldrift.productapi.entity.Product;
+import com.digitaldrift.productapi.exception.ResourceNotFoundException;
+import com.digitaldrift.productapi.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @Transactional
+    public ProductResponse createProduct(ProductRequest request) {
+        Product product = new Product(
+                request.name(),
+                request.description(),
+                request.price(),
+                request.stockQuantity(),
+                request.category()
+        );
+
+        Product savedProduct = productRepository.save(product);
+        return ProductResponse.from(savedProduct);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse getProductById(Long id) {
+        Product product = findProduct(id);
+        return ProductResponse.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Page&lt;ProductResponse&gt; getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductResponse::from);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(Long id, ProductRequest request) {
+        Product product = findProduct(id);
+
+        product.update(
+                request.name(),
+                request.description(),
+                request.price(),
+                request.stockQuantity(),
+                request.category()
+        );
+
+        return ProductResponse.from(product);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        Product product = findProduct(id);
+        productRepository.delete(product);
+    }
+
+    private Product findProduct(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    }
+}</code></pre>
+
+          <h3>Create Controller Layer</h3>
+          <p>
+            The controller exposes REST endpoints. It uses <code>@Valid</code> so request validation runs automatically. It also accepts <code>Pageable</code>, which lets clients send <code>page</code>, <code>size</code>, and <code>sort</code> query parameters.
+          </p>
+          <pre><code class="language-java">package com.digitaldrift.productapi.controller;
+
+import com.digitaldrift.productapi.dto.ProductRequest;
+import com.digitaldrift.productapi.dto.ProductResponse;
+import com.digitaldrift.productapi.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;ProductResponse&gt; createProduct(@Valid @RequestBody ProductRequest request) {
+        ProductResponse response = productService.createProduct(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;ProductResponse&gt; getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity&lt;Page&lt;ProductResponse&gt;&gt; getAllProducts(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(productService.getAllProducts(pageable));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;ProductResponse&gt; updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductRequest request
+    ) {
+        return ResponseEntity.ok(productService.updateProduct(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+}</code></pre>
+
+          <h2 id="apis">CRUD APIs</h2>
+          <p>
+            Your API now supports the complete CRUD lifecycle. This is the practical heart of the spring boot postgresql example.
+          </p>
+          <ul>
+            <li><strong>Create Product:</strong> <code>POST /api/products</code></li>
+            <li><strong>Get Product By ID:</strong> <code>GET /api/products/{id}</code></li>
+            <li><strong>Get All Products:</strong> <code>GET /api/products</code></li>
+            <li><strong>Update Product:</strong> <code>PUT /api/products/{id}</code></li>
+            <li><strong>Delete Product:</strong> <code>DELETE /api/products/{id}</code></li>
+          </ul>
+
+          <h3>Create Product Request</h3>
+          <pre><code class="language-json">{
+  "name": "Mechanical Keyboard",
+  "description": "Hot-swappable wireless mechanical keyboard for developers",
+  "price": 129.99,
+  "stockQuantity": 50,
+  "category": "Accessories"
+}</code></pre>
+
+          <h3>Create Product Response</h3>
+          <pre><code class="language-json">{
+  "id": 1,
+  "name": "Mechanical Keyboard",
+  "description": "Hot-swappable wireless mechanical keyboard for developers",
+  "price": 129.99,
+  "stockQuantity": 50,
+  "category": "Accessories",
+  "createdAt": "2026-06-17T08:30:00Z",
+  "updatedAt": "2026-06-17T08:30:00Z"
+}</code></pre>
+
+          <h2 id="pagination">Pagination and Sorting</h2>
+          <p>
+            Pagination prevents your API from returning thousands of rows in one response. Sorting lets the client choose a useful order. Spring Data JPA supports both through <code>Pageable</code>, <code>PageRequest</code>, and <code>Sort</code>.
+          </p>
+          <p>
+            In the controller above, Spring automatically creates a <code>Pageable</code> object from query parameters. You can request the first page with five products sorted by price from low to high:
+          </p>
+          <pre><code class="language-text">GET /api/products?page=0&amp;size=5&amp;sort=price,asc</code></pre>
+          <p>
+            You can also create a pageable manually in service code when needed:
+          </p>
+          <pre><code class="language-java">PageRequest pageRequest = PageRequest.of(
+        0,
+        10,
+        Sort.by(Sort.Direction.DESC, "createdAt")
+);</code></pre>
+          <p>
+            A typical paginated response includes content plus metadata:
+          </p>
+          <pre><code class="language-json">{
+  "content": [
+    {
+      "id": 1,
+      "name": "Mechanical Keyboard",
+      "description": "Hot-swappable wireless mechanical keyboard for developers",
+      "price": 129.99,
+      "stockQuantity": 50,
+      "category": "Accessories",
+      "createdAt": "2026-06-17T08:30:00Z",
+      "updatedAt": "2026-06-17T08:30:00Z"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 5
+  },
+  "totalElements": 1,
+  "totalPages": 1,
+  "last": true,
+  "first": true,
+  "size": 5,
+  "number": 0
+}</code></pre>
+
+          <h2 id="testing">Testing APIs with Postman</h2>
+          <p>
+            Start the application:
+          </p>
+          <pre><code class="language-bash">./gradlew bootRun</code></pre>
+          <p>
+            In Postman, set the base URL to <code>http://localhost:8080</code>. Use <code>Content-Type: application/json</code> for create and update requests.
+          </p>
+          <h3>Postman Examples</h3>
+          <ul>
+            <li><strong>Create:</strong> <code>POST http://localhost:8080/api/products</code></li>
+            <li><strong>Read one:</strong> <code>GET http://localhost:8080/api/products/1</code></li>
+            <li><strong>Read all:</strong> <code>GET http://localhost:8080/api/products?page=0&amp;size=10&amp;sort=createdAt,desc</code></li>
+            <li><strong>Update:</strong> <code>PUT http://localhost:8080/api/products/1</code></li>
+            <li><strong>Delete:</strong> <code>DELETE http://localhost:8080/api/products/1</code></li>
+          </ul>
+          <h3>Validation Error Response</h3>
+          <pre><code class="language-json">{
+  "timestamp": "2026-06-17T08:35:00Z",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Validation failed",
+  "path": "/api/products",
+  "validationErrors": {
+    "name": "Product name is required",
+    "price": "Price must be greater than zero"
+  }
+}</code></pre>
+
+          <h2>cURL Examples</h2>
+          <h3>Create</h3>
+          <pre><code class="language-bash">curl -X POST http://localhost:8080/api/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "USB-C Dock",
+    "description": "Multi-port USB-C dock for laptops",
+    "price": 89.99,
+    "stockQuantity": 25,
+    "category": "Accessories"
+  }'</code></pre>
+          <h3>Read</h3>
+          <pre><code class="language-bash">curl http://localhost:8080/api/products/1
+
+curl "http://localhost:8080/api/products?page=0&amp;size=5&amp;sort=price,asc"</code></pre>
+          <h3>Update</h3>
+          <pre><code class="language-bash">curl -X PUT http://localhost:8080/api/products/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "USB-C Dock Pro",
+    "description": "Premium USB-C dock with HDMI, Ethernet, and fast charging",
+    "price": 119.99,
+    "stockQuantity": 18,
+    "category": "Accessories"
+  }'</code></pre>
+          <h3>Delete</h3>
+          <pre><code class="language-bash">curl -X DELETE http://localhost:8080/api/products/1</code></pre>
+
+          <h2 id="mistakes">Common Hibernate Mistakes</h2>
+          <h3>N+1 Problem</h3>
+          <p>
+            The N+1 problem happens when Hibernate runs one query to load a list and then one extra query per item to load related data. With 100 rows, that can become 101 queries. It often appears with relationships such as product reviews, order items, users, and roles. Use fetch joins, entity graphs, projection queries, or carefully designed DTO queries when you load relationships.
+          </p>
+          <h3>LazyInitializationException</h3>
+          <p>
+            <code>LazyInitializationException</code> usually means your code tried to access a lazy relationship after the Hibernate session was closed. Avoid returning entities directly from controllers. Use DTOs inside transactional service methods so the data is loaded while the transaction is active.
+          </p>
+          <h3>Missing Transactions</h3>
+          <p>
+            Write operations should run inside transactions. In Spring, place <code>@Transactional</code> on service methods, not usually on controllers. Read-only methods can use <code>@Transactional(readOnly = true)</code> to communicate intent and allow optimization.
+          </p>
+          <h3>Incorrect Cascade Types</h3>
+          <p>
+            Cascades control what happens to related entities when you persist, update, or delete a parent. Do not blindly use <code>CascadeType.ALL</code>. It can accidentally delete child records or persist data you did not intend to save. Choose cascade behavior based on ownership and lifecycle.
+          </p>
+
+          <h2>Best Practices</h2>
+          <ul>
+            <li><strong>Use the DTO pattern:</strong> Keep API models separate from database entities.</li>
+            <li><strong>Validate input:</strong> Use <code>jakarta.validation</code> annotations and return useful error messages.</li>
+            <li><strong>Keep service layer separation:</strong> Put business rules in services, not controllers.</li>
+            <li><strong>Handle errors properly:</strong> Use <code>@ControllerAdvice</code> for consistent API responses.</li>
+            <li><strong>Use transactions intentionally:</strong> Write operations should be transactional; read operations can be read-only.</li>
+            <li><strong>Avoid exposing entities:</strong> Entities often contain internal fields and relationships clients should not control.</li>
+            <li><strong>Name database columns clearly:</strong> Prefer predictable table and column names for long-term maintainability.</li>
+          </ul>
+          <p>
+            If you plan to add authentication to this API, the next useful read is <a href="/post/spring-boot-jwt-authentication-complete-guide">Spring Boot JWT Authentication Guide</a>.
+          </p>
+
+          <h2 id="production">Production Considerations</h2>
+          <h3>Database Indexing</h3>
+          <p>
+            Index columns that are used frequently in filters, joins, and sorting. For this product API, you may later add indexes on <code>category</code>, <code>name</code>, or <code>created_at</code>. Indexes improve reads but add write overhead, so create them based on real query patterns.
+          </p>
+          <h3>Connection Pooling</h3>
+          <p>
+            Spring Boot uses HikariCP by default. In production, tune pool size based on application concurrency, database capacity, and request latency. A bigger pool is not always better; too many connections can overload PostgreSQL.
+          </p>
+          <pre><code class="language-yaml">spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000</code></pre>
+          <h3>Query Optimization</h3>
+          <p>
+            Use PostgreSQL's <code>EXPLAIN ANALYZE</code> to inspect slow queries. Keep an eye on generated SQL logs during development. For complex read endpoints, DTO projections or custom queries can be faster than loading full entities and relationships.
+          </p>
+          <h3>Database Migrations</h3>
+          <p>
+            Replace <code>ddl-auto: update</code> with Flyway or Liquibase before production. Migrations make schema changes reviewable, repeatable, and safe across environments.
+          </p>
+          <h3>Security</h3>
+          <p>
+            Protect write endpoints with authentication and authorization. Validate request size, avoid logging sensitive data, and configure CORS only for trusted origins. CRUD APIs are simple to call, which means they are also simple to abuse if left open.
+          </p>
+
+          <h2 id="faq">Frequently Asked Questions</h2>
+          <h3>Is Spring Boot good for PostgreSQL CRUD APIs?</h3>
+          <p>
+            Yes. Spring Boot reduces setup work, Spring Data JPA removes repetitive repository code, Hibernate handles ORM behavior, and PostgreSQL provides a reliable relational database. The combination is common in real backend teams.
+          </p>
+          <h3>Do I need to know SQL if I use JPA?</h3>
+          <p>
+            Yes, eventually. JPA saves time, but SQL knowledge helps you understand performance, indexes, joins, constraints, and generated queries. Good backend developers are comfortable with both ORM and SQL.
+          </p>
+          <h3>Can I use MySQL instead of PostgreSQL?</h3>
+          <p>
+            Yes. Replace the PostgreSQL driver and datasource URL with MySQL equivalents. The JPA entity, DTO, repository, service, and controller patterns remain almost the same.
+          </p>
+          <h3>Should I use records for DTOs?</h3>
+          <p>
+            Java records are a great fit for immutable request and response DTOs. They reduce boilerplate and clearly express that the object is a data carrier.
+          </p>
+          <h3>Why not return Product entity directly?</h3>
+          <p>
+            Returning entities couples your API to your database model, can expose internal fields, and can trigger serialization issues with relationships. DTOs keep the API contract explicit.
+          </p>
+
+          <h2 id="interview">Interview Questions and Answers</h2>
+          <ul>
+            <li><strong>What is JPA?</strong> JPA is a Java specification for mapping objects to relational database tables.</li>
+            <li><strong>What is Hibernate?</strong> Hibernate is an ORM framework and a popular JPA implementation.</li>
+            <li><strong>What is Spring Data JPA?</strong> It is a Spring project that simplifies repository creation and database access using JPA.</li>
+            <li><strong>What does JpaRepository provide?</strong> It provides CRUD methods, pagination, sorting, flushing, and batch-related operations.</li>
+            <li><strong>What is @Entity?</strong> It marks a Java class as a persistent JPA entity.</li>
+            <li><strong>What is @Transactional?</strong> It defines a transaction boundary where database operations commit or roll back together.</li>
+            <li><strong>What is the N+1 problem?</strong> It is a performance issue where one query loads parent rows and then extra queries load related data for each row.</li>
+            <li><strong>What is the difference between save and update?</strong> Spring Data JPA uses <code>save</code> for both new and existing entities; Hibernate decides whether to insert or update based on entity state.</li>
+            <li><strong>Why use DTOs?</strong> DTOs separate API contracts from persistence models and make validation safer.</li>
+            <li><strong>Why use PostgreSQL?</strong> PostgreSQL is reliable, open source, feature-rich, and widely used for production relational workloads.</li>
+          </ul>
+
+          <h2>Conclusion</h2>
+          <p>
+            You have built a complete Spring Boot PostgreSQL CRUD API with JPA and Hibernate using Java 21, Spring Boot 3.x, Gradle, validation, DTOs, repository, service, controller, pagination, sorting, and global exception handling. This is the foundation behind many real backend systems: model the data, validate inputs, persist safely, return clear responses, and handle failure predictably.
+          </p>
+          <p>
+            The next step is to extend this project in a production direction. Add authentication with JWT, introduce Flyway migrations, write integration tests with Testcontainers, add search filters, and monitor slow queries. Once you understand this pattern deeply, you can apply it to orders, users, payments, bookings, invoices, and almost any business workflow.
+          </p>
+
+        </div>
+
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/spring-boot-jwt-authentication-complete-guide" class="nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-title">Spring Boot JWT Authentication Guide</span>
+          </a>
+        </nav>
+
+      </article>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>

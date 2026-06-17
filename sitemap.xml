@@ -3,35 +3,70 @@
 
   <url>
     <loc>https://blog.dhirajroy.com/</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://blog.dhirajroy.com/about</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://blog.dhirajroy.com/contact</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://blog.dhirajroy.com/archive</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
+    <loc>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
     <loc>https://blog.dhirajroy.com/post/nodejs-jwt-auth</loc>
-    <lastmod>2026-05-05</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>

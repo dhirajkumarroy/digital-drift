@@ -5,16 +5,71 @@
     <link>https://blog.dhirajroy.com</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <pubDate>Mon, 04 May 2026 23:05:39 GMT</pubDate>
-    <lastBuildDate>Mon, 04 May 2026 23:05:39 GMT</lastBuildDate>
+    <pubDate>Wed, 17 Jun 2026 14:46:35 GMT</pubDate>
+    <lastBuildDate>Wed, 17 Jun 2026 14:46:35 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
 
     <item>
-      <title>Node.js JWT Authentication (2026) – Build Secure Backend APIs</title>
+      <title>Spring Boot PostgreSQL CRUD with JPA and Hibernate</title>
+      <link>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</link>
+      <guid>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</guid>
+      <pubDate>Tue, 16 Jun 2026 18:30:00 GMT</pubDate>
+      <description>Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, and complete source code.</description>
+      <category>Java</category>
+      <category>Spring Boot</category>
+      <category>Backend</category>
+    </item>
+
+    <item>
+      <title>Spring Boot JWT Authentication — Complete Guide</title>
+      <link>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</link>
+      <guid>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</guid>
+      <pubDate>Tue, 16 Jun 2026 18:30:00 GMT</pubDate>
+      <description>Master spring boot jwt authentication with Java 21, Spring Boot 3.x, Spring Security, Gradle, complete code, tests, and production tips.</description>
+      <category>Java</category>
+      <category>Spring Boot</category>
+      <category>Security</category>
+    </item>
+
+    <item>
+      <title>How to Build a REST API with Spring Boot in 30 Minutes</title>
+      <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</link>
+      <guid>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</guid>
+      <pubDate>Mon, 15 Jun 2026 18:30:00 GMT</pubDate>
+      <description>Build a Spring Boot REST API in 30 minutes with CRUD endpoints, Java records, JSON requests, and curl testing.</description>
+      <category>Java</category>
+      <category>Spring Boot</category>
+      <category>Backend</category>
+    </item>
+
+    <item>
+      <title>API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse</title>
+      <link>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</link>
+      <guid>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</guid>
+      <pubDate>Sun, 17 May 2026 18:30:00 GMT</pubDate>
+      <description>Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js.</description>
+      <category>Node.js</category>
+      <category>Backend</category>
+      <category>Security</category>
+    </item>
+
+    <item>
+      <title>Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles &amp; Permissions</title>
+      <link>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</link>
+      <guid>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</guid>
+      <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
+      <description>Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js and Node.js roles and permissions.</description>
+      <category>Node.js</category>
+      <category>Backend</category>
+      <category>Security</category>
+    </item>
+
+    <item>
+      <title>Node.js Refresh Token Authentication (2026) – Secure Scalable Login Systems</title>
       <link>https://blog.dhirajroy.com/post/nodejs-jwt-auth</link>
       <guid>https://blog.dhirajroy.com/post/nodejs-jwt-auth</guid>
-      <pubDate>Mon, 04 May 2026 18:30:00 GMT</pubDate>
-      <description>Learn Node.js JWT Authentication from scratch. Master secure tokens, refresh flows, and build production-ready secure backend APIs.</description>
+      <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
+      <description>Master Node.js Refresh Token Authentication. Build a secure authentication Node.js system with JWT refresh token Node.js and a scalable refresh token implementation.</description>
       <category>Node.js</category>
       <category>Backend</category>
       <category>Security</category>
