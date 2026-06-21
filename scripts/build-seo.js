@@ -25,7 +25,8 @@ function generateSitemap() {
     { url: '/', priority: '1.0', changefreq: 'weekly' },
     { url: '/about', priority: '0.8', changefreq: 'monthly' },
     { url: '/contact', priority: '0.8', changefreq: 'monthly' },
-    { url: '/archive', priority: '0.7', changefreq: 'weekly' }
+    { url: '/archive', priority: '0.7', changefreq: 'weekly' },
+    { url: '/privacy-policy', priority: '0.4', changefreq: 'yearly' }
   ];
 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
