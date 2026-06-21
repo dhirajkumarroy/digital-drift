@@ -28,6 +28,19 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 17,
+    slug: "spring-boot-global-exception-handling-controlleradvice",
+    title: "Spring Boot Global Exception Handling with @ControllerAdvice",
+    summary: "Master spring boot exception handling with Java 21, Spring Boot 3.x, custom exceptions, validation, @ControllerAdvice, error DTOs, tests, and production advice.",
+    date: "Jun 21, 2026",
+    dateISO: "2026-06-21",
+    url: "/post/spring-boot-global-exception-handling-controlleradvice",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 16,
+    featured: false
+  },
+
+  {
     id: 16,
     slug: "spring-boot-postgresql-crud-jpa-hibernate",
     title: "Spring Boot PostgreSQL CRUD with JPA and Hibernate",

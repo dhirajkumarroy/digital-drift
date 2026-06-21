@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spring Boot Global Exception Handling with @ControllerAdvice | Digital Drift</title>
+  <meta name="description" content="Learn spring boot exception handling with Java 21, Spring Boot 3.x, Gradle, @ControllerAdvice, custom exceptions, validation, consistent REST API error responses, and complete code." />
+  <meta name="keywords" content="spring boot exception handling, controlleradvice spring boot, spring boot global exception handler, spring boot custom exception, rest api error handling spring boot, Java 21, Spring Boot 3, Gradle" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta property="og:title" content="Spring Boot Global Exception Handling with @ControllerAdvice" />
+  <meta property="og:description" content="Build consistent, production-ready REST API errors with Spring Boot 3.x, custom exceptions, validation, and @ControllerAdvice." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot Global Exception Handling with @ControllerAdvice" />
+  <meta name="twitter:description" content="A practical Spring Boot exception handling guide with Java 21, custom exceptions, validation, error DTOs, tests, and production advice." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Spring Boot Global Exception Handling with @ControllerAdvice",
+    "description": "Learn spring boot exception handling with Java 21, Spring Boot 3.x, Gradle, @ControllerAdvice, custom exceptions, validation, and consistent REST API error responses.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-06-21",
+    "dateModified": "2026-06-21",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice",
+    "keywords": ["spring boot exception handling", "controlleradvice spring boot", "spring boot global exception handler", "spring boot custom exception", "rest api error handling spring boot", "Java 21", "Spring Boot 3"],
+    "publisher": { "@type": "Organization", "name": "Digital Drift", "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" } }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"What is @ControllerAdvice in Spring Boot?","acceptedAnswer":{"@type":"Answer","text":"@ControllerAdvice is a Spring annotation for centralizing cross-cutting controller behavior, especially exception handling. It lets an application return consistent error responses without repeating try-catch blocks in every controller."}},
+      {"@type":"Question","name":"Should Spring Boot APIs expose exception messages?","acceptedAnswer":{"@type":"Answer","text":"Expose clear messages for expected client errors such as validation failures and missing resources. Do not expose stack traces, SQL details, secrets, or internal exception messages for unexpected server errors."}},
+      {"@type":"Question","name":"What status code should a duplicate resource return?","acceptedAnswer":{"@type":"Answer","text":"A duplicate resource or business-rule conflict normally returns HTTP 409 Conflict."}}
+    ]
+  }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VN488V6MP5');</script>
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/archive">Archive</a></nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"><svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg><svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110-2h1zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" /></svg></button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+      </div>
+    </header>
+    <nav id="mobile-menu" class="nav-mobile"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/archive">Archive</a></nav>
+    <main role="main">
+      <article class="blog-post">
+        <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
+        <h1 class="post-title">Spring Boot Global Exception Handling with @ControllerAdvice</h1>
+        <div class="post-meta"><span>📅 Jun 21, 2026</span><span>⏱ 16 min read</span><span>✍ Dhiraj Roy</span></div>
+        <div class="post-content">
+          <p><strong>Spring boot exception handling</strong> is what turns a functional API into a dependable one. A client may request a user that does not exist, submit an invalid email address, try to create a duplicate account, or trigger an unexpected database failure. Your API still needs to return a clear, predictable response. Without a deliberate error strategy, callers receive inconsistent payloads, misleading status codes, or internal details that should never leave the server.</p>
+          <p>This guide builds a production-minded global exception handler using <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, and <strong>Gradle</strong>. You will create an error DTO, custom exceptions, a <code>@ControllerAdvice</code> class, validation handlers, controller and service examples, JSON responses, Postman checks, cURL commands, and practical guidance for logs, monitoring, and security.</p>
+          <blockquote>Start with <a href="/post/spring-boot-getting-started">Spring Boot Getting Started</a> if controllers and request mappings are new to you. For a working API foundation, see <a href="/post/spring-boot-rest-api-30-minutes">How to Build a REST API with Spring Boot in 30 Minutes</a>.</blockquote>
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;"><strong>Table of Contents</strong><ul style="margin-top: 1rem;"><li><a href="#why">Why exception handling matters</a></li><li><a href="#concepts">Exception concepts</a></li><li><a href="#setup">Project setup and structure</a></li><li><a href="#code">Complete source code</a></li><li><a href="#responses">API responses and validation</a></li><li><a href="#testing">Testing, Postman, and cURL</a></li><li><a href="#production">Production practices</a></li><li><a href="#faq">FAQ and interview questions</a></li></ul></div>
+
+          <h2 id="why">Why Spring Boot Exception Handling Matters</h2>
+          <p>HTTP status codes are part of your API contract. A frontend, mobile application, integration partner, and observability system all use them to decide what happened and what to do next. A <code>400 Bad Request</code> tells a user to correct input. A <code>404 Not Found</code> tells a client that a resource is absent. A <code>409 Conflict</code> explains that the request is valid but violates current state. A <code>500 Internal Server Error</code> tells callers that retrying later may be reasonable.</p>
+          <p>Default error responses are useful during early development, but they do not define a stable public contract. They can vary by Spring Boot configuration, omit field-level validation detail, and encourage controllers full of repetitive <code>try/catch</code> blocks. In a real API, errors should have one predictable shape, useful messages for expected failures, and safe messages for unexpected failures.</p>
+          <p>Think about an account registration endpoint. If an email is malformed, the client should receive which field is wrong. If the email already exists, it should receive a conflict response. If PostgreSQL is unavailable, it should receive a generic server error while your logs preserve the technical cause. Each outcome needs a different response, but none should require the controller to know logging and serialization details.</p>
+
+          <h2 id="concepts">What Is Exception Handling?</h2>
+          <p>An exception interrupts normal program flow when something goes wrong or when code deliberately signals an invalid state. Java's exception hierarchy lets us distinguish failures that callers are expected to recover from and programming or infrastructure failures that need application-level handling.</p>
+          <h3>Checked Exceptions</h3>
+          <p>Checked exceptions extend <code>Exception</code> but not <code>RuntimeException</code>. Java requires the method to catch or declare them. File and network APIs may use checked exceptions. Spring REST applications rarely use checked exceptions for ordinary business rules because they make service signatures noisy without improving HTTP error handling.</p>
+          <h3>Unchecked and Runtime Exceptions</h3>
+          <p>Unchecked exceptions extend <code>RuntimeException</code>. You do not need to declare them in a method signature. Custom API exceptions such as <code>ResourceNotFoundException</code> and <code>BusinessException</code> commonly extend <code>RuntimeException</code>, then a global handler maps them to HTTP responses. This keeps business methods readable while making failure behavior explicit.</p>
+
+          <h2>Common API Errors</h2>
+          <ul><li><strong>Resource not found:</strong> A requested user, order, or product ID does not exist.</li><li><strong>Validation failure:</strong> A required field is blank, an email is invalid, or a number is outside its allowed range.</li><li><strong>Database error:</strong> A unique constraint is violated, a connection fails, or a query cannot complete.</li><li><strong>Unauthorized request:</strong> A caller has not authenticated or does not have permission for the action.</li></ul>
+          <p>Do not treat every failure as a 500. Expected client mistakes deserve a 4xx response; unexpected server-side conditions deserve a 5xx response. This distinction improves user experience, retries, alerting, and client-side logic.</p>
+
+          <h2>Default Spring Boot Error Response</h2>
+          <p>When an exception escapes a controller without your own handler, Spring Boot's default error infrastructure often returns fields such as timestamp, status, error, path, and sometimes a message. That is helpful for exploration, but it is not enough for a durable API. You may want stable error codes, field validation errors, a correlation ID, and a message that does not disclose internal state.</p>
+
+          <h2 id="setup">Project Setup</h2>
+          <p>Create a Gradle project with Java 21 and Spring Boot 3.x. Add Spring Web and Validation. The sample below stores users in memory to keep attention on error handling; the same pattern works with Spring Data JPA and PostgreSQL.</p>
+          <pre><code class="language-groovy">plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.digitaldrift'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}</code></pre>
+          <h3>Folder Structure</h3>
+          <pre><code class="language-text">src/main/java/com/digitaldrift/exceptiondemo/
+├── ExceptionDemoApplication.java
+├── controller/
+│   └── UserController.java
+├── dto/
+│   ├── CreateUserRequest.java
+│   └── ErrorResponse.java
+├── exception/
+│   ├── BusinessException.java
+│   ├── GlobalExceptionHandler.java
+│   └── ResourceNotFoundException.java
+└── service/
+    └── UserService.java</code></pre>
+
+          <h2 id="code">Complete Source Code</h2>
+          <h3>Application Class</h3>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ExceptionDemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ExceptionDemoApplication.class, args);
+    }
+}</code></pre>
+
+          <h3>Create ErrorResponse DTO</h3>
+          <p>A response DTO is the center of a consistent <strong>rest api error handling spring boot</strong> design. A Java record is concise and immutable. It includes an application-specific error code and an optional map for validation fields.</p>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.dto;
+
+import java.time.Instant;
+import java.util.Map;
+
+public record ErrorResponse(
+        Instant timestamp,
+        int status,
+        String error,
+        String code,
+        String message,
+        String path,
+        Map&lt;String, String&gt; validationErrors
+) {
+}</code></pre>
+
+          <h3>Validation Request DTO</h3>
+          <p>Bean Validation keeps malformed input out of the service layer. Add <code>@Valid</code> to the controller request parameter to activate these annotations.</p>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record CreateUserRequest(
+        @NotBlank(message = "Name is required")
+        @Size(min = 2, max = 80, message = "Name must be between 2 and 80 characters")
+        String name,
+
+        @NotBlank(message = "Email is required")
+        @Email(message = "Email must be valid")
+        String email,
+
+        @Min(value = 18, message = "Age must be at least 18")
+        @Max(value = 120, message = "Age must not exceed 120")
+        int age
+) {
+}</code></pre>
+
+          <h3>Create Custom Exceptions</h3>
+          <p>Custom exceptions tell the global handler what kind of failure occurred. They should represent application meaning, not replace every Java exception in the system.</p>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}</code></pre>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
+
+public class BusinessException extends RuntimeException {
+    public BusinessException(String message) {
+        super(message);
+    }
+}</code></pre>
+
+          <h3>Global Exception Handler: @ControllerAdvice and @ExceptionHandler</h3>
+          <p><code>@ControllerAdvice</code> applies controller-related behavior across the application. Each <code>@ExceptionHandler</code> method catches a type, creates the standard response, and chooses an HTTP status. This is the core of a <strong>controlleradvice spring boot</strong> implementation.</p>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
+
+import com.digitaldrift.exceptiondemo.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleNotFound(
+            ResourceNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(HttpStatus.NOT_FOUND, "RESOURCE_NOT_FOUND",
+                exception.getMessage(), request, Map.of());
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleBusinessException(
+            BusinessException exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(HttpStatus.CONFLICT, "BUSINESS_RULE_VIOLATION",
+                exception.getMessage(), request, Map.of());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleValidation(
+            MethodArgumentNotValidException exception,
+            HttpServletRequest request
+    ) {
+        Map&lt;String, String&gt; errors = new LinkedHashMap&lt;&gt;();
+        for (FieldError error : exception.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED",
+                "One or more fields are invalid", request, errors);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleIllegalArgument(
+            IllegalArgumentException exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "INVALID_ARGUMENT",
+                exception.getMessage(), request, Map.of());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleUnexpected(
+            Exception exception,
+            HttpServletRequest request
+    ) {
+        // Log exception details here with your application's logger.
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR",
+                "An unexpected error occurred", request, Map.of());
+    }
+
+    private ResponseEntity&lt;ErrorResponse&gt; buildResponse(
+            HttpStatus status, String code, String message,
+            HttpServletRequest request, Map&lt;String, String&gt; validationErrors
+    ) {
+        ErrorResponse response = new ErrorResponse(
+                Instant.now(), status.value(), status.getReasonPhrase(), code,
+                message, request.getRequestURI(), validationErrors
+        );
+        return ResponseEntity.status(status).body(response);
+    }
+}</code></pre>
+          <p>The generic handler must come last conceptually: Spring selects the most specific matching exception handler. It gives unknown failures a safe response. Log the original exception on the server, but do not send its stack trace, database driver message, or configuration details to clients.</p>
+
+          <h3>Service Example</h3>
+          <p>The service throws domain-relevant exceptions. In a database-backed application, the lookup would use a repository; the error-handling shape remains the same.</p>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.service;
+
+import com.digitaldrift.exceptiondemo.dto.CreateUserRequest;
+import com.digitaldrift.exceptiondemo.exception.BusinessException;
+import com.digitaldrift.exceptiondemo.exception.ResourceNotFoundException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+    private final Map&lt;Long, CreateUserRequest&gt; users = new ConcurrentHashMap&lt;&gt;();
+    private final AtomicLong nextId = new AtomicLong(1);
+
+    public CreateUserRequest create(CreateUserRequest request) {
+        boolean emailExists = users.values().stream()
+                .anyMatch(user -&gt; user.email().equalsIgnoreCase(request.email()));
+
+        if (emailExists) {
+            throw new BusinessException("A user already exists with this email");
+        }
+
+        users.put(nextId.getAndIncrement(), request);
+        return request;
+    }
+
+    public CreateUserRequest getById(Long id) {
+        if (id &lt;= 0) {
+            throw new IllegalArgumentException("User id must be greater than zero");
+        }
+
+        CreateUserRequest user = users.get(id);
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
+        return user;
+    }
+}</code></pre>
+          <p>The short in-memory store only makes the exception paths easy to follow. In a real application, a database-generated ID and repository would replace it.</p>
+
+          <h3>Controller Example</h3>
+          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.controller;
+
+import com.digitaldrift.exceptiondemo.dto.CreateUserRequest;
+import com.digitaldrift.exceptiondemo.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;CreateUserRequest&gt; create(@Valid @RequestBody CreateUserRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;CreateUserRequest&gt; getById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getById(id));
+    }
+}</code></pre>
+          <p>Notice what is missing: no controller-level <code>try/catch</code>. Controllers stay focused on HTTP input and output, services own business behavior, and the <strong>spring boot global exception handler</strong> owns the error contract.</p>
+
+          <h2 id="responses">Standard API Error Format and Example Responses</h2>
+          <p>Clients should be able to parse every error the same way. The values may change, but the keys should remain consistent. A useful minimum is timestamp, numeric status, reason phrase, machine-readable code, safe message, path, and validation errors.</p>
+          <h3>400 Bad Request: Validation Failure</h3>
+          <pre><code class="language-json">{
+  "timestamp": "2026-06-21T10:15:30Z",
+  "status": 400,
+  "error": "Bad Request",
+  "code": "VALIDATION_FAILED",
+  "message": "One or more fields are invalid",
+  "path": "/api/users",
+  "validationErrors": {
+    "name": "Name is required",
+    "email": "Email must be valid",
+    "age": "Age must be at least 18"
+  }
+}</code></pre>
+          <h3>404 Not Found</h3>
+          <pre><code class="language-json">{
+  "timestamp": "2026-06-21T10:16:00Z",
+  "status": 404,
+  "error": "Not Found",
+  "code": "RESOURCE_NOT_FOUND",
+  "message": "User not found with id: 99",
+  "path": "/api/users/99",
+  "validationErrors": {}
+}</code></pre>
+          <h3>409 Conflict: Business Rule</h3>
+          <pre><code class="language-json">{
+  "timestamp": "2026-06-21T10:17:00Z",
+  "status": 409,
+  "error": "Conflict",
+  "code": "BUSINESS_RULE_VIOLATION",
+  "message": "A user already exists with this email",
+  "path": "/api/users",
+  "validationErrors": {}
+}</code></pre>
+          <h3>500 Internal Server Error</h3>
+          <pre><code class="language-json">{
+  "timestamp": "2026-06-21T10:18:00Z",
+  "status": 500,
+  "error": "Internal Server Error",
+  "code": "INTERNAL_ERROR",
+  "message": "An unexpected error occurred",
+  "path": "/api/users/1",
+  "validationErrors": {}
+}</code></pre>
+
+          <h2>Validation Examples</h2>
+          <p>Use validation annotations close to the request contract. <code>@NotBlank</code> rejects empty text, <code>@Email</code> checks email syntax, <code>@Size</code> bounds text length, and <code>@Min</code>/<code>@Max</code> define numeric rules. These are client-facing rules; database constraints are still important as a final integrity boundary.</p>
+          <p>For nested request objects, place <code>@Valid</code> on the nested field too. For cross-field rules, such as a start date before an end date, create a class-level custom constraint rather than placing fragile business logic in a controller.</p>
+
+          <h2>Best Practices</h2>
+          <ul><li><strong>Write meaningful messages:</strong> State what failed and how a client can correct it. Avoid vague text such as "Bad input".</li><li><strong>Use stable error codes:</strong> Clients can branch on <code>VALIDATION_FAILED</code> even if the human message changes.</li><li><strong>Keep one response structure:</strong> Do not make validation errors look unrelated to not-found errors.</li><li><strong>Log at the right level:</strong> Expected 4xx errors may be info or warn; unexpected 5xx failures need error logs with the exception.</li><li><strong>Map exceptions intentionally:</strong> An exception type should have one clear HTTP meaning.</li><li><strong>Do not leak internals:</strong> Never return stack traces, SQL, filesystem paths, access tokens, or secret values.</li></ul>
+
+          <h2 id="production">Production Considerations</h2>
+          <h3>Correlation IDs and Monitoring</h3>
+          <p>Give each request a correlation ID, return it in a response header, and include it in logs. When a customer reports an error, the ID connects the client response to the exact server-side event. Send error metrics to monitoring tools and alert on rates, not individual expected validation failures.</p>
+          <h3>Security</h3>
+          <p>Authentication failures should return appropriate 401 or 403 responses without confirming sensitive account details. Spring Security can handle those before a controller is reached, so configure its authentication entry point and access-denied handler to use the same general error shape. For a complete authentication flow, see <a href="/post/spring-boot-jwt-authentication-complete-guide">Spring Boot JWT Authentication Guide</a>.</p>
+          <h3>Persistence Errors</h3>
+          <p>Do not expose raw database exceptions. Translate a known duplicate-key condition into a conflict response where appropriate and let unexpected persistence failures become safe 500 errors. The persistence context and transaction boundaries are covered in <a href="/post/spring-boot-postgresql-crud-jpa-hibernate">Spring Boot PostgreSQL CRUD with JPA and Hibernate</a>.</p>
+
+          <h2>Common Mistakes</h2>
+          <h3>Catching Exception Everywhere</h3>
+          <p>Sprinkling broad <code>catch (Exception)</code> blocks through controllers duplicates logic and frequently hides the original cause. Catch an exception locally only when that layer can recover, translate, or add meaningful context. Otherwise, let the global handler do its job.</p>
+          <h3>Exposing Stack Traces</h3>
+          <p>Stack traces help developers but can reveal framework versions, class names, file paths, query details, and system behavior. Keep them in logs, not JSON responses.</p>
+          <h3>Ignoring Validation</h3>
+          <p>Skipping validation pushes bad data deeper into the system, where it creates obscure database errors or broken business logic. Validate at the API boundary, then retain database constraints as defense in depth.</p>
+
+          <h2 id="testing">Testing Error Responses</h2>
+          <p>Test error handling like any other API contract. A focused MVC test verifies both status and JSON keys.</p>
+          <pre><code class="language-java">@WebMvcTest(UserController.class)
+class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
+
+    @Test
+    void returnsNotFoundError() throws Exception {
+        given(userService.getById(99L))
+                .willThrow(new ResourceNotFoundException("User not found with id: 99"));
+
+        mockMvc.perform(get("/api/users/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("RESOURCE_NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("User not found with id: 99"));
+    }
+}</code></pre>
+          <p>Add tests for invalid payloads, duplicate email conflicts, malformed IDs when relevant, and the generic 500 path. Treat response keys and error codes as a compatibility contract for frontend and integration teams.</p>
+
+          <h2>Postman Examples</h2>
+          <p>Start the application with <code>./gradlew bootRun</code>. In Postman, send a valid <code>POST http://localhost:8080/api/users</code> request with <code>Content-Type: application/json</code>:</p>
+          <pre><code class="language-json">{
+  "name": "Ava Patel",
+  "email": "ava@example.com",
+  "age": 28
+}</code></pre>
+          <p>Then try a blank name, invalid email, and age below 18. Confirm that each failure returns <code>400</code>, error code <code>VALIDATION_FAILED</code>, and a populated <code>validationErrors</code> object. Request <code>GET /api/users/99</code> for a 404 response, then post the same email again to see a 409 conflict.</p>
+
+          <h2>cURL Examples</h2>
+          <pre><code class="language-bash">curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ava Patel","email":"ava@example.com","age":28}'
+
+curl http://localhost:8080/api/users/99
+
+curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"","email":"not-an-email","age":16}'</code></pre>
+
+          <h2 id="faq">Interview Questions and Answers</h2>
+          <ul><li><strong>What does @ControllerAdvice do?</strong> It centralizes cross-cutting controller behavior, including exception-to-response mapping.</li><li><strong>What does @ExceptionHandler do?</strong> It marks a method that handles one or more exception types.</li><li><strong>Why use custom exceptions?</strong> They express domain meaning and allow clear HTTP mappings without controller duplication.</li><li><strong>What is MethodArgumentNotValidException?</strong> Spring throws it when a <code>@Valid</code> request object fails Bean Validation.</li><li><strong>When should you return 409 Conflict?</strong> When a valid request conflicts with current resource state, such as a duplicate unique email.</li><li><strong>Why include an error code?</strong> It gives API clients a stable machine-readable value independent of wording.</li></ul>
+
+          <h2>Frequently Asked Questions</h2>
+          <h3>Should every exception have its own handler?</h3><p>No. Create handlers for meaningful categories that need different status codes or response behavior. Let truly unexpected exceptions fall through to one safe generic handler.</p>
+          <h3>Can @RestControllerAdvice be used instead?</h3><p>Yes. <code>@RestControllerAdvice</code> combines <code>@ControllerAdvice</code> with <code>@ResponseBody</code>, which is convenient for JSON-only REST APIs.</p>
+          <h3>Should validation errors be 400 or 422?</h3><p>Both are used in practice. Spring Boot applications commonly use 400 for malformed or invalid request data. Pick one policy, document it, and stay consistent.</p>
+
+          <h2>Conclusion</h2>
+          <p>Good Spring Boot exception handling gives every failed request an intentional outcome. You created a standard error DTO, custom not-found and business exceptions, a global <code>@ControllerAdvice</code>, validation handling for <code>MethodArgumentNotValidException</code>, safe generic handling, and testable client responses.</p>
+          <p>Keep the central idea simple: expected errors should help clients recover, unexpected errors should help operators investigate, and neither should expose internal implementation details. That small discipline pays off quickly as your API grows.</p>
+        </div>
+        <div class="author-bio"><img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" /><div class="author-info"><strong>Dhiraj Roy</strong><p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p></div></div>
+        <nav class="post-nav" aria-label="Post navigation"><a href="/post/spring-boot-postgresql-crud-jpa-hibernate" class="nav-prev"><span class="nav-label">← Previous</span><span class="nav-title">Spring Boot PostgreSQL CRUD with JPA and Hibernate</span></a></nav>
+      </article>
+    </main>
+    <footer class="footer"><p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p><div class="footer-links"><a href="mailto:roykumardhiraj9347@gmail.com">Email</a><a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a><a href="/archive">Archive</a><a href="/contact">Contact</a></div></footer>
+  </div>
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>
