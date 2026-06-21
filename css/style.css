@@ -744,25 +744,41 @@ a:focus-visible {
 /* ---------- FOOTER ---------- */
 .footer {
   margin-top: 5rem;
-  text-align: center;
   border-top: 1px solid var(--color-border);
-  padding: 2rem 0 2.5rem;
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
   font-size: 0.875rem;
-  opacity: 0.8;
+}
+.footer p {
+  color: var(--color-text);
+  opacity: 0.72;
 }
 .footer-links {
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 0.75rem;
+  justify-content: flex-end;
+  gap: 0.25rem 1rem;
+  margin: 0;
   flex-wrap: wrap;
 }
 .footer-links a {
   color: var(--color-text);
   text-decoration: none;
-  transition: color 0.2s;
+  opacity: 0.8;
+  padding: 0.35rem 0;
+  transition: var(--transition);
 }
-.footer-links a:hover { color: var(--color-primary); }
+.footer-links a:hover {
+  color: var(--color-primary);
+  opacity: 1;
+}
+.footer-links a:focus-visible {
+  outline: none;
+  border-radius: 4px;
+  box-shadow: var(--shadow-glow);
+}
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 768px) {
@@ -1270,8 +1286,14 @@ code {
   .page-btn { min-width: 2.1rem; height: 2.1rem; font-size: 0.8rem; }
 
   /* Footer */
-  .footer { margin-top: 3rem; }
-  .footer-links { gap: 1rem; }
+  .footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+  .footer-links { justify-content: flex-start; gap: 0.25rem 1rem; }
 
   /* Back to top */
   .back-to-top { bottom: 1rem; right: 1rem; width: 2.25rem; height: 2.25rem; font-size: 1rem; }
