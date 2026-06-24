@@ -28,6 +28,19 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 18,
+    slug: "spring-boot-pagination-sorting-complete-guide",
+    title: "Spring Boot Pagination and Sorting — Complete Guide",
+    summary: "Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, Sort, validation, and production practices.",
+    date: "Jun 24, 2026",
+    dateISO: "2026-06-24",
+    url: "/post/spring-boot-pagination-sorting-complete-guide",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 19,
+    featured: false
+  },
+
+  {
     id: 17,
     slug: "spring-boot-global-exception-handling-controlleradvice",
     title: "Spring Boot Global Exception Handling with @ControllerAdvice",

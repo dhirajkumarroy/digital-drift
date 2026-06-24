@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spring Boot Pagination and Sorting — Complete Guide | Digital Drift</title>
+  <meta name="description" content="Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, PageRequest, Sort, validation, and complete code." />
+  <meta name="keywords" content="spring boot pagination and sorting, spring data jpa pagination, spring boot pageable example, spring boot sorting example, pagination in spring boot rest api, Java 21, Spring Boot 3, PostgreSQL, Gradle" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta property="og:title" content="Spring Boot Pagination and Sorting — Complete Guide" />
+  <meta property="og:description" content="A practical Spring Data JPA pagination and sorting guide using Java 21, Spring Boot 3.x, PostgreSQL, Gradle, DTOs, validation, and production guardrails." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:site_name" content="Digital Drift" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot Pagination and Sorting — Complete Guide" />
+  <meta name="twitter:description" content="Build scalable pagination and sorting into a Spring Boot PostgreSQL REST API with Spring Data JPA, Java 21, and Gradle." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Spring Boot Pagination and Sorting — Complete Guide","description":"Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, PageRequest, Sort, validation, and complete code.","author":{"@type":"Person","name":"Dhiraj Roy"},"datePublished":"2026-06-24","dateModified":"2026-06-24","url":"https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide","keywords":["spring boot pagination and sorting","spring data jpa pagination","spring boot pageable example","spring boot sorting example","pagination in spring boot rest api","Java 21","Spring Boot 3","PostgreSQL"],"publisher":{"@type":"Organization","name":"Digital Drift","logo":{"@type":"ImageObject","url":"https://blog.dhirajroy.com/apple-touch-icon.png"}}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Pageable in Spring Boot?","acceptedAnswer":{"@type":"Answer","text":"Pageable is a Spring Data interface that carries page number, page size, and sorting information for a repository query."}},{"@type":"Question","name":"What page size should a Spring Boot API use?","acceptedAnswer":{"@type":"Answer","text":"There is no universal number, but a default of 20 to 50 records with a server-enforced maximum is a practical starting point for many REST APIs."}},{"@type":"Question","name":"Should I add a default sort to paginated APIs?","acceptedAnswer":{"@type":"Answer","text":"Yes. A stable default sort, usually by a unique or timestamp field, prevents records from moving unpredictably between pages."}}]}
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VN488V6MP5');</script>
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/archive">Archive</a></nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"><svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg><svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110-2h1zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" /></svg></button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+      </div>
+    </header>
+    <nav id="mobile-menu" class="nav-mobile"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/archive">Archive</a></nav>
+    <main role="main">
+      <article class="blog-post">
+        <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
+        <h1 class="post-title">Spring Boot Pagination and Sorting — Complete Guide</h1>
+        <div class="post-meta"><span>📅 Jun 24, 2026</span><span>⏱ 19 min read</span><span>✍ Dhiraj Roy</span></div>
+        <div class="post-content">
+          <p><strong>Spring boot pagination and sorting</strong> is the difference between an API that works with ten records and one that remains useful when it has ten million. A product catalog, support dashboard, customer list, audit log, or admin panel rarely needs every row at once. Returning a massive dataset slows the database, uses unnecessary network bandwidth, makes browser interfaces sluggish, and creates an awkward experience for the person trying to find one item.</p>
+          <p>In this complete guide, you will build a PostgreSQL-backed product API with <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, <strong>Spring Data JPA</strong>, and <strong>Gradle</strong>. You will use <code>Pageable</code>, <code>PageRequest</code>, and <code>Sort</code>; design a stable pagination response; add validation and global error handling; seed PostgreSQL data; and test everything with Postman and cURL.</p>
+          <blockquote>For the controller basics used here, read <a href="/post/spring-boot-rest-api-30-minutes">Spring Boot REST API Guide</a>. For the persistence foundation, see <a href="/post/spring-boot-postgresql-crud-jpa-hibernate">Spring Boot PostgreSQL CRUD with JPA and Hibernate</a>.</blockquote>
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;"><strong>Table of Contents</strong><ul style="margin-top: 1rem;"><li><a href="#why">Why pagination matters</a></li><li><a href="#concepts">Pagination and sorting concepts</a></li><li><a href="#setup">Project setup</a></li><li><a href="#code">Complete implementation</a></li><li><a href="#api">Endpoints and responses</a></li><li><a href="#performance">Performance and production</a></li><li><a href="#testing">Testing</a></li><li><a href="#faq">FAQ and interview questions</a></li></ul></div>
+
+          <h2 id="why">Why Pagination Matters</h2>
+          <p>Imagine an ecommerce back office with 250,000 products. A plain <code>findAll()</code> endpoint makes PostgreSQL read all rows, Hibernate create a Java object for each row, Spring serialize every object, and the network send an oversized JSON document. Even if it succeeds on a laptop, it wastes resources and risks timeouts in production. Pagination asks for a bounded slice instead: perhaps 20 items at a time.</p>
+          <p>Real-world examples are everywhere: a banking app pages transactions by newest first, a CRM pages contacts by name, a warehouse dashboard pages products by stock quantity, and an audit screen pages events by timestamp. Sorting makes each view useful. A manager may sort low stock first; a buyer may sort products by price; an operator may want the newest records first.</p>
+          <p>Pagination also creates a clear user experience. A frontend can display page controls, show the total result count, and request only the next result set when it is needed. It is a resource-control feature as much as a UI feature.</p>
+
+          <h2 id="concepts">What Is Pagination?</h2>
+          <p>Pagination divides a collection into numbered chunks. In Spring Data, page numbering is zero-based by default, so <code>page=0</code> requests the first page.</p>
+          <ul><li><strong>Page:</strong> The zero-based chunk number. Page 0 is the first page.</li><li><strong>Size:</strong> The maximum number of rows in one response.</li><li><strong>Offset:</strong> The number of rows skipped before the current page. With page 2 and size 20, the offset is 40.</li><li><strong>Limit:</strong> The maximum rows returned. In SQL this corresponds to the page size.</li></ul>
+          <p>For a request of <code>?page=1&amp;size=20</code>, Spring Data ultimately asks PostgreSQL for 20 records after skipping the first 20. Offset pagination is easy to explain and ideal for many admin APIs. Very deep pages can become expensive because the database still has to walk past skipped rows; later in this guide we will cover production alternatives.</p>
+
+          <h2>What Is Sorting?</h2>
+          <p>Sorting determines the order before a page is selected. <strong>Ascending</strong> order, written <code>ASC</code>, moves low values to high values or A to Z. <strong>Descending</strong> order, <code>DESC</code>, moves high values to low values or newest timestamps first. A stable sort matters: if the order changes between requests, a record can appear twice or disappear while the user moves through pages.</p>
+          <p>Multiple-field sorting resolves ties. For example, sort products by <code>category ASC</code> and then <code>name ASC</code>. For pagination, include a unique final field such as <code>id ASC</code> or <code>id DESC</code>. That gives two records with equal timestamps or prices a deterministic order.</p>
+
+          <h2 id="setup">Project Setup</h2>
+          <p>Create a Gradle project with Java 21 and Spring Boot 3.x. Add Spring Web, Spring Data JPA, Validation, and the PostgreSQL driver. This is a conventional <strong>spring data jpa pagination</strong> setup; no special pagination library is required.</p>
+          <pre><code class="language-groovy">plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.digitaldrift'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') { useJUnitPlatform() }</code></pre>
+          <pre><code class="language-yaml">spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_db
+    username: product_user
+    password: product_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8080</code></pre>
+          <p>Use environment variables or a secret manager instead of literal credentials in production. Also replace <code>ddl-auto: update</code> with Flyway or Liquibase migrations before deploying.</p>
+          <h3>Folder Structure</h3>
+          <pre><code class="language-text">src/main/java/com/digitaldrift/catalog/
+├── CatalogApplication.java
+├── controller/ProductController.java
+├── dto/ProductRequest.java
+├── dto/ProductResponse.java
+├── dto/PagedResponse.java
+├── entity/Product.java
+├── exception/GlobalExceptionHandler.java
+├── exception/ResourceNotFoundException.java
+├── repository/ProductRepository.java
+└── service/ProductService.java</code></pre>
+
+          <h2 id="code">Complete Implementation</h2>
+          <h3>Create Product Entity</h3>
+          <p>The entity is the PostgreSQL table model. Store money as <code>BigDecimal</code>, not <code>double</code>, to avoid floating-point surprises. The entity also keeps timestamps that make a useful default sort.</p>
+          <pre><code class="language-java">package com.digitaldrift.catalog.entity;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String name;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private Integer stockQuantity;
+
+    @Column(nullable = false, length = 80)
+    private String category;
+
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
+
+    protected Product() { }
+
+    public Product(String name, BigDecimal price, Integer stockQuantity, String category) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
+    }
+
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public BigDecimal getPrice() { return price; }
+    public Integer getStockQuantity() { return stockQuantity; }
+    public String getCategory() { return category; }
+    public Instant getCreatedAt() { return createdAt; }
+}</code></pre>
+
+          <h3>Create DTOs and Validation</h3>
+          <p>Do not return JPA entities directly. A request DTO defines what the client may send; a response DTO defines the stable public shape. Validation belongs at the API boundary, before expensive persistence work begins.</p>
+          <pre><code class="language-java">package com.digitaldrift.catalog.dto;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
+
+public record ProductRequest(
+        @NotBlank @Size(max = 120) String name,
+        @NotNull @DecimalMin("0.01") BigDecimal price,
+        @NotNull @Min(0) Integer stockQuantity,
+        @NotBlank @Size(max = 80) String category
+) { }</code></pre>
+          <pre><code class="language-java">package com.digitaldrift.catalog.dto;
+
+import com.digitaldrift.catalog.entity.Product;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+public record ProductResponse(
+        Long id, String name, BigDecimal price, Integer stockQuantity,
+        String category, Instant createdAt
+) {
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+                product.getStockQuantity(), product.getCategory(), product.getCreatedAt());
+    }
+}</code></pre>
+
+          <h3>Pagination Response Model</h3>
+          <p>Spring's <code>Page</code> object is excellent internally, but its JSON format exposes framework details and can vary with configuration. A custom response makes the API contract deliberate and easy for frontend teams to consume.</p>
+          <pre><code class="language-java">package com.digitaldrift.catalog.dto;
+
+import org.springframework.data.domain.Page;
+import java.util.List;
+
+public record PagedResponse&lt;T&gt;(
+        List&lt;T&gt; content,
+        int page,
+        int size,
+        long totalElements,
+        int totalPages,
+        boolean first,
+        boolean last,
+        boolean hasNext,
+        boolean hasPrevious
+) {
+    public static &lt;T&gt; PagedResponse&lt;T&gt; from(Page&lt;T&gt; result) {
+        return new PagedResponse&lt;&gt;(
+                result.getContent(), result.getNumber(), result.getSize(),
+                result.getTotalElements(), result.getTotalPages(), result.isFirst(),
+                result.isLast(), result.hasNext(), result.hasPrevious()
+        );
+    }
+}</code></pre>
+
+          <h3>Create Repository Layer</h3>
+          <p><code>JpaRepository</code> already includes the pagination and sorting methods from <code>PagingAndSortingRepository</code>. In older tutorials you may see those interfaces extended separately. With current Spring Data, extending <code>JpaRepository&lt;Product, Long&gt;</code> gives you CRUD, <code>findAll(Pageable)</code>, and sorting support.</p>
+          <pre><code class="language-java">package com.digitaldrift.catalog.repository;
+
+import com.digitaldrift.catalog.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository&lt;Product, Long&gt; {
+}</code></pre>
+
+          <h3>Create Service Layer</h3>
+          <p>The service owns the pagination policy. It limits request size, allowlists sortable fields, and appends <code>id</code> as a tie-breaker. This matters because clients should not be allowed to sort arbitrary entity properties or request an accidental page of 100,000 rows.</p>
+          <pre><code class="language-java">package com.digitaldrift.catalog.service;
+
+import com.digitaldrift.catalog.dto.PagedResponse;
+import com.digitaldrift.catalog.dto.ProductResponse;
+import com.digitaldrift.catalog.entity.Product;
+import com.digitaldrift.catalog.repository.ProductRepository;
+import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class ProductService {
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final Set&lt;String&gt; ALLOWED_SORT_FIELDS =
+            Set.of("id", "name", "price", "stockQuantity", "category", "createdAt");
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse&lt;ProductResponse&gt; getProducts(
+            int page, Integer requestedSize, String sortBy, String direction
+    ) {
+        int size = requestedSize == null ? DEFAULT_PAGE_SIZE : requestedSize;
+        if (page &lt; 0) throw new IllegalArgumentException("Page must be zero or greater");
+        if (size &lt; 1 || size &gt; MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException("Page size must be between 1 and " + MAX_PAGE_SIZE);
+        }
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+        }
+
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction)
+                ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(sortDirection, sortBy).and(Sort.by(sortDirection, "id"));
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page&lt;ProductResponse&gt; result = productRepository.findAll(pageRequest)
+                .map(ProductResponse::from);
+
+        return PagedResponse.from(result);
+    }
+}</code></pre>
+
+          <h3>Create Controller Layer</h3>
+          <p>This <strong>spring boot pageable example</strong> exposes understandable query parameters while keeping policy in the service. The controller provides defaults: page zero, 20 records, newest products first.</p>
+          <pre><code class="language-java">package com.digitaldrift.catalog.controller;
+
+import com.digitaldrift.catalog.dto.PagedResponse;
+import com.digitaldrift.catalog.dto.ProductResponse;
+import com.digitaldrift.catalog.service.ProductService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping
+    public ResponseEntity&lt;PagedResponse&lt;ProductResponse&gt;&gt; getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        return ResponseEntity.ok(productService.getProducts(page, size, sortBy, direction));
+    }
+}</code></pre>
+
+          <h2>Implement Pagination with Pageable and PageRequest</h2>
+          <p><code>Pageable</code> is the Spring Data interface that describes a requested page. <code>PageRequest</code> is the common immutable implementation. In the service above, <code>PageRequest.of(page, size, sort)</code> contains all three concerns in one object. Passing it to <code>repository.findAll(pageRequest)</code> makes Hibernate generate a limited query plus a count query for the total number of rows.</p>
+          <p>Some controllers accept <code>Pageable pageable</code> directly. That is concise and works well internally:</p>
+          <pre><code class="language-java">@GetMapping("/internal")
+public Page&lt;ProductResponse&gt; list(Pageable pageable) {
+    return productRepository.findAll(pageable).map(ProductResponse::from);
+}</code></pre>
+          <p>For a public API, explicit parameters and a controlled <code>PageRequest</code> are often clearer. They let you enforce a maximum size and validate sort fields in one place.</p>
+
+          <h2>Implement Sorting with Sort.by()</h2>
+          <p>A <strong>spring boot sorting example</strong> begins with <code>Sort.by("price")</code>. Add a direction with <code>Sort.by(Sort.Direction.ASC, "price")</code> or <code>Sort.by(Sort.Direction.DESC, "createdAt")</code>. For multiple fields, chain orders:</p>
+          <pre><code class="language-java">Sort sort = Sort.by("category").ascending()
+        .and(Sort.by("name").ascending())
+        .and(Sort.by("id").ascending());</code></pre>
+          <p>The appended ID gives a stable order when two products have the same category and name. Choose a default sort deliberately. A page without a defined order can look correct in development and become unpredictable after a database plan changes.</p>
+
+          <h2 id="api">Pagination and Sorting Together</h2>
+          <p>The endpoint combines both features:</p>
+          <pre><code class="language-text">GET /api/products?page=0&amp;size=20&amp;sortBy=price&amp;direction=asc</code></pre>
+          <p>The service produces a <code>PageRequest</code> with an ascending price sort and a secondary ascending ID sort. PostgreSQL returns the first 20 records in that deterministic order. The API then maps the content into DTOs and returns pagination metadata with it.</p>
+          <h3>API Endpoints</h3>
+          <ul><li><strong>Default page:</strong> <code>GET /api/products</code></li><li><strong>Pagination only:</strong> <code>GET /api/products?page=2&amp;size=10</code></li><li><strong>Sorting only:</strong> <code>GET /api/products?sortBy=name&amp;direction=asc</code></li><li><strong>Combined:</strong> <code>GET /api/products?page=0&amp;size=25&amp;sortBy=stockQuantity&amp;direction=asc</code></li></ul>
+          <h3>Example JSON Response</h3>
+          <pre><code class="language-json">{
+  "content": [
+    {
+      "id": 14,
+      "name": "USB-C Dock",
+      "price": 89.99,
+      "stockQuantity": 4,
+      "category": "Accessories",
+      "createdAt": "2026-06-24T08:15:00Z"
+    },
+    {
+      "id": 7,
+      "name": "Wireless Mouse",
+      "price": 49.99,
+      "stockQuantity": 9,
+      "category": "Accessories",
+      "createdAt": "2026-06-23T09:30:00Z"
+    }
+  ],
+  "page": 0,
+  "size": 20,
+  "totalElements": 128,
+  "totalPages": 7,
+  "first": true,
+  "last": false,
+  "hasNext": true,
+  "hasPrevious": false
+}</code></pre>
+
+          <h2>PostgreSQL Sample Data</h2>
+          <p>Populate the table with a few products before testing. In a real project, use Flyway seed migrations or a local development fixture rather than manually editing production data.</p>
+          <pre><code class="language-sql">INSERT INTO products (name, price, stock_quantity, category, created_at)
+VALUES
+  ('Mechanical Keyboard', 129.99, 25, 'Accessories', NOW()),
+  ('Wireless Mouse', 49.99, 9, 'Accessories', NOW()),
+  ('27-inch Monitor', 329.00, 12, 'Displays', NOW()),
+  ('Laptop Stand', 39.50, 46, 'Accessories', NOW()),
+  ('Webcam', 79.99, 4, 'Accessories', NOW());</code></pre>
+          <p>When queries frequently sort by a field, PostgreSQL needs an index that supports the actual query pattern. More on that shortly.</p>
+
+          <h2>Global Exception Handling Integration</h2>
+          <p>The service throws <code>IllegalArgumentException</code> for negative pages, oversized page sizes, and unapproved sort fields. A global handler turns those into consistent <code>400 Bad Request</code> JSON instead of an unhelpful server error.</p>
+          <pre><code class="language-java">@ExceptionHandler(IllegalArgumentException.class)
+public ResponseEntity&lt;ErrorResponse&gt; handleIllegalArgument(
+        IllegalArgumentException exception,
+        HttpServletRequest request
+) {
+    ErrorResponse response = new ErrorResponse(
+            Instant.now(), 400, "Bad Request", "INVALID_ARGUMENT",
+            exception.getMessage(), request.getRequestURI(), Map.of()
+    );
+    return ResponseEntity.badRequest().body(response);
+}</code></pre>
+          <p>For the full <code>@ControllerAdvice</code> setup, validation errors, and 404/409/500 responses, read <a href="/post/spring-boot-global-exception-handling-controlleradvice">Spring Boot Global Exception Handling</a>. Authentication and authorization errors are covered in the <a href="/post/spring-boot-jwt-authentication-complete-guide">Spring Boot JWT Authentication Guide</a>.</p>
+
+          <h2 id="performance">Performance Benefits and Production Considerations</h2>
+          <p>Pagination reduces the amount of data transferred and the amount of Java heap used per request. It also protects a database from expensive accidental scans. But it is not magic: the count query used to calculate <code>totalElements</code> can still be costly on a large filtered table, and deep offset pages make the database skip many rows.</p>
+          <h3>Database Indexing</h3>
+          <p>Create indexes based on real filters and sorts. For a common category filter ordered by newest first, a composite index can help:</p>
+          <pre><code class="language-sql">CREATE INDEX idx_products_category_created_at_id
+ON products (category, created_at DESC, id DESC);</code></pre>
+          <p>Do not index every column. Each index consumes storage and makes inserts or updates more expensive. Use PostgreSQL <code>EXPLAIN ANALYZE</code> against real query shapes before adding one.</p>
+          <h3>Query Optimization and Caching</h3>
+          <p>Return only fields a screen needs. DTO projections can outperform loading a wide entity graph for read-heavy endpoints. Cache public, slowly changing pages only when cache invalidation is understood; a product inventory page changes often and may not be a good cache candidate. Monitor database latency, count-query time, and popular sort combinations.</p>
+          <h3>Deep Pagination</h3>
+          <p>Offset pagination is a sound default for browse screens. For endless feeds or very deep exports, consider keyset pagination, sometimes called seek pagination. Instead of asking for page 10,000, a client asks for records after a known <code>createdAt</code>/<code>id</code> cursor. It avoids a large offset but needs a cursor-style API and stable ordering.</p>
+
+          <h2>Common Mistakes</h2>
+          <h3>Allowing a Huge Page Size</h3><p>Never trust a client-provided <code>size</code>. A maximum of 100 is a reasonable initial guardrail. Tune it after observing payload size, query performance, and your actual user interface.</p>
+          <h3>Missing a Default Sort</h3><p>Without an explicit order, successive page calls can return records in a different order. Default to a timestamp and unique ID, or another business-defined stable order.</p>
+          <h3>Returning Entities Directly</h3><p>Entities are persistence models, not an API contract. Returning them can expose columns, lazy relationships, and internal changes. Map to DTOs before building a page response.</p>
+          <h3>Accepting Any Sort Property</h3><p>Even when Spring safely builds the query, unrestricted fields turn your API into an undocumented persistence surface. Use an allowlist and tell clients which fields are supported.</p>
+
+          <h2>Best Practices</h2>
+          <ul><li><strong>Use DTOs:</strong> Keep the JSON contract independent from JPA entities.</li><li><strong>Be consistent:</strong> Use the same parameter names and response metadata across list endpoints.</li><li><strong>Set defaults:</strong> A request without query parameters should still be bounded and stable.</li><li><strong>Enforce a maximum:</strong> Put the upper limit on the server, not only in documentation.</li><li><strong>Validate sorting:</strong> Allow only known, indexed, meaningful fields.</li><li><strong>Include metadata:</strong> Clients need total pages and next/previous flags to build reliable pagination controls.</li><li><strong>Document zero-based pages:</strong> It removes a frequent frontend integration mistake.</li></ul>
+
+          <h2 id="testing">Postman Testing</h2>
+          <p>Run the API with <code>./gradlew bootRun</code> and create a Postman collection with these requests:</p>
+          <ul><li><code>GET http://localhost:8080/api/products</code> should return page 0 with size 20.</li><li><code>GET http://localhost:8080/api/products?page=1&amp;size=2</code> should return the second two-record page.</li><li><code>GET http://localhost:8080/api/products?sortBy=price&amp;direction=asc</code> should put the lowest price first.</li><li><code>GET http://localhost:8080/api/products?size=500</code> should return 400 with <code>INVALID_ARGUMENT</code>.</li><li><code>GET http://localhost:8080/api/products?sortBy=password</code> should return 400 because the field is not allowlisted.</li></ul>
+          <h2>cURL Examples</h2>
+          <pre><code class="language-bash">curl "http://localhost:8080/api/products?page=0&amp;size=10"
+
+curl "http://localhost:8080/api/products?sortBy=name&amp;direction=asc"
+
+curl "http://localhost:8080/api/products?page=0&amp;size=25&amp;sortBy=stockQuantity&amp;direction=asc"
+
+curl "http://localhost:8080/api/products?size=500"</code></pre>
+
+          <h2 id="faq">Frequently Asked Questions</h2>
+          <h3>What is the difference between Page and Slice?</h3><p>A <code>Page</code> includes total element and total page counts, which normally requires a count query. A <code>Slice</code> only tells you whether a next slice exists, so it can be cheaper for some feed-style endpoints.</p>
+          <h3>Should API page numbers start at zero or one?</h3><p>Spring Data uses zero by default. You can expose one-based numbers, but converting them consistently adds work. Pick one convention, document it, and do not mix both.</p>
+          <h3>Can I paginate a filtered query?</h3><p>Yes. Add repository methods that accept both the filter and <code>Pageable</code>, such as <code>Page&lt;Product&gt; findByCategory(String category, Pageable pageable)</code>.</p>
+          <h3>Is offset pagination always slow?</h3><p>No. It is efficient for common shallow pages with appropriate indexes. It becomes less attractive for large offsets or highly active datasets, where cursor pagination may be better.</p>
+
+          <h2>Interview Questions and Answers</h2>
+          <ul><li><strong>What is Pageable?</strong> A Spring Data abstraction containing page, size, and sort instructions.</li><li><strong>What does PageRequest do?</strong> It is the standard implementation used to create a pageable request.</li><li><strong>What does JpaRepository add?</strong> It combines CRUD, paging, sorting, flushing, and JPA convenience operations.</li><li><strong>Why use a secondary sort field?</strong> It gives deterministic ordering when primary values are equal.</li><li><strong>Why cap page size?</strong> To protect database, network, and memory resources from expensive requests.</li><li><strong>What is keyset pagination?</strong> A cursor-based technique that fetches rows after a known sorted key instead of skipping an offset.</li><li><strong>Why is a custom page response useful?</strong> It keeps the public API contract stable and framework-independent.</li></ul>
+
+          <h2>Conclusion</h2>
+          <p>Spring Boot pagination and sorting is a small feature with a large production impact. You built a bounded, stable product listing API with PostgreSQL, Spring Data JPA, <code>PageRequest</code>, <code>Sort</code>, DTOs, validation, an allowlisted sort policy, and a custom pagination response.</p>
+          <p>Carry this same pattern to users, orders, transactions, logs, and any other growing dataset. Start with a sensible default page, a clear sort, a strict maximum size, and measured indexes. Your API will be faster, easier to consume, and much calmer under real load.</p>
+        </div>
+        <div class="author-bio"><img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" /><div class="author-info"><strong>Dhiraj Roy</strong><p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p></div></div>
+        <nav class="post-nav" aria-label="Post navigation"><a href="/post/spring-boot-global-exception-handling-controlleradvice" class="nav-prev"><span class="nav-label">← Previous</span><span class="nav-title">Spring Boot Global Exception Handling with @ControllerAdvice</span></a></nav>
+      </article>
+    </main>
+    <footer class="footer"><p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p><div class="footer-links"><a href="mailto:roykumardhiraj9347@gmail.com">Email</a><a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a><a href="/archive">Archive</a><a href="/privacy-policy">Privacy Policy</a><a href="/contact">Contact</a></div></footer>
+  </div>
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>
