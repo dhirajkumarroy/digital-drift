@@ -72,18 +72,23 @@
     featuredEl.innerHTML = `
       <div class="featured-section-label">Featured Post</div>
       <article class="featured-card fade-in-section">
-        <div class="featured-badge">★ Featured</div>
-        <div class="card-tags">${featured.tags.map(getTagHtml).join('')}</div>
-        <h2 class="card-title">
-          <a href="${escapeHtml(featured.url)}">${escapeHtml(featured.title)}</a>
-        </h2>
-        <p class="card-summary">${escapeHtml(featured.summary)}</p>
-        <div class="card-meta">
-          <span>📅 ${escapeHtml(featured.date)}</span>
-          <span>⏱ ${formatReadTime(featured.readTime)}</span>
+        <div class="featured-text-content">
+          <div class="featured-badge">★ Featured</div>
+          <div class="card-tags">${featured.tags.map(getTagHtml).join('')}</div>
+          <h2 class="card-title">
+            <a href="${escapeHtml(featured.url)}">${escapeHtml(featured.title)}</a>
+          </h2>
+          <p class="card-summary">${escapeHtml(featured.summary)}</p>
+          <div class="card-meta">
+            <span>📅 ${escapeHtml(featured.date)}</span>
+            <span>⏱ ${formatReadTime(featured.readTime)}</span>
+          </div>
+          <a href="${escapeHtml(featured.url)}" class="btn-primary" style="text-decoration:none;display:inline-block;margin-top:0.25rem;">
+            Read Article →
+          </a>
         </div>
-        <a href="${escapeHtml(featured.url)}" class="btn-primary" style="text-decoration:none;display:inline-block;margin-top:0.25rem;">
-          Read Article →
+        <a href="${escapeHtml(featured.url)}" class="featured-image-link" aria-label="${escapeHtml(featured.title)}">
+          <img src="${escapeHtml(featured.image || '/android-chrome-512x512.png')}" alt="${escapeHtml(featured.title)}" class="featured-image" loading="lazy" />
         </a>
       </article>
     `;
@@ -136,6 +141,9 @@
       const card = document.createElement('article');
       card.className = 'blog-card';
       card.innerHTML = `
+        <a href="${escapeHtml(post.url)}" class="card-image-link" aria-label="${escapeHtml(post.title)}">
+          <img src="${escapeHtml(post.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(post.title)}" class="card-image" loading="lazy" />
+        </a>
         <div class="card-tags">${post.tags.map(getTagHtml).join('')}</div>
         <h3 class="card-title">
           <a href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>

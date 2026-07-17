@@ -35,6 +35,7 @@ const BLOG_POSTS = [
     date: "Jun 24, 2026",
     dateISO: "2026-06-24",
     url: "/post/spring-boot-pagination-sorting-complete-guide",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 19,
     featured: false
@@ -48,6 +49,7 @@ const BLOG_POSTS = [
     date: "Jun 21, 2026",
     dateISO: "2026-06-21",
     url: "/post/spring-boot-global-exception-handling-controlleradvice",
+    image: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 16,
     featured: false
@@ -61,6 +63,7 @@ const BLOG_POSTS = [
     date: "Jun 17, 2026",
     dateISO: "2026-06-17",
     url: "/post/spring-boot-postgresql-crud-jpa-hibernate",
+    image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 20,
     featured: false
@@ -74,6 +77,7 @@ const BLOG_POSTS = [
     date: "Jun 17",
     dateISO: "2026-06-17",
     url: "/post/spring-boot-jwt-authentication-complete-guide",
+    image: "https://images.unsplash.com/photo-1509822929063-6b6cfc9b42f2?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Security"],
     readTime: 16,
     featured: false
@@ -87,6 +91,7 @@ const BLOG_POSTS = [
     date: "Jun 16, 2026",
     dateISO: "2026-06-16",
     url: "/post/spring-boot-rest-api-30-minutes",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 10,
     featured: false
@@ -100,6 +105,7 @@ const BLOG_POSTS = [
     date: "May 18, 2026",
     dateISO: "2026-05-18",
     url: "/post/nodejs-api-rate-limiting",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=60",
     tags: ["Node.js", "Backend", "Security"],
     readTime: 14,
     featured: false
@@ -113,6 +119,7 @@ const BLOG_POSTS = [
     date: "May 10, 2026",
     dateISO: "2026-05-10",
     url: "/post/nodejs-rbac-roles-permissions",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60",
     tags: ["Node.js", "Backend", "Security"],
     readTime: 14,
     featured: false
@@ -126,6 +133,7 @@ const BLOG_POSTS = [
     date: "May 10, 2026",
     dateISO: "2026-05-10",
     url: "/post/nodejs-jwt-auth",
+    image: "https://images.unsplash.com/photo-1601597111158-2fceff270190?w=800&auto=format&fit=crop&q=60",
     tags: ["Node.js", "Backend", "Security"],
     readTime: 12,
     featured: false
@@ -138,6 +146,7 @@ const BLOG_POSTS = [
     date: "May 05, 2026",
     dateISO: "2026-05-05",
     url: "/post/spring-boot-rest-api-java-21-production-setup",
+    image: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 18,
     featured: false
@@ -150,6 +159,7 @@ const BLOG_POSTS = [
     date: "Apr 24, 2026",
     dateISO: "2026-04-24",
     url: "/post/what-is-backend",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60",
     tags: ["Backend", "Education", "Roadmap"],
     readTime: 12,
     featured: true
@@ -162,6 +172,7 @@ const BLOG_POSTS = [
     date: "Apr 24, 2026",
     dateISO: "2026-04-24",
     url: "/post/nodejs-backend-development-production-api",
+    image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop&q=60",
     tags: ["Node.js backend", "Tech", "Programming"],
     readTime: 20,
     featured: false
@@ -174,6 +185,7 @@ const BLOG_POSTS = [
     date: "Apr 22, 2026",
     dateISO: "2026-04-22",
     url: "/post/docker-complete-guide",
+    image: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&auto=format&fit=crop&q=60",
     tags: ["Backend", "Tech", "Productivity"],
     readTime: 16,
     featured: false
@@ -186,6 +198,7 @@ const BLOG_POSTS = [
     date: "Apr 22, 2026",
     dateISO: "2026-04-22",
     url: "/post/git-and-github-complete-guide",
+    image: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop&q=60",
     tags: ["Backend", "Tech", "Productivity"],
     readTime: 14,
     featured: false
@@ -198,6 +211,7 @@ const BLOG_POSTS = [
     date: "Apr 15, 2026",
     dateISO: "2026-04-15",
     url: "/post/spring-boot-getting-started",
+    image: "https://images.unsplash.com/photo-1484417894907-623942c8ea29?w=800&auto=format&fit=crop&q=60",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 7,
     featured: false

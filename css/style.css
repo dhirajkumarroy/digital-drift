@@ -1375,3 +1375,100 @@ html.light .skeleton-line {
 
 /* Toast in light mode */
 html.light .toast { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+
+/* ============================================================
+   POST COVER & BANNER IMAGES
+   ============================================================ */
+
+/* Blog Card Image styling */
+.card-image-link {
+  display: block;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  border-bottom: 1px solid var(--color-border);
+}
+@media (max-width: 639px) {
+  .card-image-link {
+    margin: -1.2rem -1.2rem 1rem -1.2rem;
+  }
+}
+.card-image {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.blog-card:hover .card-image {
+  transform: scale(1.05);
+}
+
+/* Featured Card Split Grid styling */
+.featured-card {
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+}
+.featured-text-content {
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+.featured-image-link {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 250px;
+}
+.featured-image {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.featured-card:hover .featured-image {
+  transform: scale(1.03);
+}
+@media (min-width: 768px) {
+  .featured-card {
+    grid-template-columns: 1.2fr 1fr !important;
+  }
+  .featured-image-link {
+    height: 100%;
+    min-height: 350px;
+    border-left: 1px solid var(--color-border);
+  }
+}
+@media (max-width: 767px) {
+  .featured-text-content {
+    padding: 1.5rem;
+  }
+  .featured-image-link {
+    order: -1;
+  }
+}
+
+/* Single Post Page Banner styling */
+.post-banner-wrapper {
+  width: 100%;
+  margin: 1.5rem 0 2rem 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow);
+}
+.post-banner-img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+}

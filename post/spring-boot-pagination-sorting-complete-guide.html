@@ -17,14 +17,15 @@
   <meta property="og:description" content="A practical Spring Data JPA pagination and sorting guide using Java 21, Spring Boot 3.x, PostgreSQL, Gradle, DTOs, validation, and production guardrails." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide" />
-  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60" />
   <meta property="og:site_name" content="Digital Drift" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Spring Boot Pagination and Sorting — Complete Guide" />
   <meta name="twitter:description" content="Build scalable pagination and sorting into a Spring Boot PostgreSQL REST API with Spring Data JPA, Java 21, and Gradle." />
-  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Article","headline":"Spring Boot Pagination and Sorting — Complete Guide","description":"Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, PageRequest, Sort, validation, and complete code.","author":{"@type":"Person","name":"Dhiraj Roy"},"datePublished":"2026-06-24","dateModified":"2026-06-24","url":"https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide","keywords":["spring boot pagination and sorting","spring data jpa pagination","spring boot pageable example","spring boot sorting example","pagination in spring boot rest api","Java 21","Spring Boot 3","PostgreSQL"],"publisher":{"@type":"Organization","name":"Digital Drift","logo":{"@type":"ImageObject","url":"https://blog.dhirajroy.com/apple-touch-icon.png"}}}
+  {"@context":"https://schema.org","@type":"Article","headline":"Spring Boot Pagination and Sorting — Complete Guide",
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60","description":"Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, PageRequest, Sort, validation, and complete code.","author":{"@type":"Person","name":"Dhiraj Roy"},"datePublished":"2026-06-24","dateModified":"2026-06-24","url":"https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide","keywords":["spring boot pagination and sorting","spring data jpa pagination","spring boot pageable example","spring boot sorting example","pagination in spring boot rest api","Java 21","Spring Boot 3","PostgreSQL"],"publisher":{"@type":"Organization","name":"Digital Drift","logo":{"@type":"ImageObject","url":"https://blog.dhirajroy.com/apple-touch-icon.png"}}}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Pageable in Spring Boot?","acceptedAnswer":{"@type":"Answer","text":"Pageable is a Spring Data interface that carries page number, page size, and sorting information for a repository query."}},{"@type":"Question","name":"What page size should a Spring Boot API use?","acceptedAnswer":{"@type":"Answer","text":"There is no universal number, but a default of 20 to 50 records with a server-enforced maximum is a practical starting point for many REST APIs."}},{"@type":"Question","name":"Should I add a default sort to paginated APIs?","acceptedAnswer":{"@type":"Answer","text":"Yes. A stable default sort, usually by a unique or timestamp field, prevents records from moving unpredictably between pages."}}]}
@@ -53,6 +54,11 @@
         <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
         <h1 class="post-title">Spring Boot Pagination and Sorting — Complete Guide</h1>
         <div class="post-meta"><span>📅 Jun 24, 2026</span><span>⏱ 19 min read</span><span>✍ Dhiraj Roy</span></div>
+
+        <!-- Post Banner Image -->
+        <div class="post-banner-wrapper">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60" alt="Spring Boot Pagination and Sorting — Complete Guide" class="post-banner-img" />
+        </div>
         <div class="post-content">
           <p><strong>Spring boot pagination and sorting</strong> is the difference between an API that works with ten records and one that remains useful when it has ten million. A product catalog, support dashboard, customer list, audit log, or admin panel rarely needs every row at once. Returning a massive dataset slows the database, uses unnecessary network bandwidth, makes browser interfaces sluggish, and creates an awkward experience for the person trying to find one item.</p>
           <p>In this complete guide, you will build a PostgreSQL-backed product API with <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, <strong>Spring Data JPA</strong>, and <strong>Gradle</strong>. You will use <code>Pageable</code>, <code>PageRequest</code>, and <code>Sort</code>; design a stable pagination response; add validation and global error handling; seed PostgreSQL data; and test everything with Postman and cURL.</p>

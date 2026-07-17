@@ -153,6 +153,12 @@
               </div>
 
               <div class="admin-field">
+                <label for="f-image">Post Image URL *</label>
+                <input type="text" id="f-image" placeholder="e.g. https://images.unsplash.com/... or /images/posts/..." />
+                <span style="font-size:0.75rem;opacity:0.5;margin-top:0.2rem;">A URL to the post's cover/banner image.</span>
+              </div>
+
+              <div class="admin-field">
                 <label for="f-summary">Summary / Excerpt *</label>
                 <textarea id="f-summary" rows="3" class="section-content" placeholder="One sentence describing the post (≤160 chars)…"></textarea>
                 <div class="char-counter"><span id="summary-count">0</span> / 160</div>
@@ -354,8 +360,12 @@
       const date    = formatDisplayDate(document.getElementById('f-date').value) || 'Today';
       const rt      = document.getElementById('f-readtime').value || '5';
       const tagHtml = tags.map(t => `<span class="tag" data-tag="${esc(t)}">${esc(t)}</span>`).join('');
+      const image   = document.getElementById('f-image').value || '/android-chrome-192x192.png';
 
       document.getElementById('card-preview').innerHTML = `
+        <div class="card-image-link" style="margin: -1.5rem -1.5rem 1rem -1.5rem; pointer-events: none;">
+          <img src="${esc(image)}" alt="${esc(title)}" class="card-image" />
+        </div>
         <div class="card-tags">${tagHtml || '<span class="tag">Tag</span>'}</div>
         <h3 class="card-title" style="font-size:1.1rem;margin-bottom:.5rem;">${esc(title)}</h3>
         <div class="card-meta">
@@ -367,9 +377,10 @@
       `;
     }
 
-    ['f-date','f-readtime','f-featured'].forEach(id =>
+    ['f-date','f-readtime','f-featured','f-image'].forEach(id =>
       document.getElementById(id).addEventListener('change', updatePreview)
     );
+    document.getElementById('f-image').addEventListener('input', updatePreview);
     updatePreview();
 
     /* ── Content Sections ─────────────────────────────────── */
@@ -432,13 +443,14 @@
     window.generate = function() {
       const title    = titleInput.value.trim();
       const slug     = slugInput.value.trim();
+      const image    = document.getElementById('f-image').value.trim();
       const summary  = summaryEl.value.trim();
       const isoDate  = document.getElementById('f-date').value;
       const readTime = parseInt(document.getElementById('f-readtime').value) || 5;
       const featured = document.getElementById('f-featured').checked;
 
-      if (!title || !slug || !summary || !isoDate || tags.length === 0) {
-        toast('⚠ Please fill in title, slug, summary, date, and at least one tag.', 'error');
+      if (!title || !slug || !image || !summary || !isoDate || tags.length === 0) {
+        toast('⚠ Please fill in title, slug, image URL, summary, date, and at least one tag.', 'error');
         return;
       }
 
@@ -448,6 +460,7 @@
       const tagStr      = tags.map(t => `<span class="tag" data-tag="${esc(t)}">${esc(t)}</span>`).join('\n            ');
       const schemaTagsStr = tags.map(t => `"${t}"`).join(', ');
       const contentHtml = buildContentHtml();
+      const absoluteImage = image.startsWith('http') ? image : `https://blog.dhirajroy.com${image}`;
 
       /* ── Full Post HTML ─────────────────────────────── */
       const postHtml = `<!DOCTYPE html>
@@ -469,18 +482,19 @@
   <meta property="og:description" content="${esc(summary)}" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://blog.dhirajroy.com/post/${esc(slug)}.html" />
-  <meta property="og:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta property="og:image" content="${esc(absoluteImage)}" />
   <meta property="og:site_name" content="Digital Drift" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(summary)}" />
-  <meta name="twitter:image" content="https://blog.dhirajroy.com/android-chrome-512x512.png" />
+  <meta name="twitter:image" content="${esc(absoluteImage)}" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "${esc(title)}",
     "description": "${esc(summary)}",
+    "image": "${esc(absoluteImage)}",
     "author": { "@type": "Person", "name": "Dhiraj Roy" },
     "datePublished": "${esc(isoDate)}",
     "dateModified": "${esc(isoDate)}",
@@ -547,6 +561,11 @@
         <span>✍ Dhiraj Roy</span>
       </div>
 
+      <!-- Post Banner Image -->
+      <div class="post-banner-wrapper">
+        <img src="${esc(image)}" alt="${esc(title)}" class="post-banner-img" />
+      </div>
+
       <div class="post-content">
 ${contentHtml}
       </div>
@@ -598,6 +617,7 @@ ${contentHtml}
     date: "${displayDate}",
     dateISO: "${isoDate}",
     url: "/post/${slug}.html",
+    image: "${image.replace(/"/g, '\\"')}",
     tags: [${tagsArrayStr}],
     readTime: ${readTime},
     featured: ${featured}
