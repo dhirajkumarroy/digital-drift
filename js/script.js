@@ -579,6 +579,181 @@
     }
   };
 
+  // ── ARTICLE BREADCRUMBS ───────────────────────────────────
+  function initBreadcrumbs() {
+    const postArticle = document.querySelector('.blog-post');
+    if (!postArticle) return;
+
+    const postTitleEl = postArticle.querySelector('.post-title');
+    if (!postTitleEl || postArticle.querySelector('.breadcrumbs')) return;
+
+    const currentPath = window.location.pathname;
+    const currentPost = BLOG_POSTS.find(p => p.url === currentPath || currentPath.endsWith(p.slug) || currentPath.endsWith(p.slug + '.html'));
+    const categoryTag = currentPost && currentPost.tags ? currentPost.tags[0] : 'Engineering';
+
+    const breadcrumbs = document.createElement('nav');
+    breadcrumbs.className = 'breadcrumbs';
+    breadcrumbs.setAttribute('aria-label', 'Breadcrumb navigation');
+    breadcrumbs.innerHTML = `
+      <a href="/">Home</a>
+      <span class="bc-sep">/</span>
+      <a href="/archive">${escapeHtml(categoryTag)}</a>
+      <span class="bc-sep">/</span>
+      <span class="bc-current">${escapeHtml(postTitleEl.textContent.trim())}</span>
+    `;
+
+    postTitleEl.parentNode.insertBefore(breadcrumbs, postTitleEl);
+  }
+
+  // ── ARTICLE AUTO TABLE OF CONTENTS ────────────────────────
+  function initAutoTOC() {
+    const postContent = document.querySelector('.post-content');
+    if (!postContent) return;
+
+    const headings = postContent.querySelectorAll('h2, h3');
+    if (headings.length < 2) return;
+
+    // Check if TOC container already exists in article
+    let tocBox = postContent.querySelector('.table-of-contents') || postContent.querySelector('[style*="Table of Contents"]');
+    if (!tocBox) {
+      // Create auto-generated TOC
+      const autoToc = document.createElement('div');
+      autoToc.className = 'auto-toc-box';
+      let tocHtml = '<strong>Table of Contents</strong><ul class="auto-toc-list">';
+      
+      headings.forEach((h, index) => {
+        if (!h.id) {
+          h.id = 'heading-' + index + '-' + h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+        const isSub = h.tagName.toLowerCase() === 'h3';
+        tocHtml += `<li class="${isSub ? 'toc-sub' : 'toc-main'}"><a href="#${h.id}">${escapeHtml(h.textContent.trim())}</a></li>`;
+      });
+      tocHtml += '</ul>';
+      autoToc.innerHTML = tocHtml;
+
+      const firstParagraph = postContent.querySelector('p');
+      if (firstParagraph && firstParagraph.nextSibling) {
+        postContent.insertBefore(autoToc, firstParagraph.nextSibling);
+      } else {
+        postContent.insertBefore(autoToc, postContent.firstChild);
+      }
+    }
+
+    // Scroll spy for headings
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.auto-toc-list a').forEach(link => {
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { rootMargin: '-10% 0px -75% 0px' });
+
+    headings.forEach(h => observer.observe(h));
+  }
+
+  // ── AUTHOR BIO & RELATED POSTS ────────────────────────────
+  function initAuthorBioAndRelatedPosts() {
+    const postArticle = document.querySelector('.blog-post');
+    const postContent = document.querySelector('.post-content');
+    if (!postArticle || !postContent) return;
+
+    const currentPath = window.location.pathname;
+    const currentPost = BLOG_POSTS.find(p => p.url === currentPath || currentPath.endsWith(p.slug) || currentPath.endsWith(p.slug + '.html'));
+
+    // 1. Author Bio Card
+    if (!postContent.querySelector('.author-bio-card')) {
+      const authorCard = document.createElement('div');
+      authorCard.className = 'author-bio-card';
+      authorCard.innerHTML = `
+        <div class="author-bio-avatar-wrapper">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-bio-avatar" />
+        </div>
+        <div class="author-bio-content">
+          <div class="author-bio-header">
+            <h3>Dhiraj Roy</h3>
+            <span class="author-bio-role">Backend &amp; System Design Specialist</span>
+          </div>
+          <p class="author-bio-text">
+            Software Engineer building production systems with Java 21, Spring Boot 3.x, Microservices, PostgreSQL, and AI integrations. Founder &amp; Lead Author at Digital Drift.
+          </p>
+          <div class="author-bio-links">
+            <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+            <a href="/about">About Author</a>
+          </div>
+        </div>
+      `;
+      postContent.appendChild(authorCard);
+    }
+
+    // 2. Newsletter Signup Box
+    if (!postContent.querySelector('.newsletter-card')) {
+      const newsletterCard = document.createElement('div');
+      newsletterCard.className = 'newsletter-card';
+      newsletterCard.innerHTML = `
+        <div class="newsletter-icon">⚡</div>
+        <div class="newsletter-content">
+          <h3>Subscribe to Digital Drift Digest</h3>
+          <p>Get high-quality, practical engineering guides on Java 21, Spring Boot, microservices, and system design sent straight to your inbox.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); if(window.showToast) window.showToast('🎉 Thank you for subscribing to Digital Drift!'); this.reset();">
+            <input type="email" placeholder="Enter your email address…" required class="newsletter-input" />
+            <button type="submit" class="btn-primary newsletter-btn">Subscribe Free</button>
+          </form>
+        </div>
+      `;
+      postContent.appendChild(newsletterCard);
+    }
+
+    // 3. Related Posts Grid
+    if (currentPost && !postContent.querySelector('.related-posts-section')) {
+      const primaryTag = currentPost.tags[0];
+      const related = BLOG_POSTS.filter(p => p.id !== currentPost.id && p.tags.includes(primaryTag)).slice(0, 2);
+      if (related.length > 0) {
+        const relatedSec = document.createElement('div');
+        relatedSec.className = 'related-posts-section';
+        relatedSec.innerHTML = `
+          <h3 class="related-posts-title">Related Articles You Might Like</h3>
+          <div class="related-posts-grid">
+            ${related.map(p => `
+              <a href="${escapeHtml(p.url)}" class="related-post-card">
+                <img src="${escapeHtml(p.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(p.title)}" class="related-post-img" loading="lazy" />
+                <div class="related-post-info">
+                  <span class="related-post-tag">${escapeHtml(p.tags[0])}</span>
+                  <h4 class="related-post-heading">${escapeHtml(p.title)}</h4>
+                  <span class="related-post-meta">⏱ ${formatReadTime(p.readTime)}</span>
+                </div>
+              </a>
+            `).join('')}
+          </div>
+        `;
+        postContent.appendChild(relatedSec);
+      }
+    }
+
+    // 4. Comments Section Container
+    if (!postContent.querySelector('.comments-section')) {
+      const commentsSec = document.createElement('div');
+      commentsSec.className = 'comments-section';
+      commentsSec.innerHTML = `
+        <h3 class="comments-title">💬 Discussion &amp; Feedback</h3>
+        <p class="comments-subtitle">Have questions or suggestions? Join the developer conversation.</p>
+        <div id="giscus-container" class="giscus-container">
+          <div class="comments-fallback">
+            <p>Leave a comment or share your thoughts via <a href="https://github.com/dhirajkumarroy/digital-drift/discussions" target="_blank" rel="noopener">GitHub Discussions</a>.</p>
+          </div>
+        </div>
+      `;
+      postContent.appendChild(commentsSec);
+    }
+  }
+
   // ── INIT ──────────────────────────────────────────────────
   function init() {
     initTheme();
@@ -588,7 +763,10 @@
     initCopyCodeBtns();
     initFadeIn();
     initFooterYear();
+    initBreadcrumbs();
+    initAutoTOC();
     initSocialSharing();
+    initAuthorBioAndRelatedPosts();
     bindEvents();
 
     if (postsContainer) {
