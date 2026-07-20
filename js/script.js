@@ -70,22 +70,30 @@
     if (!featured) { featuredEl.style.display = 'none'; return; }
 
     featuredEl.innerHTML = `
-      <div class="featured-section-label">Featured Post</div>
+      <div class="featured-section-label">✨ Featured Story</div>
       <article class="featured-card fade-in-section">
         <div class="featured-text-content">
-          <div class="featured-badge">★ Featured</div>
-          <div class="card-tags">${featured.tags.map(getTagHtml).join('')}</div>
+          <div class="featured-badge">
+            <span class="badge-dot"></span> Featured Article
+          </div>
           <h2 class="card-title">
             <a href="${escapeHtml(featured.url)}">${escapeHtml(featured.title)}</a>
           </h2>
           <p class="card-summary">${escapeHtml(featured.summary)}</p>
+          <div class="card-tags">${featured.tags.map(getTagHtml).join('')}</div>
           <div class="card-meta">
             <span>📅 ${escapeHtml(featured.date)}</span>
+            <span class="meta-dot">•</span>
             <span>⏱ ${formatReadTime(featured.readTime)}</span>
           </div>
-          <a href="${escapeHtml(featured.url)}" class="btn-primary" style="text-decoration:none;display:inline-block;margin-top:0.25rem;">
-            Read Article →
-          </a>
+          <div class="featured-action">
+            <a href="${escapeHtml(featured.url)}" class="btn-primary featured-btn">
+              Read Article
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
+                <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
         </div>
         <a href="${escapeHtml(featured.url)}" class="featured-image-link" aria-label="${escapeHtml(featured.title)}">
           <img src="${escapeHtml(featured.image || '/android-chrome-512x512.png')}" alt="${escapeHtml(featured.title)}" class="featured-image" loading="lazy" />
@@ -99,10 +107,29 @@
   function renderStats() {
     if (!statsBarEl) return;
     const allTags = new Set(BLOG_POSTS.flatMap(p => p.tags));
+    const totalMins = BLOG_POSTS.reduce((s,p) => s + p.readTime, 0);
     statsBarEl.innerHTML = `
-      <div class="stat-item"><strong>${BLOG_POSTS.length}</strong>&nbsp;Posts Published</div>
-      <div class="stat-item"><strong>${allTags.size}</strong>&nbsp;Topics</div>
-      <div class="stat-item"><strong>${BLOG_POSTS.reduce((s,p) => s + p.readTime, 0)}</strong>&nbsp;Min of Reading</div>
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-info">
+          <span class="stat-number">${BLOG_POSTS.length}</span>
+          <span class="stat-label">Articles Published</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏷️</div>
+        <div class="stat-info">
+          <span class="stat-number">${allTags.size}</span>
+          <span class="stat-label">Core Topics</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-info">
+          <span class="stat-number">${totalMins} <small>min</small></span>
+          <span class="stat-label">Reading Time</span>
+        </div>
+      </div>
     `;
   }
 
@@ -129,10 +156,16 @@
     const end      = start + POSTS_PER_PAGE;
     const toRender = filtered.slice(start, end);
 
+    // Update count badge
+    const countBadge = document.getElementById('posts-count-badge');
+    if (countBadge) {
+      countBadge.textContent = `${total} article${total === 1 ? '' : 's'}`;
+    }
+
     postsContainer.innerHTML = '';
 
     if (total === 0) {
-      postsContainer.innerHTML = '<div class="no-results">No posts found. Try a different search or tag.</div>';
+      postsContainer.innerHTML = '<div class="no-results">No posts found. Try a different search or tag filter.</div>';
       if (paginationEl) paginationEl.innerHTML = '';
       return;
     }
@@ -144,21 +177,25 @@
         <a href="${escapeHtml(post.url)}" class="card-image-link" aria-label="${escapeHtml(post.title)}">
           <img src="${escapeHtml(post.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(post.title)}" class="card-image" loading="lazy" />
         </a>
-        <div class="card-tags">${post.tags.map(getTagHtml).join('')}</div>
-        <h3 class="card-title">
-          <a href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>
-        </h3>
-        <div class="card-meta">
-          <span>📅 ${escapeHtml(post.date)}</span>
-          <span class="read-time-badge">⏱ ${formatReadTime(post.readTime)}</span>
+        <div class="card-body">
+          <div class="card-tags">${post.tags.map(getTagHtml).join('')}</div>
+          <h3 class="card-title">
+            <a href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>
+          </h3>
+          <p class="card-summary">${escapeHtml(post.summary)}</p>
+          <div class="card-footer">
+            <div class="card-meta">
+              <span>📅 ${escapeHtml(post.date)}</span>
+              <span class="read-time-badge">⏱ ${formatReadTime(post.readTime)}</span>
+            </div>
+            <a href="${escapeHtml(post.url)}" class="card-link" aria-label="Read ${escapeHtml(post.title)}">
+              Read
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/>
+              </svg>
+            </a>
+          </div>
         </div>
-        <p class="card-summary">${escapeHtml(post.summary)}</p>
-        <a href="${escapeHtml(post.url)}" class="card-link">
-          Read More
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-            <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/>
-          </svg>
-        </a>
       `;
       // Staggered fade-in
       setTimeout(() => card.classList.add('fade-in'), i * 55);

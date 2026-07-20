@@ -119,21 +119,26 @@
     <!-- Search -->
     <div class="search-container">
       <label for="search-input" class="sr-only">Search blog posts</label>
-      <span class="search-icon" aria-hidden="true">🔍</span>
+      <span class="search-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </span>
       <input
         type="search"
         id="search-input"
-        placeholder="Search posts… (press / to focus)"
+        placeholder="Search articles by title, topic, or keyword…"
         class="search-input"
         autocomplete="off"
       />
+      <span class="search-shortcut">/</span>
       <button id="search-clear" class="search-clear" aria-label="Clear search">✕</button>
     </div>
 
     <!-- Blog Posts -->
     <main role="main">
-      <h1 class="main-heading">Digital Drift</h1>
-      <h2 class="section-title">Latest Posts</h2>
+      <div class="section-header-bar">
+        <h2 class="section-title">Latest Articles</h2>
+        <span class="posts-count-badge" id="posts-count-badge"></span>
+      </div>
       <div id="blog-posts-container" class="posts-grid"></div>
       <nav id="pagination" class="pagination" aria-label="Blog post pages"></nav>
     </main>
