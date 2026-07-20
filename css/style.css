@@ -893,7 +893,6 @@ a:focus-visible {
   .mobile-menu-toggle { display: block; }
   .container { padding: 0 1rem; }
   .main-heading { font-size: 1.75rem; }
-  .featured-card { padding: 1.5rem; }
   .featured-card .card-title { font-size: 1.3rem; }
   .back-to-top { bottom: 1.25rem; right: 1.25rem; width: 2.4rem; height: 2.4rem; font-size: 1.1rem; }
   .stats-bar { gap: 1rem; }
@@ -1362,7 +1361,6 @@ code {
   .stat-item { font-size: 0.8rem; }
 
   /* Featured card */
-  .featured-card { padding: 1.25rem; }
   .featured-card .card-title { font-size: 1.2rem; }
   .featured-card .card-summary { font-size: 0.95rem; }
 
@@ -1512,42 +1510,85 @@ html.light .toast { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
   transform: scale(1.05);
 }
 
-/* Featured Card Split Grid styling */
+/* ---------- FEATURED HERO SECTION & RESPONSIVE GRID ---------- */
+.featured-section {
+  margin-bottom: 2.75rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 .featured-card {
   padding: 0 !important;
   display: grid !important;
   grid-template-columns: 1fr;
-  overflow: hidden;
+  border-radius: 18px;
   background: var(--color-card);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
+.featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  z-index: 3;
+}
+.featured-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(6, 172, 211, 0.4);
+}
+
 .featured-text-content {
   padding: 2.25rem 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
   z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
+
 .featured-image-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   overflow: hidden;
   width: 100%;
+  max-width: 100%;
   height: 260px;
   background: #090d16;
+  box-sizing: border-box;
+  text-decoration: none;
 }
 .featured-image {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: right center;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 0.5rem;
   transition: transform 0.35s ease;
+  box-sizing: border-box;
 }
 .featured-card:hover .featured-image {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
-@media (min-width: 768px) {
+
+/* ── RESPONSIVE BREAKPOINTS ────────────────────────────────────── */
+
+/* Large Desktop (>1400px) & Standard Desktop (900px - 1400px) */
+@media (min-width: 900px) {
   .featured-card {
     grid-template-columns: 1.15fr 1fr !important;
   }
@@ -1555,18 +1596,55 @@ html.light .toast { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
     height: 100%;
     min-height: 360px;
     border-left: 1px solid var(--color-border);
-  }
-}
-@media (max-width: 767px) {
-  .featured-text-content {
-    padding: 1.5rem;
-  }
-  .featured-image-link {
-    order: -1;
-    height: 220px;
+    border-top: none;
   }
   .featured-image {
-    object-position: center;
+    padding: 0.75rem;
+  }
+}
+
+/* Tablet (600px - 899px) */
+@media (min-width: 600px) and (max-width: 899px) {
+  .featured-card {
+    grid-template-columns: 1fr !important;
+  }
+  .featured-text-content {
+    padding: 1.75rem 2rem;
+  }
+  .featured-image-link {
+    width: 100%;
+    height: 280px;
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .featured-image {
+    padding: 0.5rem;
+  }
+}
+
+/* Mobile (<600px) */
+@media (max-width: 599px) {
+  .featured-card {
+    grid-template-columns: 1fr !important;
+  }
+  .featured-text-content {
+    padding: 1.25rem 1.5rem;
+  }
+  .featured-card .card-title {
+    font-size: 1.35rem;
+  }
+  .featured-card .card-summary {
+    font-size: 0.95rem;
+  }
+  .featured-image-link {
+    width: 100%;
+    height: 210px;
+    max-height: 230px;
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .featured-image {
+    padding: 0.25rem;
   }
 }
 
