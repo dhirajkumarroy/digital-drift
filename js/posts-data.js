@@ -159,7 +159,7 @@ const BLOG_POSTS = [
     date: "Apr 24, 2026",
     dateISO: "2026-04-24",
     url: "/post/what-is-backend",
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=60",
+    image: "https://lh3.googleusercontent.com/d/1To1A9K5lT-LY2qwMikyUSykJMbau_ZHi",
     tags: ["Backend", "Education", "Roadmap"],
     readTime: 12,
     featured: true
