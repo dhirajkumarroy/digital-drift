@@ -496,6 +496,89 @@
     if (el) el.textContent = new Date().getFullYear();
   }
 
+  // ── SOCIAL SHARING ───────────────────────────────────────
+  function initSocialSharing() {
+    const postArticle = document.querySelector('.blog-post');
+    if (!postArticle) return;
+
+    const postTitleEl = postArticle.querySelector('.post-title');
+    const postContent = postArticle.querySelector('.post-content');
+    if (!postTitleEl || !postContent) return;
+
+    const shareUrl = encodeURIComponent(window.location.href);
+    const shareTitle = encodeURIComponent(postTitleEl.textContent.trim());
+
+    const twitterUrl  = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`;
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${shareTitle}%20${shareUrl}`;
+
+    function createShareBarHtml(label) {
+      return `
+        <div class="social-share-wrapper">
+          <span class="share-label">${label || 'Share this article:'}</span>
+          <div class="social-share-buttons">
+            <a href="${twitterUrl}" target="_blank" rel="noopener noreferrer" class="share-btn share-twitter" aria-label="Share on X (Twitter)">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span>X / Twitter</span>
+            </a>
+            <a href="${linkedinUrl}" target="_blank" rel="noopener noreferrer" class="share-btn share-linkedin" aria-label="Share on LinkedIn">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <a href="${facebookUrl}" target="_blank" rel="noopener noreferrer" class="share-btn share-facebook" aria-label="Share on Facebook">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.6 13.78 5.6c1.1 0 2.25.2 2.25.2v2.47h-1.27c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 3h-2.34v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
+              <span>Facebook</span>
+            </a>
+            <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="share-btn share-whatsapp" aria-label="Share on WhatsApp">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.81 9.81 0 0 0 12.04 2zm5.8 13.56c-.25.69-1.46 1.33-2.02 1.41-.53.08-1.2.12-1.93-.11-.45-.14-1.03-.33-1.78-.66-3.13-1.36-5.17-4.52-5.33-4.73-.15-.21-1.27-1.69-1.27-3.23 0-1.54.8-2.3 1.09-2.6.28-.3.62-.38.83-.38.21 0 .42 0 .6.01.2.01.46-.08.72.54.26.63.9 2.2.98 2.36.08.16.13.35.03.56-.1.21-.15.34-.3.51-.15.17-.32.38-.46.51-.15.15-.3.31-.13.61.17.3 1.09 1.8 2.68 3.21 1.6 1.42 2.94 1.86 3.36 2.07.42.21.67.18.92-.1.25-.28 1.07-1.25 1.36-1.68.29-.43.58-.36.97-.21.39.15 2.49 1.17 2.91 1.38.42.21.7.31.8.49.1.18.1.99-.15 1.68z"/></svg>
+              <span>WhatsApp</span>
+            </a>
+            <button class="share-btn share-copy" onclick="copyPostLink()" aria-label="Copy link to clipboard">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              <span>Copy Link</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Top share bar
+    const topBar = document.createElement('div');
+    topBar.className = 'post-share-top';
+    topBar.innerHTML = createShareBarHtml('Share this article:');
+
+    const banner = postArticle.querySelector('.post-banner-wrapper');
+    if (banner) {
+      banner.parentNode.insertBefore(topBar, banner);
+    } else {
+      postTitleEl.parentNode.insertBefore(topBar, postTitleEl.nextSibling);
+    }
+
+    // Bottom share bar
+    const bottomBar = document.createElement('div');
+    bottomBar.className = 'post-share-bottom';
+    bottomBar.innerHTML = createShareBarHtml('Enjoyed this guide? Share it with your network:');
+    postContent.appendChild(bottomBar);
+  }
+
+  window.copyPostLink = function() {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        if (window.showToast) window.showToast('📋 Link copied to clipboard!');
+      });
+    } else {
+      const input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      if (window.showToast) window.showToast('📋 Link copied to clipboard!');
+    }
+  };
+
   // ── INIT ──────────────────────────────────────────────────
   function init() {
     initTheme();
@@ -505,6 +588,7 @@
     initCopyCodeBtns();
     initFadeIn();
     initFooterYear();
+    initSocialSharing();
     bindEvents();
 
     if (postsContainer) {
