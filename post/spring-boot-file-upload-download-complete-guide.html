@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spring Boot File Upload and Download — Complete Guide | Digital Drift</title>
+  <meta name="description" content="Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, file validation, security best practices, and production advice." />
+  <meta name="keywords" content="spring boot file upload, spring boot multipart file upload, spring boot file download, spring boot upload image, multipartfile spring boot, spring boot upload files to server, Java 21, Spring Boot 3, PostgreSQL, Gradle" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta property="og:title" content="Spring Boot File Upload and Download — Complete Guide" />
+  <meta property="og:description" content="A complete hands-on guide to building secure spring boot file upload and download REST APIs with Java 21, Spring Boot 3.x, PostgreSQL, and Gradle." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide" />
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki" />
+  <meta property="og:site_name" content="Digital Drift" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot File Upload and Download — Complete Guide" />
+  <meta name="twitter:description" content="Build production-grade file upload and download APIs in Spring Boot 3.x using MultipartFile, PostgreSQL metadata storage, and Java 21." />
+  <meta name="twitter:image" content="https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Spring Boot File Upload and Download — Complete Guide",
+    "image": "https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki",
+    "description": "Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, file validation, security best practices, and production advice.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-07-20",
+    "dateModified": "2026-07-20",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide",
+    "keywords": ["spring boot file upload", "spring boot multipart file upload", "spring boot file download", "spring boot upload image", "multipartfile spring boot", "spring boot upload files to server", "Java 21", "Spring Boot 3", "PostgreSQL"],
+    "publisher": { "@type": "Organization", "name": "Digital Drift", "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" } }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I handle large file uploads in Spring Boot?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Configure max-file-size and max-request-size in application.yml. For very large files (hundreds of MBs or GBs), stream files directly to storage or use presigned S3 URLs to bypass application memory bottlenecks." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is MultipartFile in Spring Boot?",
+        "acceptedAnswer": { "@type": "Answer", "text": "MultipartFile is a Spring representation of an uploaded file received in a multipart HTTP request. It provides utility methods to inspect file name, content type, size, and byte stream." }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I store file binaries directly in PostgreSQL BLOB or on the filesystem?",
+        "acceptedAnswer": { "@type": "Answer", "text": "For production applications, store binary content on local disk storage or object storage (Amazon S3 / Azure Blob) and save file metadata (name, size, content type, path) in PostgreSQL for fast querying and lightweight database backups." }
+      }
+    ]
+  }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VN488V6MP5');</script>
+  <link rel="stylesheet" href="/css/style.css?v=3" />
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress"></div>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Digital Drift</a>
+      <div class="header-actions">
+        <nav class="nav-desktop"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/archive">Archive</a></nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"><svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg><svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110-2h1zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" /></svg></button>
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+      </div>
+    </header>
+    <nav id="mobile-menu" class="nav-mobile"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/archive">Archive</a></nav>
+    <main role="main">
+      <article class="blog-post">
+        <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
+        <h1 class="post-title">Spring Boot File Upload and Download — Complete Guide</h1>
+        <div class="post-meta"><span>📅 Jul 20, 2026</span><span>⏱ 22 min read</span><span>✍ Dhiraj Roy</span></div>
+
+        <!-- Post Banner Image -->
+        <div class="post-banner-wrapper">
+          <img src="https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki" alt="Spring Boot File Upload and Download — Complete Guide" class="post-banner-img" />
+        </div>
+        <div class="post-content">
+          <p>Handling <strong>spring boot file upload</strong> and file download operations is a fundamental requirement for almost every modern web application and RESTful backend service. Whether you are building an e-commerce platform allowing sellers to upload product images, a document management system handling PDF invoices, an HR portal processing resumes, or a social networking app storing user avatars—handling file transfers cleanly, securely, and scalably is essential.</p>
+          <p>In this comprehensive, production-ready guide, we will build a complete file management REST API using <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, <strong>Spring Data JPA</strong>, <strong>PostgreSQL</strong>, and <strong>Gradle</strong>. You will learn how to handle single and batch <strong>spring boot multipart file upload</strong> requests, serve inline browser previews for images, trigger file attachments for downloads, store metadata cleanly in PostgreSQL, enforce strict validation, implement global exception handling, prevent path traversal security vulnerabilities, and prepare your application for production deployment.</p>
+
+          <blockquote>
+            For core API building blocks used in this tutorial, see our articles on <a href="/post/spring-boot-rest-api-30-minutes">Spring Boot REST API in 30 Minutes</a>, <a href="/post/spring-boot-postgresql-crud-jpa-hibernate">Spring Boot PostgreSQL CRUD with JPA and Hibernate</a>, and <a href="/post/spring-boot-global-exception-handling-controlleradvice">Spring Boot Global Exception Handling with @ControllerAdvice</a>.
+          </blockquote>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0; border: 1px solid var(--color-border);">
+            <strong>Table of Contents</strong>
+            <ul style="margin-top: 1rem; columns: 2; -webkit-columns: 2; -moz-columns: 2;">
+              <li><a href="#introduction">1. Introduction</a></li>
+              <li><a href="#multipart-file">2. Understanding MultipartFile</a></li>
+              <li><a href="#project-setup">3. Project Setup</a></li>
+              <li><a href="#project-structure">4. Project Structure</a></li>
+              <li><a href="#configuration">5. File Upload Properties</a></li>
+              <li><a href="#dto">6. Create FileUploadResponse DTO</a></li>
+              <li><a href="#storage-service">7. Create File Storage Service</a></li>
+              <li><a href="#controller">8. Create Upload Controller</a></li>
+              <li><a href="#single-upload">9. Upload Single File</a></li>
+              <li><a href="#multiple-upload">10. Upload Multiple Files</a></li>
+              <li><a href="#download-api">11. Download File API</a></li>
+              <li><a href="#view-images">12. View Images in Browser</a></li>
+              <li><a href="#delete-files">13. Delete Uploaded Files</a></li>
+              <li><a href="#validation">14. Validate Uploaded Files</a></li>
+              <li><a href="#postgresql-metadata">15. File Metadata in PostgreSQL</a></li>
+              <li><a href="#rest-endpoints">16. REST API Endpoints</a></li>
+              <li><a href="#json-responses">17. JSON Responses</a></li>
+              <li><a href="#postman-testing">18. Testing with Postman</a></li>
+              <li><a href="#curl-examples">19. cURL Examples</a></li>
+              <li><a href="#common-errors">20. Common Errors</a></li>
+              <li><a href="#security">21. Security Best Practices</a></li>
+              <li><a href="#production">22. Production Considerations</a></li>
+              <li><a href="#faq">23. Frequently Asked Questions</a></li>
+              <li><a href="#interview-questions">24. Interview Questions &amp; Answers</a></li>
+              <li><a href="#conclusion">25. Conclusion</a></li>
+            </ul>
+          </div>
+
+          <h2 id="introduction">1. Introduction</h2>
+          <h3>Why File Upload Matters</h3>
+          <p>Files represent unstructured data. Unlike traditional database fields like usernames or email addresses, files vary vastly in size, format, binary encoding, and security profiles. Handling file uploads requires proper memory management (avoiding loading 500 MB files directly into Java heap memory), validation, and secure disk management.</p>
+          <h3>Real-world Use Cases</h3>
+          <ul>
+            <li><strong>Media &amp; User Avatars:</strong> Profile picture uploads, photo galleries, cover banners.</li>
+            <li><strong>Document Portals:</strong> PDF invoices, tax documents, signed contracts, medical records.</li>
+            <li><strong>E-Commerce:</strong> High-resolution product images, digital downloads (PDFs, ZIPs).</li>
+            <li><strong>Enterprise Workflows:</strong> CSV/Excel spreadsheet imports, bulk report generation.</li>
+          </ul>
+          <h3>Supported File Types</h3>
+          <p>Our Spring Boot application will support standard image formats (JPEG, PNG, WEBP), document formats (PDF, DOCX), text files (CSV, TXT), and archives (ZIP), with custom validation to reject unauthorized executable scripts (<code>.sh</code>, <code>.exe</code>, <code>.bat</code>).</p>
+
+          <h2 id="multipart-file">2. Understanding MultipartFile</h2>
+          <h3>What is MultipartFile?</h3>
+          <p><code>MultipartFile</code> is a core Spring interface in the <code>org.springframework.web.multipart</code> package. It represents an uploaded file received in a <code>multipart/form-data</code> HTTP request. Spring automatically parses the incoming boundary-delimited HTTP payload and wraps each file in a <code>MultipartFile</code> object.</p>
+          <p>Key methods provided by <code>MultipartFile</code>:</p>
+          <ul>
+            <li><code>getOriginalFilename()</code>: Returns the filename in the client's filesystem.</li>
+            <li><code>getContentType()</code>: Returns the MIME type (e.g., <code>image/png</code>, <code>application/pdf</code>).</li>
+            <li><code>getSize()</code>: Returns the file size in bytes.</li>
+            <li><code>getBytes()</code>: Returns the file content as a byte array (use with caution for large files).</li>
+            <li><code>getInputStream()</code>: Provides an <code>InputStream</code> to stream file content efficiently.</li>
+            <li><code>transferTo(File dest)</code>: Convenience method to copy the uploaded file directly to a destination file.</li>
+          </ul>
+          <h3>How Spring Boot Handles File Uploads</h3>
+          <p>Under the hood, Spring Boot uses Servlet 3.0+ multipart parsing (or Commons FileUpload). When a request with <code>Content-Type: multipart/form-data</code> hits the server, Spring Boot writes temporary files to a disk directory if the file exceeds a configured threshold, preventing <code>OutOfMemoryError</code> exceptions on your JVM.</p>
+
+          <h2 id="project-setup">3. Project Setup</h2>
+          <p>Generate a new project using <strong>Spring Initializr</strong> (start.spring.io) or configure your <code>build.gradle</code> manually with <strong>Java 21</strong> and <strong>Spring Boot 3.3.x</strong>.</p>
+          <h3>Gradle Configuration (`build.gradle`)</h3>
+          <pre><code class="language-groovy">plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.digitaldrift'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}</code></pre>
+
+          <h2 id="project-structure">4. Project Structure</h2>
+          <p>Following modern layered architecture and domain clean structure in Spring Boot 3.x:</p>
+          <pre><code class="language-text">src/main/java/com/digitaldrift/fileupload/
+├── FileUploadApplication.java
+├── config/
+│   └── FileStorageProperties.java
+├── controller/
+│   └── FileController.java
+├── dto/
+│   └── FileUploadResponse.java
+├── entity/
+│   └── FileMetadata.java
+├── exception/
+│   ├── FileStorageException.java
+│   ├── MyFileNotFoundException.java
+│   └── GlobalExceptionHandler.java
+├── repository/
+│   └── FileMetadataRepository.java
+└── service/
+    └── FileStorageService.java</code></pre>
+
+          <h2 id="configuration">5. Configure File Upload Properties</h2>
+          <p>Configure custom upload limits and the target storage location in <code>src/main/resources/application.yml</code>:</p>
+          <pre><code class="language-yaml">server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/file_db
+    username: postgres
+    password: postgres_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Configure Spring Boot Servlet Multipart limits
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+# Custom application properties for file storage
+file:
+  upload-dir: ./uploads</code></pre>
+
+          <h3>Configuration Class</h3>
+          <p>Create a strongly-typed Java 21 configuration bean using <code>@ConfigurationProperties</code>:</p>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Component
+@ConfigurationProperties(prefix = "file")
+public class FileStorageProperties {
+    private String uploadDir;
+
+    public String getUploadDir() {
+        return uploadDir;
+    }
+
+    public void setUploadDir(String uploadDir) {
+        this.uploadDir = uploadDir;
+    }
+}</code></pre>
+
+          <h2 id="dto">6. Create FileUploadResponse DTO</h2>
+          <p>Using Java 21 <code>record</code> syntax for lightweight, immutable Data Transfer Objects:</p>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.dto;
+
+public record FileUploadResponse(
+    String fileId,
+    String fileName,
+    String fileDownloadUri,
+    String fileType,
+    long size
+) {}</code></pre>
+
+          <h2 id="postgresql-metadata">15. Store File Metadata in PostgreSQL</h2>
+          <p>Before implementing the storage service, let's create the PostgreSQL JPA entity, repository, and exception classes to keep metadata trackable.</p>
+
+          <h3>JPA Entity (`FileMetadata.java`)</h3>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "file_metadata")
+public class FileMetadata {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @Column(nullable = false)
+    private String fileName;
+
+    @Column(nullable = false)
+    private String storedFileName;
+
+    @Column(nullable = false)
+    private String contentType;
+
+    @Column(nullable = false)
+    private Long fileSize;
+
+    @Column(nullable = false)
+    private String filePath;
+
+    @Column(nullable = false)
+    private LocalDateTime uploadedAt;
+
+    public FileMetadata() {}
+
+    public FileMetadata(String fileName, String storedFileName, String contentType, Long fileSize, String filePath) {
+        this.fileName = fileName;
+        this.storedFileName = storedFileName;
+        this.contentType = contentType;
+        this.fileSize = fileSize;
+        this.filePath = filePath;
+        this.uploadedAt = LocalDateTime.now();
+    }
+
+    // Getters and Setters
+    public String getId() { return id; }
+    public String getFileName() { return fileName; }
+    public void setFileName(String fileName) { this.fileName = fileName; }
+    public String getStoredFileName() { return storedFileName; }
+    public void setStoredFileName(String storedFileName) { this.storedFileName = storedFileName; }
+    public String getContentType() { return contentType; }
+    public void setContentType(String contentType) { this.contentType = contentType; }
+    public Long getFileSize() { return fileSize; }
+    public void setFileSize(Long fileSize) { this.fileSize = fileSize; }
+    public String getFilePath() { return filePath; }
+    public void setFilePath(String filePath) { this.filePath = filePath; }
+    public LocalDateTime getUploadedAt() { return uploadedAt; }
+    public void setUploadedAt(LocalDateTime uploadedAt) { this.uploadedAt = uploadedAt; }
+}</code></pre>
+
+          <h3>Repository Interface (`FileMetadataRepository.java`)</h3>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.repository;
+
+import com.digitaldrift.fileupload.entity.FileMetadata;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface FileMetadataRepository extends JpaRepository&lt;FileMetadata, String&gt; {
+    Optional&lt;FileMetadata&gt; findByStoredFileName(String storedFileName);
+}</code></pre>
+
+          <h3>Custom Exception Classes</h3>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.exception;
+
+public class FileStorageException extends RuntimeException {
+    public FileStorageException(String message) {
+        super(message);
+    }
+    public FileStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+
+package com.digitaldrift.fileupload.exception;
+
+public class MyFileNotFoundException extends RuntimeException {
+    public MyFileNotFoundException(String message) {
+        super(message);
+    }
+}</code></pre>
+
+          <h2 id="storage-service">7. Create File Storage Service</h2>
+          <p>The service handles disk I/O, file validation, UUID renaming for security, and database persistence:</p>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.service;
+
+import com.digitaldrift.fileupload.config.FileStorageProperties;
+import com.digitaldrift.fileupload.entity.FileMetadata;
+import com.digitaldrift.fileupload.exception.FileStorageException;
+import com.digitaldrift.fileupload.exception.MyFileNotFoundException;
+import com.digitaldrift.fileupload.repository.FileMetadataRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.*;
+import java.util.*;
+
+@Service
+public class FileStorageService {
+
+    private final Path fileStorageLocation;
+    private final FileMetadataRepository metadataRepository;
+
+    private static final List&lt;String&gt; ALLOWED_CONTENT_TYPES = Arrays.asList(
+        "image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain", "application/zip"
+    );
+
+    @Autowired
+    public FileStorageService(FileStorageProperties fileStorageProperties, FileMetadataRepository metadataRepository) {
+        this.metadataRepository = metadataRepository;
+        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+                .toAbsolutePath().normalize();
+
+        try {
+            Files.createDirectories(this.fileStorageLocation);
+        } catch (Exception ex) {
+            throw new FileStorageException("Could not create the upload directory where files will be stored.", ex);
+        }
+    }
+
+    public FileMetadata storeFile(MultipartFile file) {
+        // 1. Validate empty file
+        if (file.isEmpty()) {
+            throw new FileStorageException("Failed to store empty file.");
+        }
+
+        // 2. Validate MIME type
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
+            throw new FileStorageException("File type not allowed: " + contentType);
+        }
+
+        // 3. Clean and sanitize filename
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        if (originalFileName.contains("..")) {
+            throw new FileStorageException("Filename contains invalid path sequence: " + originalFileName);
+        }
+
+        // 4. Generate unique stored filename to prevent collisions
+        String fileExtension = "";
+        int lastDotIndex = originalFileName.lastIndexOf('.');
+        if (lastDotIndex &gt; 0) {
+            fileExtension = originalFileName.substring(lastDotIndex);
+        }
+        String storedFileName = UUID.randomUUID().toString() + fileExtension;
+
+        try {
+            // 5. Copy file to target location
+            Path targetLocation = this.fileStorageLocation.resolve(storedFileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            // 6. Save metadata in PostgreSQL
+            FileMetadata metadata = new FileMetadata(
+                originalFileName,
+                storedFileName,
+                contentType,
+                file.getSize(),
+                targetLocation.toString()
+            );
+
+            return metadataRepository.save(metadata);
+
+        } catch (IOException ex) {
+            throw new FileStorageException("Could not store file " + originalFileName + ". Please try again!", ex);
+        }
+    }
+
+    public Resource loadFileAsResource(String fileId) {
+        FileMetadata metadata = metadataRepository.findById(fileId)
+                .orElseThrow(() -&gt; new MyFileNotFoundException("File not found with id " + fileId));
+
+        try {
+            Path filePath = this.fileStorageLocation.resolve(metadata.getStoredFileName()).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() &amp;&amp; resource.isReadable()) {
+                return resource;
+            } else {
+                throw new MyFileNotFoundException("File not found or unreadable: " + metadata.getFileName());
+            }
+        } catch (MalformedURLException ex) {
+            throw new MyFileNotFoundException("File path error for id " + fileId, ex);
+        }
+    }
+
+    public FileMetadata getFileMetadata(String fileId) {
+        return metadataRepository.findById(fileId)
+                .orElseThrow(() -&gt; new MyFileNotFoundException("File metadata not found with id " + fileId));
+    }
+
+    public List&lt;FileMetadata&gt; getAllFiles() {
+        return metadataRepository.findAll();
+    }
+
+    public void deleteFile(String fileId) {
+        FileMetadata metadata = getFileMetadata(fileId);
+        try {
+            Path filePath = this.fileStorageLocation.resolve(metadata.getStoredFileName()).normalize();
+            Files.deleteIfExists(filePath);
+            metadataRepository.delete(metadata);
+        } catch (IOException ex) {
+            throw new FileStorageException("Could not delete file with id " + fileId, ex);
+        }
+    }
+}</code></pre>
+
+          <h2 id="controller">8. Create Upload Controller</h2>
+          <h2 id="single-upload">9. Upload Single File</h2>
+          <h2 id="multiple-upload">10. Upload Multiple Files</h2>
+          <h2 id="download-api">11. Download File API</h2>
+          <h2 id="view-images">12. View Images in Browser</h2>
+          <h2 id="delete-files">13. Delete Uploaded Files</h2>
+          <h2 id="rest-endpoints">16. REST API Endpoints</h2>
+
+          <p>Here is the full <code>@RestController</code> implementation covering single uploads, batch uploads, file downloads (attachment header), inline image previews, deletion, and file listing:</p>
+
+          <pre><code class="language-java">package com.digitaldrift.fileupload.controller;
+
+import com.digitaldrift.fileupload.dto.FileUploadResponse;
+import com.digitaldrift.fileupload.entity.FileMetadata;
+import com.digitaldrift.fileupload.service.FileStorageService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/files")
+public class FileController {
+
+    private final FileStorageService fileStorageService;
+
+    @Autowired
+    public FileController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
+
+    // 1. Upload Single File
+    @PostMapping("/upload")
+    public ResponseEntity&lt;FileUploadResponse&gt; uploadFile(@RequestParam("file") MultipartFile file) {
+        FileMetadata metadata = fileStorageService.storeFile(file);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/files/download/")
+                .path(metadata.getId())
+                .toUriString();
+
+        FileUploadResponse response = new FileUploadResponse(
+                metadata.getId(),
+                metadata.getFileName(),
+                fileDownloadUri,
+                metadata.getContentType(),
+                metadata.getFileSize()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // 2. Upload Multiple Files
+    @PostMapping("/upload-multiple")
+    public ResponseEntity&lt;List&lt;FileUploadResponse&gt;&gt; uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+        List&lt;FileUploadResponse&gt; responses = Arrays.stream(files)
+                .map(this::uploadFile)
+                .map(ResponseEntity::getBody)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responses);
+    }
+
+    // 3. Download File (Forces download dialog via Content-Disposition: attachment)
+    @GetMapping("/download/{fileId}")
+    public ResponseEntity&lt;Resource&gt; downloadFile(@PathVariable String fileId) {
+        FileMetadata metadata = fileStorageService.getFileMetadata(fileId);
+        Resource resource = fileStorageService.loadFileAsResource(fileId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(metadata.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getFileName() + "\"")
+                .body(resource);
+    }
+
+    // 4. View Image / Document inline in Browser (Content-Disposition: inline)
+    @GetMapping("/view/{fileId}")
+    public ResponseEntity&lt;Resource&gt; viewFileInBrowser(@PathVariable String fileId, HttpServletRequest request) {
+        FileMetadata metadata = fileStorageService.getFileMetadata(fileId);
+        Resource resource = fileStorageService.loadFileAsResource(fileId);
+
+        String contentType = metadata.getContentType();
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + metadata.getFileName() + "\"")
+                .body(resource);
+    }
+
+    // 5. List All File Metadata
+    @GetMapping
+    public ResponseEntity&lt;List&lt;FileMetadata&gt;&gt; getAllFiles() {
+        List&lt;FileMetadata&gt; files = fileStorageService.getAllFiles();
+        return ResponseEntity.ok(files);
+    }
+
+    // 6. Delete File
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity&lt;Void&gt; deleteFile(@PathVariable String fileId) {
+        fileStorageService.deleteFile(fileId);
+        return ResponseEntity.noContent().build();
+    }
+}</code></pre>
+
+          <h2 id="validation">14. Validate Uploaded Files</h2>
+          <p>Proper file validation guards your server against disk exhaustion and malicious script injection:</p>
+          <ul>
+            <li><strong>Empty File Check:</strong> Verify <code>file.isEmpty()</code> before processing.</li>
+            <li><strong>File Size Check:</strong> Enforced via Spring Boot properties <code>spring.servlet.multipart.max-file-size</code>.</li>
+            <li><strong>MIME Type Validation:</strong> Restrict uploads strictly against an allowed white-list of content types.</li>
+            <li><strong>Path Traversal Check:</strong> Sanitize names using <code>StringUtils.cleanPath()</code> and ensure no relative sequences (<code>..</code>) are passed.</li>
+          </ul>
+
+          <h2 id="json-responses">17. JSON Responses</h2>
+          <h3>Single Upload Success Response (`201 Created`)</h3>
+          <pre><code class="language-json">{
+  "fileId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  "fileName": "spring-architecture.png",
+  "fileDownloadUri": "http://localhost:8080/api/files/download/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  "fileType": "image/png",
+  "size": 1048576
+}</code></pre>
+
+          <h3>Multiple Upload Success Response (`201 Created`)</h3>
+          <pre><code class="language-json">[
+  {
+    "fileId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+    "fileName": "document1.pdf",
+    "fileDownloadUri": "http://localhost:8080/api/files/download/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+    "fileType": "application/pdf",
+    "size": 204800
+  },
+  {
+    "fileId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "fileName": "banner.webp",
+    "fileDownloadUri": "http://localhost:8080/api/files/download/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "fileType": "image/webp",
+    "size": 512000
+  }
+]</code></pre>
+
+          <h2 id="postman-testing">18. Testing with Postman</h2>
+          <ol>
+            <li>Open Postman and create a new request.</li>
+            <li>Set HTTP method to <code>POST</code> and URL to <code>http://localhost:8080/api/files/upload</code>.</li>
+            <li>Select the <strong>Body</strong> tab, choose <strong>form-data</strong>.</li>
+            <li>In the key column, type <code>file</code> and switch key type from Text to <strong>File</strong>.</li>
+            <li>In the value column, click select files and choose an image or PDF from your computer.</li>
+            <li>Click <strong>Send</strong>. You should receive a <code>201 Created</code> response with the file metadata JSON.</li>
+          </ol>
+
+          <h2 id="curl-examples">19. cURL Examples</h2>
+          <h3>Upload Single File</h3>
+          <pre><code class="language-bash">curl -X POST http://localhost:8080/api/files/upload \
+  -F "file=@/path/to/my-image.png"</code></pre>
+
+          <h3>Upload Multiple Files</h3>
+          <pre><code class="language-bash">curl -X POST http://localhost:8080/api/files/upload-multiple \
+  -F "files=@/path/to/doc1.pdf" \
+  -F "files=@/path/to/doc2.pdf"</code></pre>
+
+          <h3>Download File</h3>
+          <pre><code class="language-bash">curl -O -J http://localhost:8080/api/files/download/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d</code></pre>
+
+          <h3>Delete File</h3>
+          <pre><code class="language-bash">curl -X DELETE http://localhost:8080/api/files/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d</code></pre>
+
+          <h2 id="common-errors">20. Common Errors &amp; Exception Handling</h2>
+          <h3>Global Exception Handler (`GlobalExceptionHandler.java`)</h3>
+          <p>Handle <code>MaxUploadSizeExceededException</code> and custom file exceptions centrally:</p>
+          <pre><code class="language-java">package com.digitaldrift.fileupload.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.EXPECTATION_FAILED.value());
+        body.put("error", "Expectation Failed");
+        body.put("message", "File size exceeds configured maximum limit (10MB)");
+
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(body);
+    }
+
+    @ExceptionHandler(MyFileNotFoundException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleFileNotFoundException(MyFileNotFoundException exc) {
+        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", exc.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleFileStorageException(FileStorageException exc) {
+        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Bad Request");
+        body.put("message", exc.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+}</code></pre>
+
+          <h2 id="security">21. Security Best Practices</h2>
+          <ol>
+            <li><strong>Rename Files to UUIDs:</strong> Never store files using the client's original file name on disk. A filename like <code>../../../etc/passwd</code> or <code>shell.jsp</code> can overwrite critical files or trigger remote code execution.</li>
+            <li><strong>Validate MIME Type Server-Side:</strong> Inspect Content-Type headers and Apache Tika magic bytes to verify true file formats rather than trusting client extensions.</li>
+            <li><strong>Prevent Path Traversal:</strong> Always sanitize filename strings using <code>StringUtils.cleanPath()</code> and ensure resolved paths lie strictly inside your configured base upload directory.</li>
+            <li><strong>Restrict Executable Files:</strong> Disable execution permissions on the upload folder at the operating system level (e.g., <code>chmod -R 644 uploads/</code>).</li>
+            <li><strong>Virus &amp; Malware Scanning:</strong> Integrate anti-virus solutions (such as ClamAV) to scan uploaded files before making them accessible to users.</li>
+          </ol>
+
+          <h2 id="production">22. Production Considerations</h2>
+          <ul>
+            <li><strong>Store Files Outside Application Directory:</strong> Never save uploaded files inside the compiled JAR/WAR directory or embedded Tomcat static resources. Use external volumes or dedicated storage paths.</li>
+            <li><strong>Use Cloud Object Storage:</strong> For containerized deployments (Kubernetes, AWS ECS, Docker), upload files to Amazon S3, Google Cloud Storage, or Azure Blob Storage instead of local disk.</li>
+            <li><strong>CDN Integration:</strong> Route static media through a Content Delivery Network (Cloudflare, AWS CloudFront) for high-performance global caching and reduced server load.</li>
+            <li><strong>Backup &amp; Retention Strategy:</strong> Implement automated nightly snapshots for persistent disk volumes and database metadata tables.</li>
+          </ul>
+
+          <h2 id="faq">23. Frequently Asked Questions</h2>
+          <p><strong>Q1: Why does Spring Boot throw <code>MaxUploadSizeExceededException</code>?</strong><br />
+          This occurs when an uploaded file or total multipart request size exceeds the thresholds defined in <code>spring.servlet.multipart.max-file-size</code> and <code>spring.servlet.multipart.max-request-size</code>.</p>
+
+          <p><strong>Q2: Is storing binary BLOBs inside PostgreSQL a bad practice?</strong><br />
+          For small files under 256KB (like thumbnails), BLOBs work fine. However, storing large files in PostgreSQL inflates database size, slows down backups, and increases memory consumption. Storing file binaries on disk/cloud storage and metadata in PostgreSQL is the industry standard.</p>
+
+          <h2 id="interview-questions">24. Interview Questions &amp; Answers</h2>
+          <p><strong>Q1: How does <code>Content-Disposition: inline</code> differ from <code>Content-Disposition: attachment</code>?</strong><br />
+          <code>inline</code> instructs the web browser to render the file directly inside the browser tab (ideal for images and PDFs), whereas <code>attachment</code> forces the browser to prompt a file save download dialog.</p>
+
+          <p><strong>Q2: How do you prevent Path Traversal vulnerabilities during file uploads in Java?</strong><br />
+          Sanitize input filenames, strip relative path sequences (<code>..</code>), resolve paths against a trusted root directory, and verify that the target path starts with the normalized root directory path.</p>
+
+          <h2 id="conclusion">25. Conclusion</h2>
+          <p>Building a robust <strong>spring boot file upload</strong> and download architecture requires attention to file validation, memory management, database metadata mapping, and security guardrails. By combining Spring Boot 3.x, Java 21 records, PostgreSQL metadata tracking, and clean exception handling, you have built a scalable, production-ready foundation.</p>
+
+          <p>Next steps: Connect your storage service to Amazon S3 using the AWS SDK v2, add <a href="/post/spring-boot-jwt-authentication-complete-guide">Spring Boot JWT Authentication</a> to protect upload endpoints, and implement pagination using our <a href="/post/spring-boot-pagination-sorting-complete-guide">Spring Boot Pagination and Sorting Guide</a>.</p>
+        </div>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
+      <div class="footer-links">
+        <a href="mailto:roykumardhiraj9347@gmail.com">Email</a>
+        <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="/archive">Archive</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+  </div>
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=3"></script>
+  <script src="/js/script.js?v=3"></script>
+</body>
+</html>

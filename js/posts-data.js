@@ -28,6 +28,20 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 19,
+    slug: "spring-boot-file-upload-download-complete-guide",
+    title: "Spring Boot File Upload and Download — Complete Guide",
+    summary: "Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, validation, security, and production practices.",
+    date: "Jul 20, 2026",
+    dateISO: "2026-07-20",
+    url: "/post/spring-boot-file-upload-download-complete-guide",
+    image: "https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki",
+    tags: ["Java", "Spring Boot", "Backend"],
+    readTime: 22,
+    featured: false
+  },
+
+  {
     id: 18,
     slug: "spring-boot-pagination-sorting-complete-guide",
     title: "Spring Boot Pagination and Sorting — Complete Guide",
