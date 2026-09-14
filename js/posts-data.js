@@ -28,6 +28,20 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 20,
+    slug: "system-design-roadmap-beginner-to-advanced",
+    title: "The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced",
+    summary: "A linear, five-phase system design roadmap for developers. Master networking, data storage, distributed systems, reliability, and interview execution.",
+    date: "Sep 14, 2026",
+    dateISO: "2026-09-14",
+    url: "/post/system-design-roadmap-beginner-to-advanced",
+    image: "/images/system-design-roadmap.jpg",
+    tags: ["System Design", "Architecture", "Backend"],
+    readTime: 10,
+    featured: false
+  },
+
+  {
     id: 19,
     slug: "spring-boot-file-upload-download-complete-guide",
     title: "Spring Boot File Upload and Download — Complete Guide",
