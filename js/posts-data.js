@@ -63,7 +63,7 @@ const BLOG_POSTS = [
     date: "Jun 21, 2026",
     dateISO: "2026-06-21",
     url: "/post/spring-boot-global-exception-handling-controlleradvice",
-    image: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop&q=60",
+    image: "/images/spring-boot-exception-handling.jpg",
     tags: ["Java", "Spring Boot", "Backend"],
     readTime: 16,
     featured: false
