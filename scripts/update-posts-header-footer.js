@@ -137,12 +137,12 @@ const NEW_FOOTER = `  </div><!-- /.container -->
         </div>
       </div>
 
-      <div class="footer-bottom-row">
-        <p>&copy; <span id="current-year"></span> Digital Drift. All rights reserved. Built with passion for developers.</p>
-        <div class="footer-bottom-links">
+      <div class="footer-bottom-bar">
+        <p class="footer-copyright">&copy; <span id="current-year">2026</span> Digital Drift. All rights reserved.</p>
+        <div class="footer-legal-links">
           <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/contact">Terms of Service</a>
           <a href="/contact">Contact</a>
-          <a href="/archive">Archive</a>
         </div>
       </div>
     </div>

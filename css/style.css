@@ -1589,7 +1589,8 @@ html.dark .footer-col-title { color: #FFFFFF; }
   display: block;
 }
 
-.footer-bottom-bar {
+.footer-bottom-bar,
+.footer-bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1601,18 +1602,28 @@ html.dark .footer-col-title { color: #FFFFFF; }
   gap: 1rem;
 }
 
-.footer-legal-links {
+.footer-copyright,
+.footer-bottom-bar p,
+.footer-bottom-row p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.footer-legal-links,
+.footer-bottom-links {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
-.footer-legal-links a {
+.footer-legal-links a,
+.footer-bottom-links a {
   color: var(--color-text-muted);
   text-decoration: none;
   transition: color 0.2s ease;
 }
-.footer-legal-links a:hover {
+.footer-legal-links a:hover,
+.footer-bottom-links a:hover {
   color: var(--color-primary);
 }
 
