@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="84" height="84" viewBox="0 0 84 84" fill="none">
+  <rect width="84" height="84" rx="14" fill="#0D1F12"/>
+  <path d="M42 20L64 32.5V57.5L42 70L20 57.5V32.5L42 20Z" fill="#166534" fill-opacity="0.25" stroke="#22C55E" stroke-width="2.5"/>
+  <text x="42" y="49" fill="#22C55E" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" letter-spacing="-0.5" text-anchor="middle">node</text>
+</svg>

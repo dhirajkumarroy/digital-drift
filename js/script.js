@@ -51,7 +51,27 @@
   // ── POST FILTERING ────────────────────────────────────────
   function getFilteredPosts() {
     let filtered = [...BLOG_POSTS];
-    if (activeTag) filtered = filtered.filter(p => p.tags.includes(activeTag));
+    if (activeTag) {
+      if (activeTag === 'Backend') {
+        filtered = filtered.filter(p => p.tags.some(t => /backend|java|spring|node|api/i.test(t)));
+      } else if (activeTag === 'Frontend') {
+        filtered = filtered.filter(p => p.tags.some(t => /frontend|react|ui|web|css|html/i.test(t)) || p.summary.toLowerCase().includes('frontend') || p.title.toLowerCase().includes('frontend'));
+        if (filtered.length === 0) filtered = BLOG_POSTS.slice(0, 4);
+      } else if (activeTag === 'JavaScript') {
+        filtered = filtered.filter(p => p.tags.some(t => /javascript|js|node|tech/i.test(t)) || p.title.toLowerCase().includes('javascript') || p.summary.toLowerCase().includes('javascript'));
+      } else if (activeTag === 'Node.js') {
+        filtered = filtered.filter(p => p.tags.some(t => /node/i.test(t)));
+      } else if (activeTag === 'Laravel') {
+        filtered = filtered.filter(p => p.tags.some(t => /laravel|backend/i.test(t)) || p.title.toLowerCase().includes('laravel'));
+        if (filtered.length === 0) filtered = BLOG_POSTS.slice(0, 4);
+      } else if (activeTag === 'Database') {
+        filtered = filtered.filter(p => p.tags.some(t => /database|sql|postgres/i.test(t)) || p.title.toLowerCase().includes('postgresql') || p.summary.toLowerCase().includes('database'));
+      } else if (activeTag === 'DevOps') {
+        filtered = filtered.filter(p => p.tags.some(t => /devops|docker|git|cloud/i.test(t)) || p.title.toLowerCase().includes('docker') || p.title.toLowerCase().includes('git'));
+      } else {
+        filtered = filtered.filter(p => p.tags.includes(activeTag));
+      }
+    }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(p =>
@@ -66,89 +86,123 @@
   // ── RENDER FEATURED POST ──────────────────────────────────
   function renderFeatured() {
     if (!featuredEl) return;
-    const featured = BLOG_POSTS.find(p => p.featured);
+    const featured = BLOG_POSTS.find(p => p.featured) || BLOG_POSTS[0];
     if (!featured) { featuredEl.style.display = 'none'; return; }
 
     featuredEl.innerHTML = `
-      <div class="featured-section-label">✨ Featured Story</div>
+      <div class="section-top-header">
+        <div class="section-title-wrap-row">
+          <span class="section-star">⭐</span>
+          <h2 class="section-title">Featured Article</h2>
+        </div>
+        <a href="/archive" class="section-action-link">View all <span class="arrow">→</span></a>
+      </div>
       <article class="featured-card fade-in-section">
+        <div class="featured-image-container">
+          <a href="${escapeHtml(featured.url)}" class="featured-image-link" aria-label="${escapeHtml(featured.title)}">
+            <span class="badge-new">NEW</span>
+            <img src="${escapeHtml(featured.image || '/android-chrome-512x512.png')}" alt="${escapeHtml(featured.title)}" class="featured-image" loading="eager" />
+          </a>
+        </div>
         <div class="featured-text-content">
-          <div class="featured-badge">
-            <span class="badge-dot"></span> Featured Article
+          <div class="card-tags">
+            <span class="tag tag-pill tag-blue">Frontend</span>
+            <span class="tag tag-pill tag-subtle">${escapeHtml(featured.tags[0] || 'React')}</span>
           </div>
-          <h2 class="card-title">
+          <h3 class="featured-card-title">
             <a href="${escapeHtml(featured.url)}">${escapeHtml(featured.title)}</a>
-          </h2>
-          <p class="card-summary">${escapeHtml(featured.summary)}</p>
-          <div class="card-tags">${featured.tags.map(getTagHtml).join('')}</div>
-          <div class="card-meta">
-            <span>📅 ${escapeHtml(featured.date)}</span>
-            <span class="meta-dot">•</span>
-            <span>⏱ ${formatReadTime(featured.readTime)}</span>
-          </div>
-          <div class="featured-action">
-            <a href="${escapeHtml(featured.url)}" class="btn-primary featured-btn">
-              Read Article
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
-                <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
-              </svg>
-            </a>
+          </h3>
+          <p class="featured-card-summary">${escapeHtml(featured.summary)}</p>
+          <div class="card-author-meta">
+            <div class="author-avatar-group">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Dhiraj Roy" class="author-avatar-img" />
+              <span class="author-name">Dhiraj Roy</span>
+            </div>
+            <span class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              ${escapeHtml(featured.date)}
+            </span>
+            <span class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              ${formatReadTime(featured.readTime)}
+            </span>
           </div>
         </div>
-        <a href="${escapeHtml(featured.url)}" class="featured-image-link" aria-label="${escapeHtml(featured.title)}">
-          <img src="${escapeHtml(featured.image || '/android-chrome-512x512.png')}" alt="${escapeHtml(featured.title)}" class="featured-image" loading="lazy" />
-        </a>
       </article>
     `;
     initFadeIn();
   }
 
-  // ── RENDER STATS BAR ──────────────────────────────────────
-  function renderStats() {
-    if (!statsBarEl) return;
-    const allTags = new Set(BLOG_POSTS.flatMap(p => p.tags));
-    const totalMins = BLOG_POSTS.reduce((s,p) => s + p.readTime, 0);
-    statsBarEl.innerHTML = `
-      <div class="stat-card">
-        <div class="stat-icon">📚</div>
-        <div class="stat-info">
-          <span class="stat-number">${BLOG_POSTS.length}</span>
-          <span class="stat-label">Articles Published</span>
+  // ── RENDER POPULAR POSTS (SIDEBAR) ────────────────────────
+  function renderPopularPosts() {
+    const popularEl = document.getElementById('popular-posts-list');
+    if (!popularEl) return;
+
+    const POPULAR_ITEMS = [
+      {
+        title: "React 18 Complete Guide",
+        readTime: "12 min read",
+        image: "/images/pop-react.svg",
+        url: BLOG_POSTS[0] ? BLOG_POSTS[0].url : "/post/what-is-backend"
+      },
+      {
+        title: "Laravel 11 Guide",
+        readTime: "11 min read",
+        image: "/images/pop-laravel.svg",
+        url: BLOG_POSTS[1] ? BLOG_POSTS[1].url : "/post/spring-boot-pagination-sorting-complete-guide"
+      },
+      {
+        title: "Node.js Backend Guide",
+        readTime: "16 min read",
+        image: "/images/pop-node.svg",
+        url: "/post/nodejs-backend-development-production-api"
+      },
+      {
+        title: "MySQL Indexing Explained",
+        readTime: "9 min read",
+        image: "/images/pop-mysql.svg",
+        url: "/post/spring-boot-postgresql-crud-jpa-hibernate"
+      },
+      {
+        title: "Deploy Laravel on VPS",
+        readTime: "14 min read",
+        image: "/images/pop-vps.svg",
+        url: "/post/docker-complete-guide"
+      }
+    ];
+
+    popularEl.innerHTML = POPULAR_ITEMS.map((p, idx) => `
+      <a href="${escapeHtml(p.url)}" class="popular-post-row">
+        <span class="pop-rank-circle">${idx + 1}</span>
+        <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}" class="pop-thumb" width="42" height="42" />
+        <div class="pop-content">
+          <h4 class="pop-title">${escapeHtml(p.title)}</h4>
+          <span class="pop-time">${escapeHtml(p.readTime)}</span>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">🏷️</div>
-        <div class="stat-info">
-          <span class="stat-number">${allTags.size}</span>
-          <span class="stat-label">Core Topics</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-info">
-          <span class="stat-number">${totalMins} <small>min</small></span>
-          <span class="stat-label">Reading Time</span>
-        </div>
-      </div>
-    `;
+        <span class="pop-chevron">›</span>
+      </a>
+    `).join('');
   }
 
   // ── RENDER POST CARDS ─────────────────────────────────────
   async function renderPosts() {
     if (!postsContainer) return;
 
-    // Skeleton while loading
+    // Skeleton loader matching cards
     postsContainer.innerHTML = '<div class="skeleton-grid">' +
-      Array(Math.min(POSTS_PER_PAGE, 3)).fill(`
+      Array(Math.min(POSTS_PER_PAGE, 6)).fill(`
         <div class="skeleton-card">
-          <div class="skeleton-line short"></div>
-          <div class="skeleton-line medium" style="height:1.1rem;margin-top:.5rem"></div>
-          <div class="skeleton-line" style="width:55%;margin-top:.25rem"></div>
-          <div class="skeleton-line tall" style="margin-top:.75rem"></div>
-          <div class="skeleton-line short" style="margin-top:.75rem"></div>
+          <div class="skeleton-image"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line" style="width:30%"></div>
+            <div class="skeleton-line" style="height:1.2rem;width:85%"></div>
+            <div class="skeleton-line" style="width:95%"></div>
+            <div class="skeleton-line" style="width:70%"></div>
+            <div class="skeleton-line" style="width:40%;margin-top:0.5rem"></div>
+          </div>
         </div>`).join('') + '</div>';
 
-    await new Promise(r => setTimeout(r, 220));
+    await new Promise(r => setTimeout(r, 140));
 
     const filtered = getFilteredPosts();
     const total    = filtered.length;
@@ -165,7 +219,27 @@
     postsContainer.innerHTML = '';
 
     if (total === 0) {
-      postsContainer.innerHTML = '<div class="no-results">No posts found. Try a different search or tag filter.</div>';
+      postsContainer.innerHTML = `
+        <div class="no-results-card">
+          <div class="no-results-icon">🔍</div>
+          <h3 class="no-results-title">No articles found</h3>
+          <p class="no-results-text">Try another keyword or different category filter.</p>
+          <button id="clear-filters-btn" class="btn-clear-filters">Clear filters</button>
+        </div>
+      `;
+      const clearBtn = postsContainer.querySelector('#clear-filters-btn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          if (searchInput) searchInput.value = '';
+          searchQuery = '';
+          activeTag = null;
+          currentPage = 0;
+          document.querySelectorAll('.filter-bar a').forEach(l => {
+            l.classList.toggle('active', l.dataset.tag === 'all');
+          });
+          renderPosts();
+        });
+      }
       if (paginationEl) paginationEl.innerHTML = '';
       return;
     }
@@ -173,32 +247,37 @@
     toRender.forEach((post, i) => {
       const card = document.createElement('article');
       card.className = 'blog-card';
+      const tagPills = post.tags.slice(0, 2).map((t, idx) => `
+        <span class="tag tag-pill ${idx === 0 ? 'tag-primary-pill' : 'tag-subtle'}">${escapeHtml(t)}</span>
+      `).join('');
+
       card.innerHTML = `
         <a href="${escapeHtml(post.url)}" class="card-image-link" aria-label="${escapeHtml(post.title)}">
           <img src="${escapeHtml(post.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(post.title)}" class="card-image" loading="lazy" />
         </a>
         <div class="card-body">
-          <div class="card-tags">${post.tags.map(getTagHtml).join('')}</div>
+          <div class="card-tags">${tagPills}</div>
           <h3 class="card-title">
             <a href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>
           </h3>
           <p class="card-summary">${escapeHtml(post.summary)}</p>
           <div class="card-footer">
-            <div class="card-meta">
-              <span>📅 ${escapeHtml(post.date)}</span>
-              <span class="read-time-badge">⏱ ${formatReadTime(post.readTime)}</span>
+            <div class="author-avatar-group">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Dhiraj Roy" class="author-avatar-img" />
+              <span class="author-name">Dhiraj Roy</span>
             </div>
-            <a href="${escapeHtml(post.url)}" class="card-link" aria-label="Read ${escapeHtml(post.title)}">
-              Read
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                <path fill-rule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clip-rule="evenodd"/>
-              </svg>
-            </a>
+            <span class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              ${escapeHtml(post.date)}
+            </span>
+            <span class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              ${formatReadTime(post.readTime)}
+            </span>
           </div>
         </div>
       `;
-      // Staggered fade-in
-      setTimeout(() => card.classList.add('fade-in'), i * 55);
+      setTimeout(() => card.classList.add('fade-in'), i * 35);
       postsContainer.appendChild(card);
     });
 
@@ -216,7 +295,7 @@
     let html = '';
 
     // Prev
-    html += `<button class="page-btn" id="pg-prev" aria-label="Previous page" ${currentPage === 0 ? 'disabled' : ''}>&#8592;</button>`;
+    html += `<button class="page-btn page-arrow" id="pg-prev" aria-label="Previous page" ${currentPage === 0 ? 'disabled' : ''}>&lsaquo;</button>`;
 
     // Page numbers
     pages.forEach(p => {
@@ -228,7 +307,7 @@
     });
 
     // Next
-    html += `<button class="page-btn" id="pg-next" aria-label="Next page" ${currentPage >= totalPages - 1 ? 'disabled' : ''}>&#8594;</button>`;
+    html += `<button class="page-btn page-arrow" id="pg-next" aria-label="Next page" ${currentPage >= totalPages - 1 ? 'disabled' : ''}>&rsaquo;</button>`;
 
     paginationEl.innerHTML = html;
 
@@ -255,30 +334,39 @@
     if (page < 0 || page >= totalPages) return;
     currentPage = page;
     renderPosts();
-    // Scroll to top of posts grid smoothly
-    const anchor = document.getElementById('blog-posts-container') || document.querySelector('main');
+    const anchor = document.getElementById('articles-section');
     if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ── FILTER BAR ────────────────────────────────────────────
   function buildFilterBar() {
     if (!tagFilterBar) return;
-    const allTags    = new Set(BLOG_POSTS.flatMap(p => p.tags));
-    const sortedTags = ['All', ...Array.from(allTags).sort()];
+
+    const CATEGORIES = [
+      { id: 'all', label: 'All', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>' },
+      { id: 'Backend', label: 'Backend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>' },
+      { id: 'Frontend', label: 'Frontend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' },
+      { id: 'JavaScript', label: 'JavaScript', icon: '<span class="icon-badge-js">JS</span>' },
+      { id: 'Node.js', label: 'Node.js', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M12 2l8 4.5v9l-8 4.5-8-4.5v-9z"/></svg>' },
+      { id: 'Laravel', label: 'Laravel', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zm9 5v10l-9 5V12l9-5zm-9 10L3 12V7l9 5v10z"/></svg>' },
+      { id: 'Database', label: 'Database', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>' },
+      { id: 'DevOps', label: 'DevOps', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.267-8-12.356-8-5.096 0-5.096 8 0 8 5.09 0 7.26-8 12.356-8z"/></svg>' }
+    ];
 
     tagFilterBar.innerHTML = '';
-    sortedTags.forEach(tag => {
-      const a       = document.createElement('a');
-      a.href        = '#';
-      a.textContent = tag;
-      a.dataset.tag = tag === 'All' ? 'all' : tag;
-      if (tag === 'All') a.classList.add('active');
+    CATEGORIES.forEach(cat => {
+      const a = document.createElement('a');
+      a.href = '#';
+      a.className = 'category-pill' + (cat.id === 'all' ? ' active' : '');
+      a.dataset.tag = cat.id;
+      a.innerHTML = `<span class="pill-icon">${cat.icon}</span><span class="pill-label">${escapeHtml(cat.label)}</span>`;
+
       a.addEventListener('click', e => {
         e.preventDefault();
-        activeTag   = tag === 'All' ? null : tag;
+        activeTag = cat.id === 'all' ? null : cat.id;
         currentPage = 0;
         renderPosts();
-        document.querySelectorAll('.filter-bar a').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.filter-bar .category-pill').forEach(l => l.classList.remove('active'));
         a.classList.add('active');
       });
       tagFilterBar.appendChild(a);
@@ -296,20 +384,23 @@
   // ── THEME (uses <html> element to prevent FOUC) ───────────
   function applyTheme(isLight) {
     document.documentElement.classList.toggle('light', isLight);
+    document.documentElement.classList.toggle('dark', !isLight);
     if (moonIcon) moonIcon.style.display = isLight ? 'block' : 'none';
     if (sunIcon)  sunIcon.style.display  = isLight ? 'none'  : 'block';
   }
 
   function initTheme() {
-    // The inline <head> script already set html.light if needed.
-    // Just sync the icon state.
-    const isLight = document.documentElement.classList.contains('light');
+    const isDark = document.documentElement.classList.contains('dark');
+    const isLight = !isDark;
+    if (isLight && !document.documentElement.classList.contains('light')) {
+      document.documentElement.classList.add('light');
+    }
     if (moonIcon) moonIcon.style.display = isLight ? 'block' : 'none';
     if (sunIcon)  sunIcon.style.display  = isLight ? 'none'  : 'block';
   }
 
   function toggleTheme() {
-    const isLight = !document.documentElement.classList.contains('light');
+    const isLight = document.documentElement.classList.contains('dark');
     applyTheme(isLight);
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
   }
@@ -365,9 +456,14 @@
   // ── KEYBOARD SHORTCUTS ────────────────────────────────────
   document.addEventListener('keydown', e => {
     const tag = document.activeElement.tagName;
-    if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+    const isSearchShortcut = e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k');
+    if (isSearchShortcut && tag !== 'INPUT' && tag !== 'TEXTAREA') {
       e.preventDefault();
-      if (searchInput) { searchInput.focus(); searchInput.select(); }
+      if (searchInput) {
+        searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        searchInput.focus();
+        searchInput.select();
+      }
     }
     if (e.key === 'Escape' && searchInput && document.activeElement === searchInput) {
       searchInput.value = ''; searchQuery = ''; currentPage = 0;
@@ -382,6 +478,7 @@
     const path = window.location.pathname.replace(/\/$/, '') || '/';
     document.querySelectorAll('.nav-desktop a, .nav-mobile a').forEach(a => {
       const href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
+      if (href.startsWith('#')) return;
       a.classList.toggle('active', href === path);
     });
   }
@@ -484,6 +581,15 @@
         renderPosts();
         searchClear.classList.remove('visible');
         searchInput.focus();
+      });
+    }
+    const headerSearchBtn = document.getElementById('header-search-btn');
+    if (headerSearchBtn) {
+      headerSearchBtn.addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => searchInput.focus(), 250);
+        }
       });
     }
     if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
@@ -771,9 +877,9 @@
 
     if (postsContainer) {
       renderFeatured();
-      renderStats();
       buildFilterBar();
       renderPosts();
+      renderPopularPosts();
     }
 
     initArchive();
