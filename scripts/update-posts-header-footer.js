@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Prevent dark/light theme flash — runs before any paint -->
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Page Not Found | Digital Drift</title>
+const fs = require('fs');
+const path = require('path');
 
-  <meta name="description" content="Oops! The page you're looking for doesn't exist. Return to Digital Drift blog.">
-  <link rel="canonical" href="https://blog.dhirajroy.com/404.html">
+const postDir = path.join(__dirname, '..', 'post');
 
-  <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/style.css?v=5">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
-     crossorigin="anonymous"></script>
-</head>
-
-<body>
-  <!-- Reading progress bar -->
+const NEW_HEADER = `  <!-- Reading progress bar -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <!-- Header -->
@@ -77,28 +63,9 @@
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
       <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
-    </nav>
+    </nav>`;
 
-    <main role="main" style="text-align:center; padding: 5rem 1rem 6rem; max-width: 600px; margin: 0 auto;">
-      <div style="font-size: 5.5rem; font-weight: 800; line-height: 1; color: var(--color-primary); letter-spacing: -0.04em; margin-bottom: 0.5rem;">
-        404
-      </div>
-      <h1 style="font-size: 2rem; font-weight: 800; color: var(--color-navy); margin-bottom: 1rem; letter-spacing: -0.02em;">
-        Page Not Found
-      </h1>
-      <p style="font-size: 1.05rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 2rem;">
-        The page you are looking for doesn't exist, has been removed, or the link may have expired.
-      </p>
-      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <a href="/" class="btn-hero-primary" style="padding: 0.75rem 1.75rem; text-decoration: none;">
-          Go Back Home →
-        </a>
-        <a href="/archive" class="btn-hero-secondary" style="padding: 0.75rem 1.75rem; text-decoration: none;">
-          Browse All Articles
-        </a>
-      </div>
-    </main>
-  </div>
+const NEW_FOOTER = `  </div><!-- /.container -->
 
   <!-- Multi-Column Footer -->
   <footer class="footer-v2">
@@ -179,8 +146,37 @@
         </div>
       </div>
     </div>
-  </footer>
+  </footer>`;
 
-  <script src="/js/script.js?v=5"></script>
-</body>
-</html>
+const files = fs.readdirSync(postDir).filter(f => f.endsWith('.html'));
+
+let updatedCount = 0;
+
+for (const file of files) {
+  const filePath = path.join(postDir, file);
+  let content = fs.readFileSync(filePath, 'utf8');
+
+  // 1. Update css and js versions
+  content = content.replace(/style\.css\?v=\d+/g, 'style.css?v=5');
+  content = content.replace(/posts-data\.js\?v=\d+/g, 'posts-data.js?v=5');
+  content = content.replace(/script\.js\?v=\d+/g, 'script.js?v=5');
+
+  // 2. Replace header block
+  // From <div class="reading-progress" id="reading-progress"></div> ... <main role="main">
+  const headerRegex = /<div class="reading-progress" id="reading-progress"><\/div>[\s\S]*?<main role="main">/;
+  if (headerRegex.test(content)) {
+    content = content.replace(headerRegex, `${NEW_HEADER}\n\n    <!-- Main Article -->\n    <main role="main">`);
+  }
+
+  // 3. Replace footer block
+  // From </main> ... </div><!-- \/\.container -->
+  const footerRegex = /<\/main>[\s\S]*?<\/footer>[\s\S]*?<\/div><!-- \/\.container -->/;
+  if (footerRegex.test(content)) {
+    content = content.replace(footerRegex, `</main>\n${NEW_FOOTER}`);
+  }
+
+  fs.writeFileSync(filePath, content, 'utf8');
+  updatedCount++;
+}
+
+console.log(`Successfully updated ${updatedCount} post files with modern header and 5-column footer!`);

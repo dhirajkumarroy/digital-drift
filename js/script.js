@@ -508,10 +508,16 @@
     const archiveList   = document.getElementById('archive-list');
     const archiveMeta   = document.getElementById('archive-meta');
     const archiveSearch = document.getElementById('archive-search-input');
+    const archiveChips  = document.querySelectorAll('.archive-chip');
     if (!archiveList) return;
+
+    let currentTag = '';
 
     function renderArchive(query) {
       let posts = [...BLOG_POSTS];
+      if (currentTag) {
+        posts = posts.filter(p => p.tags.some(t => t.toLowerCase() === currentTag.toLowerCase()));
+      }
       if (query) {
         const q = query.toLowerCase();
         posts = posts.filter(p =>
@@ -519,7 +525,9 @@
           p.tags.some(t => t.toLowerCase().includes(q))
         );
       }
-      if (archiveMeta) archiveMeta.textContent = `${posts.length} post${posts.length !== 1 ? 's' : ''} total`;
+      if (archiveMeta) {
+        archiveMeta.innerHTML = `Showing <span class="archive-meta-badge">${posts.length} article${posts.length !== 1 ? 's' : ''}</span>${currentTag ? ` in <strong>${escapeHtml(currentTag)}</strong>` : ''}${query ? ` for "<strong>${escapeHtml(query)}</strong>"` : ''}`;
+      }
 
       // Group by year
       const byYear = {};
@@ -533,7 +541,7 @@
       const years = Object.keys(byYear).sort((a, b) => b - a);
 
       if (years.length === 0) {
-        archiveList.innerHTML = '<p class="no-results">No posts found.</p>';
+        archiveList.innerHTML = '<div style="text-align:center; padding:3rem 1rem; background:var(--color-card); border:1px solid var(--color-border); border-radius:16px;"><p style="font-size:1.1rem; font-weight:600; color:var(--color-text-secondary); margin-bottom:0.75rem;">No articles found matching your criteria.</p><button onclick="document.getElementById(\'archive-search-input\').value=\'\'; window.resetArchiveFilters && window.resetArchiveFilters();" style="padding:0.4rem 1rem; border-radius:9999px; background:var(--color-primary); color:#fff; border:none; cursor:pointer; font-weight:600;">Clear Filters</button></div>';
         return;
       }
 
@@ -542,23 +550,44 @@
         group.className = 'archive-year-group fade-in-section';
         const items = byYear[year].map(p => `
           <a href="${escapeHtml(p.url)}" class="archive-item">
-            <span class="archive-item-date">${escapeHtml(p.date)}</span>
-            <div class="archive-item-info">
-              <div class="archive-item-title">${escapeHtml(p.title)}</div>
-              <div class="archive-item-tags">${p.tags.map(getTagHtml).join('')}</div>
+            <div class="archive-item-left">
+              <span class="archive-date-pill">${escapeHtml(p.date)}</span>
+              <div class="archive-item-info">
+                <span class="archive-item-title">${escapeHtml(p.title)}</span>
+                <div class="archive-item-tags">${p.tags.map(getTagHtml).join('')}</div>
+              </div>
             </div>
-            <span class="read-time-badge" style="flex-shrink:0;">⏱ ${formatReadTime(p.readTime)}</span>
+            <div class="archive-item-right">
+              <span class="archive-read-time">⏱ ${formatReadTime(p.readTime)}</span>
+              <span class="archive-arrow-icon">→</span>
+            </div>
           </a>
         `).join('');
-        group.innerHTML = `<div class="archive-year">${escapeHtml(year)}</div><div class="archive-list">${items}</div>`;
+        group.innerHTML = `<div class="archive-year-badge">📅 ${escapeHtml(year)} <span style="font-size:0.82rem; font-weight:600; opacity:0.65; margin-left:4px;">(${byYear[year].length})</span></div><div class="archive-list">${items}</div>`;
         archiveList.appendChild(group);
       });
       initFadeIn();
     }
 
+    window.resetArchiveFilters = function() {
+      currentTag = '';
+      archiveChips.forEach(c => c.classList.toggle('active', c.getAttribute('data-tag') === ''));
+      renderArchive(archiveSearch ? archiveSearch.value : '');
+    };
+
+    archiveChips.forEach(chip => {
+      chip.addEventListener('click', function(e) {
+        e.preventDefault();
+        archiveChips.forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        currentTag = this.getAttribute('data-tag') || '';
+        renderArchive(archiveSearch ? archiveSearch.value : '');
+      });
+    });
+
     renderArchive('');
     if (archiveSearch) {
-      archiveSearch.addEventListener('input', debounce(function () { renderArchive(this.value); }, 280));
+      archiveSearch.addEventListener('input', debounce(function () { renderArchive(this.value); }, 250));
     }
   }
 
