@@ -141,6 +141,7 @@ const NEW_FOOTER = `  </div><!-- /.container -->
         <p class="footer-copyright">&copy; <span id="current-year">2026</span> Digital Drift. All rights reserved.</p>
         <div class="footer-legal-links">
           <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/disclaimer">Disclaimer</a>
           <a href="/contact">Terms of Service</a>
           <a href="/contact">Contact</a>
         </div>
@@ -168,12 +169,16 @@ for (const file of files) {
     content = content.replace(headerRegex, `${NEW_HEADER}\n\n    <!-- Main Article -->\n    <main role="main">`);
   }
 
-  // 3. Replace footer block
-  // From </main> ... </div><!-- \/\.container -->
-  const footerRegex = /<\/main>[\s\S]*?<\/footer>[\s\S]*?<\/div><!-- \/\.container -->/;
-  if (footerRegex.test(content)) {
-    content = content.replace(footerRegex, `</main>\n${NEW_FOOTER}`);
-  }
+  // 3. Update footer legal links
+  content = content.replace(
+    /<div class="footer-legal-links">[\s\S]*?<\/div>/,
+    `<div class="footer-legal-links">
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/disclaimer">Disclaimer</a>
+          <a href="/contact">Terms of Service</a>
+          <a href="/contact">Contact</a>
+        </div>`
+  );
 
   fs.writeFileSync(filePath, content, 'utf8');
   updatedCount++;
