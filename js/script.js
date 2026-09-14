@@ -262,10 +262,6 @@
           </h3>
           <p class="card-summary">${escapeHtml(post.summary)}</p>
           <div class="card-footer">
-            <div class="author-avatar-group">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Dhiraj Roy" class="author-avatar-img" />
-              <span class="author-name">Dhiraj Roy</span>
-            </div>
             <span class="meta-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
               ${escapeHtml(post.date)}
