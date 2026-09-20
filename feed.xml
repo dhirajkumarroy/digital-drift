@@ -5,9 +5,31 @@
     <link>https://blog.dhirajroy.com</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <pubDate>Mon, 14 Sep 2026 11:40:37 GMT</pubDate>
-    <lastBuildDate>Mon, 14 Sep 2026 11:40:37 GMT</lastBuildDate>
+    <pubDate>Sun, 20 Sep 2026 17:33:10 GMT</pubDate>
+    <lastBuildDate>Sun, 20 Sep 2026 17:33:10 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide</title>
+      <link>https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl</link>
+      <guid>https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl</guid>
+      <pubDate>Sun, 20 Sep 2026 18:30:00 GMT</pubDate>
+      <description>Master the classic system design interview question. Learn capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.</description>
+      <category>System Design</category>
+      <category>Architecture</category>
+      <category>Backend</category>
+    </item>
+
+    <item>
+      <title>The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced</title>
+      <link>https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced</link>
+      <guid>https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced</guid>
+      <pubDate>Sun, 13 Sep 2026 18:30:00 GMT</pubDate>
+      <description>A linear, five-phase system design roadmap for developers. Master networking, data storage, distributed systems, reliability, and interview execution.</description>
+      <category>System Design</category>
+      <category>Architecture</category>
+      <category>Backend</category>
+    </item>
 
     <item>
       <title>Spring Boot File Upload and Download — Complete Guide</title>

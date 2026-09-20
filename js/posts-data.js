@@ -28,6 +28,20 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 21,
+    slug: "system-design-url-shortener-tinyurl",
+    title: "System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide",
+    summary: "Master the classic system design interview question. Learn capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.",
+    date: "Sep 21, 2026",
+    dateISO: "2026-09-21",
+    url: "/post/system-design-url-shortener-tinyurl",
+    image: "/images/system-design-url-shortener.jpg",
+    tags: ["System Design", "Architecture", "Backend"],
+    readTime: 18,
+    featured: false
+  },
+
+  {
     id: 20,
     slug: "system-design-roadmap-beginner-to-advanced",
     title: "The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced",
