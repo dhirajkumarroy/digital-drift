@@ -228,6 +228,7 @@
               <li><a href="#who-should-use">13. Who Should Use GPT-6 Astra?</a></li>
               <li><a href="#faq">14. Frequently Asked Questions (FAQ)</a></li>
               <li><a href="#verdict">15. Final Verdict</a></li>
+              <li><a href="#resources">16. Official Resources &amp; Verification Citations</a></li>
             </ul>
           </div>
 
@@ -781,6 +782,77 @@ Verification: Explicitly note the hardware and network bandwidth requirements ne
           <p>Its primary strengths reside in its <strong>unmatched coding fidelity</strong>, <strong>rigorous multi-step reasoning</strong>, and <strong>autonomous agentic execution</strong>. However, these capabilities come with distinct trade-offs: <strong>substantial per-token costs</strong>, <strong>noticeable inference latency</strong> on high reasoning tiers, and <strong>strict safety gating</strong> on dual-use technical workflows.</p>
 
           <p>For software engineers, quantitative researchers, and technical organizations tackling demanding analytical problems, GPT-6 Astra represents the frontier benchmark of automated capability. For standard conversational chatbots, text classification, and budget-sensitive operations, organizations should pair Astra strategically with more affordable models like GPT-5.6 Sol or Terra to build a balanced, cost-effective AI architecture.</p>
+
+          <h2 id="resources">16. Official Resources &amp; Verification Citations</h2>
+          <p>To uphold technical integrity and counter widespread naming misconceptions online, every factual claim, metric, and pricing parameter in this guide has been cross-referenced against active primary documentation. Below is the point-by-point mapping of each resource to the verified technical facts presented in this article:</p>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h3 style="margin-top:0; font-size:1.15rem;"><a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noopener">1. OpenAI Developer Platform — Model Catalog &amp; API Specifications</a></h3>
+            <p><strong>Resource URL:</strong> <a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noopener">https://developers.openai.com/api/docs/models</a><br />
+            <strong>Verification Status:</strong> Current as of September 2026</p>
+            <ul style="line-height: 1.8;">
+              <li><strong>Official Model Identifier:</strong> Verified API model ID <code>gpt-6-astra</code> in the official catalog.</li>
+              <li><strong>Context Window:</strong> Confirmed 1,050,000-token active input limit.</li>
+              <li><strong>Maximum Completion Ceiling:</strong> Confirmed 128,000 maximum output token capacity.</li>
+              <li><strong>Modalities:</strong> Multimodal inputs (Text, PNG, JPEG, WEBP) and text/code outputs. Confirmed absence of native audio or video output generation.</li>
+              <li><strong>Reasoning Controls:</strong> Verified parameter <code>reasoning_effort</code> with supported levels: <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, and <code>max</code>.</li>
+              <li><strong>Knowledge Cutoff:</strong> Confirmed static cutoff date of April 30, 2026.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h3 style="margin-top:0; font-size:1.15rem;"><a href="https://openai.com/news/" target="_blank" rel="noopener">2. OpenAI Official Product News &amp; Release Announcements</a></h3>
+            <p><strong>Resource URL:</strong> <a href="https://openai.com/news/" target="_blank" rel="noopener">https://openai.com/news/</a><br />
+            <strong>Release Timeline:</strong> September 3, 2026 (Limited Preview) / September 4, 2026 (General Availability)</p>
+            <ul style="line-height: 1.8;">
+              <li><strong>Generational Differentiation:</strong> Establishes the GPT-6 generational family, clarifying that the GPT-5.6 series (Sol, Terra, Luna, released July 9, 2026) was the preceding generation.</li>
+              <li><strong>Computer Use &amp; Agentic Execution:</strong> Formal announcement of native computer operation capabilities (OSWorld 2.0 evaluation at 72.6%, executing tasks 47% faster than GPT-5.6 Sol).</li>
+              <li><strong>Platform Rollout:</strong> Availability across ChatGPT Plus, Pro, Business, and Enterprise, alongside Microsoft Azure OpenAI Service and Amazon Bedrock.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h3 style="margin-top:0; font-size:1.15rem;"><a href="https://openai.com/api/pricing/" target="_blank" rel="noopener">3. OpenAI API Official Pricing Schedule</a></h3>
+            <p><strong>Resource URL:</strong> <a href="https://openai.com/api/pricing/" target="_blank" rel="noopener">https://openai.com/api/pricing/</a><br />
+            <strong>Verification Status:</strong> Verified September 2026</p>
+            <ul style="line-height: 1.8;">
+              <li><strong>Standard Token Billing:</strong> $10.00 per 1,000,000 input tokens; $50.00 per 1,000,000 output tokens.</li>
+              <li><strong>Prompt Caching Rates:</strong> $1.00 per 1,000,000 cached input tokens (90% read discount); $12.50 per 1,000,000 cache write tokens.</li>
+              <li><strong>Batch / Flex Processing:</strong> 50% discount for asynchronous workloads delivered within 24 hours ($5.00 input / $25.00 output per 1M tokens).</li>
+              <li><strong>Predecessor Cost Baseline:</strong> Contrast with GPT-5.6 Sol ($4.00 input / $20.00 output per 1M tokens), proving Astra's 2.5x price multiple.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h3 style="margin-top:0; font-size:1.15rem;"><a href="https://arcprize.org" target="_blank" rel="noopener">4. ARC Prize Foundation — Independent Reasoning Benchmark Evaluations</a></h3>
+            <p><strong>Resource URL:</strong> <a href="https://arcprize.org" target="_blank" rel="noopener">https://arcprize.org</a><br />
+            <strong>Publication Date:</strong> September 2026</p>
+            <ul style="line-height: 1.8;">
+              <li><strong>ARC-AGI-3 Scaffolding Discrepancy:</strong> Documentation of the 99.9% score achieved under OpenAI's proprietary "provider adapter" harness versus ~62.7% observed under standard scaffolding.</li>
+              <li><strong>Independent Finding:</strong> Confirms that Astra's elite abstract reasoning capability requires sophisticated test-time scaffolding and search heuristics to reproduce peak benchmark scores.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h3 style="margin-top:0; font-size:1.15rem;"><a href="https://openai.com/safety/" target="_blank" rel="noopener">5. OpenAI Preparedness Framework &amp; System Safety Reports</a></h3>
+            <p><strong>Resource URL:</strong> <a href="https://openai.com/safety/" target="_blank" rel="noopener">https://openai.com/safety/</a><br />
+            <strong>Publication Date:</strong> September 2026</p>
+            <ul style="line-height: 1.8;">
+              <li><strong>ExploitBench 100% Saturation:</strong> Autonomous zero-day identification and binary exploit generation performance.</li>
+              <li><strong>Critical Risk Classification:</strong> First model designated as "Critical" for offensive cybersecurity capabilities under OpenAI's Preparedness Framework.</li>
+              <li><strong>Daybreak Security Program:</strong> Documented enterprise access restrictions and safety gating protocols enforced on autonomous vulnerability analysis tools.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h3 style="margin-top:0; font-size:1.15rem;"><a href="https://artificialanalysis.ai" target="_blank" rel="noopener">6. Artificial Analysis — Coding Agent Index &amp; Terminal Benchmarks</a></h3>
+            <p><strong>Resource URL:</strong> <a href="https://artificialanalysis.ai" target="_blank" rel="noopener">https://artificialanalysis.ai</a><br />
+            <strong>Publication Date:</strong> September 2026</p>
+            <ul style="line-height: 1.8;">
+              <li><strong>Coding Agent Index:</strong> Astra tying for 1st place across frontier coding agent benchmarks.</li>
+              <li><strong>Terminal-Bench v4.0 &amp; SWE-bench:</strong> Independent confirmation of state-of-the-art multi-file repository maintenance, error handling, and test-suite generation.</li>
+            </ul>
+          </div>
         </div>
       </article>
     </main>
