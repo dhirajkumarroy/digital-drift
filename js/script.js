@@ -11,7 +11,7 @@
 
   // ── STATE ─────────────────────────────────────────────────
   let currentPage  = 0;
-  let activeTag    = null;
+  let activeTag    = readCategoryFromUrl() || null;
   let searchQuery  = '';
 
   // ── DOM REFS ──────────────────────────────────────────────
@@ -38,6 +38,33 @@
   }
 
   function formatReadTime(min) { return min + ' min read'; }
+
+  function tagsMatch(first, second) {
+    return String(first || '').toLowerCase() === String(second || '').toLowerCase();
+  }
+
+  function readCategoryFromUrl() {
+    try {
+      const category = new URLSearchParams(window.location.search).get('category');
+      return category ? category.trim() : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function syncCategoryUrl(category) {
+    try {
+      const url = new URL(window.location.href);
+      if (category) {
+        url.searchParams.set('category', category);
+      } else {
+        url.searchParams.delete('category');
+      }
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    } catch (e) {
+      // Keep filtering functional in browsers that do not support the URL APIs.
+    }
+  }
 
   function getTagHtml(tag) {
     return `<span class="tag" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</span>`;
@@ -69,7 +96,7 @@
       } else if (activeTag === 'DevOps') {
         filtered = filtered.filter(p => p.tags.some(t => /devops|docker|git|cloud/i.test(t)) || p.title.toLowerCase().includes('docker') || p.title.toLowerCase().includes('git'));
       } else {
-        filtered = filtered.filter(p => p.tags.includes(activeTag));
+        filtered = filtered.filter(p => p.tags.some(t => tagsMatch(t, activeTag)));
       }
     }
     if (searchQuery.trim()) {
@@ -133,6 +160,11 @@
     initFadeIn();
   }
 
+  function updateFeaturedVisibility() {
+    if (!featuredEl) return;
+    featuredEl.hidden = Boolean(activeTag || searchQuery.trim());
+  }
+
   // ── RENDER POPULAR POSTS (SIDEBAR) ────────────────────────
   function renderPopularPosts() {
     const popularEl = document.getElementById('popular-posts-list');
@@ -188,6 +220,8 @@
   async function renderPosts() {
     if (!postsContainer) return;
 
+    updateFeaturedVisibility();
+
     // Skeleton loader matching cards
     postsContainer.innerHTML = '<div class="skeleton-grid">' +
       Array(Math.min(POSTS_PER_PAGE, 6)).fill(`
@@ -232,12 +266,7 @@
         clearBtn.addEventListener('click', () => {
           if (searchInput) searchInput.value = '';
           searchQuery = '';
-          activeTag = null;
-          currentPage = 0;
-          document.querySelectorAll('.filter-bar a').forEach(l => {
-            l.classList.toggle('active', l.dataset.tag === 'all');
-          });
-          renderPosts();
+          activateHomepageCategory(null);
         });
       }
       if (paginationEl) paginationEl.innerHTML = '';
@@ -335,11 +364,30 @@
   }
 
   // ── FILTER BAR ────────────────────────────────────────────
+  function syncHomepageCategoryPills() {
+    document.querySelectorAll('.filter-bar .category-pill').forEach(pill => {
+      const isActive = activeTag
+        ? tagsMatch(pill.dataset.tag, activeTag)
+        : pill.dataset.tag === 'all';
+      pill.classList.toggle('active', isActive);
+      pill.setAttribute('aria-current', isActive ? 'true' : 'false');
+    });
+  }
+
+  function activateHomepageCategory(category) {
+    activeTag = category || null;
+    currentPage = 0;
+    syncCategoryUrl(activeTag);
+    syncHomepageCategoryPills();
+    renderPosts();
+  }
+
   function buildFilterBar() {
     if (!tagFilterBar) return;
 
     const CATEGORIES = [
       { id: 'all', label: 'All', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>' },
+      { id: 'System Design', label: 'System Design', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6.7 6.5l3.6 10"/><path d="M17.3 6.5l-3.6 10"/><path d="M7 5h10"/></svg>' },
       { id: 'Backend', label: 'Backend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>' },
       { id: 'Frontend', label: 'Frontend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' },
       { id: 'JavaScript', label: 'JavaScript', icon: '<span class="icon-badge-js">JS</span>' },
@@ -353,17 +401,17 @@
     CATEGORIES.forEach(cat => {
       const a = document.createElement('a');
       a.href = '#';
-      a.className = 'category-pill' + (cat.id === 'all' ? ' active' : '');
+      const isActive = activeTag
+        ? tagsMatch(cat.id, activeTag)
+        : cat.id === 'all';
+      a.className = 'category-pill' + (isActive ? ' active' : '');
       a.dataset.tag = cat.id;
+      a.setAttribute('aria-current', isActive ? 'true' : 'false');
       a.innerHTML = `<span class="pill-icon">${cat.icon}</span><span class="pill-label">${escapeHtml(cat.label)}</span>`;
 
       a.addEventListener('click', e => {
         e.preventDefault();
-        activeTag = cat.id === 'all' ? null : cat.id;
-        currentPage = 0;
-        renderPosts();
-        document.querySelectorAll('.filter-bar .category-pill').forEach(l => l.classList.remove('active'));
-        a.classList.add('active');
+        activateHomepageCategory(cat.id === 'all' ? null : cat.id);
       });
       tagFilterBar.appendChild(a);
     });
@@ -507,7 +555,25 @@
     const archiveChips  = document.querySelectorAll('.archive-chip');
     if (!archiveList) return;
 
-    let currentTag = '';
+    let currentTag = readCategoryFromUrl();
+
+    function syncArchiveChips() {
+      archiveChips.forEach(chip => {
+        const chipTag = chip.getAttribute('data-tag') || '';
+        const isActive = currentTag
+          ? tagsMatch(chipTag, currentTag)
+          : chipTag === '';
+        chip.classList.toggle('active', isActive);
+        chip.setAttribute('aria-current', isActive ? 'true' : 'false');
+      });
+    }
+
+    function activateArchiveCategory(category) {
+      currentTag = category || '';
+      syncCategoryUrl(currentTag);
+      syncArchiveChips();
+      renderArchive(archiveSearch ? archiveSearch.value : '');
+    }
 
     function renderArchive(query) {
       let posts = [...BLOG_POSTS];
@@ -566,21 +632,17 @@
     }
 
     window.resetArchiveFilters = function() {
-      currentTag = '';
-      archiveChips.forEach(c => c.classList.toggle('active', c.getAttribute('data-tag') === ''));
-      renderArchive(archiveSearch ? archiveSearch.value : '');
+      activateArchiveCategory('');
     };
 
     archiveChips.forEach(chip => {
       chip.addEventListener('click', function(e) {
         e.preventDefault();
-        archiveChips.forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        currentTag = this.getAttribute('data-tag') || '';
-        renderArchive(archiveSearch ? archiveSearch.value : '');
+        activateArchiveCategory(this.getAttribute('data-tag') || '');
       });
     });
 
+    syncArchiveChips();
     renderArchive('');
     if (archiveSearch) {
       archiveSearch.addEventListener('input', debounce(function () { renderArchive(this.value); }, 250));

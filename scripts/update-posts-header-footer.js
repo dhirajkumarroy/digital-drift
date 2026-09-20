@@ -98,6 +98,7 @@ const NEW_FOOTER = `  </div><!-- /.container -->
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
+            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
             <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
             <li><a href="/#popular-categories" data-tag="Frontend">Frontend</a></li>
             <li><a href="/#popular-categories" data-tag="JavaScript">JavaScript</a></li>
@@ -159,7 +160,7 @@ for (const file of files) {
   // 1. Update css and js versions
   content = content.replace(/style\.css\?v=\d+/g, 'style.css?v=5');
   content = content.replace(/posts-data\.js\?v=\d+/g, 'posts-data.js?v=5');
-  content = content.replace(/script\.js\?v=\d+/g, 'script.js?v=5');
+  content = content.replace(/script\.js\?v=\d+/g, 'script.js?v=6');
 
   // 2. Replace header block
   // From <div class="reading-progress" id="reading-progress"></div> ... <main role="main">

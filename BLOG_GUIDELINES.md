@@ -374,7 +374,7 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
           <div class="footer-col">
             <h4 class="footer-col-title">Categories</h4>
             <ul class="footer-link-list">
-              <li><a href="/#popular-categories" data-tag="System Design">System Design</a></li>
+              <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
               <li><a href="/#popular-categories" data-tag="Architecture">Architecture</a></li>
               <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
               <li><a href="/#popular-categories" data-tag="Java">Java</a></li>
@@ -417,7 +417,7 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
 
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
   <script src="/js/posts-data.js?v=5"></script>
-  <script src="/js/script.js?v=5"></script>
+  <script src="/js/script.js?v=6"></script>
 </body>
 </html>
 ```
