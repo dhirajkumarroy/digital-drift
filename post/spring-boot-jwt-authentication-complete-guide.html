@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Prevent dark/light theme flash — runs before any paint -->
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
   <meta charset="UTF-8" />
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- ═══ SEO — edit every line in this block ═══ -->
@@ -41,7 +42,7 @@
     "headline": "Spring Boot JWT Authentication — Complete Guide",
     "image": "https://images.unsplash.com/photo-1509822929063-6b6cfc9b42f2?w=800&auto=format&fit=crop&q=60",
     "description": "Complete Spring Boot JWT authentication guide using Java 21, Spring Boot 3.x, Spring Security, and Gradle.",
-    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "datePublished": "2026-06-17",
     "dateModified":  "2026-06-17",
     "url": "https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide",
@@ -97,17 +98,21 @@
     gtag('config', 'G-VN488V6MP5');
   </script>
 
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
 
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
+  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot JWT Authentication — Complete Guide","item":"https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide"}]}</script>
 </head>
 <body>
-  <!-- Reading progress bar (fixed, top of viewport) -->
-    <!-- Reading progress bar -->
-    <!-- Reading progress bar -->
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Reading progress bar — do NOT edit -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <!-- Header -->
@@ -148,7 +153,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -166,11 +171,11 @@
       <a href="/#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- Main Article -->
-    <main role="main">
+    <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
 
         <!-- ── 1. TAGS ──────────────────────────────────────
@@ -185,6 +190,7 @@
         </div>
 
         <!-- ── 2. TITLE ─────────────────────────────────── -->
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot JWT Authentication — Complete Guide</span></nav><!-- generated:breadcrumbs:end -->
         <h1 class="post-title">Spring Boot JWT Authentication — Complete Guide</h1>
 
         <!-- ── 3. META ──────────────────────────────────────
@@ -198,7 +204,7 @@
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="https://images.unsplash.com/photo-1509822929063-6b6cfc9b42f2?w=800&auto=format&fit=crop&q=60" alt="Spring Boot JWT Authentication — Complete Guide" class="post-banner-img" />
+          <img src="https://images.unsplash.com/photo-1509822929063-6b6cfc9b42f2?w=800&auto=format&fit=crop&q=60" alt="Spring Boot JWT Authentication — Complete Guide" class="post-banner-img" fetchpriority="high" />
         </div>
 
         <!-- ── 4. POST CONTENT ──────────────────────────────
@@ -208,7 +214,7 @@
                <h3>            — sub-section heading
                <ul><li>        — bullet list
                <ol><li>        — numbered list
-               <pre><code>     — code block (gets a Copy button automatically)
+               <pre tabindex="0"><code>     — code block (gets a Copy button automatically)
                <code>          — inline code (inside a <p>)
                <blockquote>    — pull quote / callout
                <strong>        — bold emphasis
@@ -278,7 +284,7 @@
             an access token and returns it to the client. The client stores that token and sends it in
             the <code>Authorization</code> header on future requests.
           </p>
-          <pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...</code></pre>
+          <pre tabindex="0"><code>Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...</code></pre>
           <p>
             The access token is usually short-lived. A common expiration is 15 minutes to 1 hour,
             depending on the risk level of your application. For this beginner-friendly tutorial, we
@@ -308,7 +314,7 @@
             broader API foundation, read the
             <a href="/post/spring-boot-rest-api-30-minutes">Spring Boot REST API Tutorial</a>.
             For database-focused work, add a
-            <a href="/post/spring-boot-postgresql-crud-guide">Spring Boot PostgreSQL CRUD Guide</a>
+            <a href="/post/spring-boot-postgresql-crud-jpa-hibernate">Spring Boot PostgreSQL CRUD Guide</a>
             to your next reading list.
           </p>
 
@@ -317,7 +323,7 @@
             Here is a complete <code>build.gradle</code> for Spring Boot 3.x, Java 21, Spring
             Security, JPA, validation, H2, and the JJWT library.
           </p>
-          <pre><code>plugins {
+          <pre tabindex="0"><code>plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
@@ -361,7 +367,7 @@ tasks.named('test') {
             below is only for local development. Use an environment variable or secret manager in
             production.
           </p>
-          <pre><code>spring.application.name=spring-boot-jwt-auth
+          <pre tabindex="0"><code>spring.application.name=spring-boot-jwt-auth
 
 spring.datasource.url=jdbc:h2:mem:authdb
 spring.datasource.driverClassName=org.h2.Driver
@@ -379,7 +385,7 @@ jwt.expiration-ms=3600000</code></pre>
             Keep the security code separated by responsibility. A clear package structure helps
             beginners understand where each piece belongs.
           </p>
-          <pre><code>src/main/java/com/digitaldrift/auth/
+          <pre tabindex="0"><code>src/main/java/com/digitaldrift/auth/
 ├── SpringBootJwtAuthApplication.java
 ├── config/
 │   └── SecurityConfig.java
@@ -404,7 +410,7 @@ jwt.expiration-ms=3600000</code></pre>
             The user entity stores login identity, hashed password, and role. Avoid naming the table
             <code>user</code> because some databases reserve that word.
           </p>
-          <pre><code>package com.digitaldrift.auth.entity;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.entity;
 
 import jakarta.persistence.*;
 
@@ -456,7 +462,7 @@ public class AppUser {
             Spring Data JPA creates the query implementation at runtime. We need one method for
             finding users by email and one method for checking duplicates during registration.
           </p>
-          <pre><code>package com.digitaldrift.auth.repository;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.repository;
 
 import com.digitaldrift.auth.entity.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -473,7 +479,7 @@ public interface UserRepository extends JpaRepository&lt;AppUser, Long&gt; {
             DTOs keep external API payloads separate from database entities. This is especially
             important in authentication because you never want to accidentally return a password hash.
           </p>
-          <pre><code>package com.digitaldrift.auth.dto;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -488,7 +494,7 @@ public record RegisterRequest(
     @Size(min = 8, message = "Password must be at least 8 characters")
     String password
 ) {}</code></pre>
-          <pre><code>package com.digitaldrift.auth.dto;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -501,7 +507,7 @@ public record LoginRequest(
     @NotBlank(message = "Password is required")
     String password
 ) {}</code></pre>
-          <pre><code>package com.digitaldrift.auth.dto;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.dto;
 
 public record LoginResponse(
     String accessToken,
@@ -515,7 +521,7 @@ public record LoginResponse(
             extracting the username. In this guide, the username is the user's email address. The
             signing key is created from the configured secret.
           </p>
-          <pre><code>package com.digitaldrift.auth.security;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -586,7 +592,7 @@ public class JwtUtil {
             management, expose an authentication manager, and add our JWT filter before the standard
             username-password filter.
           </p>
-          <pre><code>package com.digitaldrift.auth.config;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.config;
 
 import com.digitaldrift.auth.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -674,7 +680,7 @@ public class SecurityConfig {
             the token is present and valid, it loads the user and sets authentication in the security
             context. After that, protected controllers can execute normally.
           </p>
-          <pre><code>package com.digitaldrift.auth.security;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -750,7 +756,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             saving. Login delegates credential verification to Spring Security's authentication
             manager. If authentication succeeds, the service generates a JWT access token.
           </p>
-          <pre><code>package com.digitaldrift.auth.service;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.service;
 
 import com.digitaldrift.auth.dto.LoginRequest;
 import com.digitaldrift.auth.dto.LoginResponse;
@@ -818,7 +824,7 @@ public class AuthService {
             The controller exposes two public endpoints: register and login. Notice that validation
             runs before the service is called because the request body uses <code>@Valid</code>.
           </p>
-          <pre><code>package com.digitaldrift.auth.controller;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.controller;
 
 import com.digitaldrift.auth.dto.LoginRequest;
 import com.digitaldrift.auth.dto.LoginResponse;
@@ -857,7 +863,7 @@ public class AuthController {
           <p>
             To confirm authentication works, create a small controller that requires a valid JWT.
           </p>
-          <pre><code>package com.digitaldrift.auth.controller;
+          <pre tabindex="0"><code>package com.digitaldrift.auth.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -883,7 +889,7 @@ public class ProfileController {
           <p>
             Start the application with Gradle:
           </p>
-          <pre><code>./gradlew bootRun</code></pre>
+          <pre tabindex="0"><code>./gradlew bootRun</code></pre>
           <p>
             In Postman, create three requests. First, register a user with
             <code>POST http://localhost:8080/api/auth/register</code>. Set the body type to JSON and
@@ -894,25 +900,25 @@ public class ProfileController {
 
           <h2>Example Requests and Responses</h2>
           <p>Register a user:</p>
-          <pre><code>curl -X POST http://localhost:8080/api/auth/register \
+          <pre tabindex="0"><code>curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"dhiraj@example.com","password":"StrongPass123"}'</code></pre>
-          <pre><code>{
+          <pre tabindex="0"><code>{
   "message": "User registered successfully"
 }</code></pre>
           <p>Login and receive a token:</p>
-          <pre><code>curl -X POST http://localhost:8080/api/auth/login \
+          <pre tabindex="0"><code>curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"dhiraj@example.com","password":"StrongPass123"}'</code></pre>
-          <pre><code>{
+          <pre tabindex="0"><code>{
   "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
   "tokenType": "Bearer",
   "expiresIn": 3600
 }</code></pre>
           <p>Call a protected endpoint:</p>
-          <pre><code>curl http://localhost:8080/api/profile \
+          <pre tabindex="0"><code>curl http://localhost:8080/api/profile \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9..."</code></pre>
-          <pre><code>{
+          <pre tabindex="0"><code>{
   "email": "dhiraj@example.com",
   "message": "You accessed a protected endpoint"
 }</code></pre>
@@ -1019,7 +1025,7 @@ public class ProfileController {
 
         <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
         <div class="author-bio">
-          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" width="64" height="64" loading="lazy" decoding="async" />
           <div class="author-info">
             <strong>Dhiraj Roy</strong>
             <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
@@ -1073,11 +1079,12 @@ public class ProfileController {
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
-            <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
-            <li><a href="/#popular-categories" data-tag="Frontend">Frontend</a></li>
-            <li><a href="/#popular-categories" data-tag="JavaScript">JavaScript</a></li>
-            <li><a href="/#popular-categories" data-tag="DevOps">DevOps</a></li>
-            <li><a href="/#popular-categories" data-tag="Database">Database</a></li>
+            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
+            <li><a href="/?category=Backend#articles-section" data-tag="Backend">Backend</a></li>
+            <li><a href="/?category=Spring%20Boot#articles-section" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/?category=JavaScript#articles-section" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/?category=DevOps#articles-section" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/?category=Database#articles-section" data-tag="Database">Database</a></li>
           </ul>
         </div>
 
@@ -1086,9 +1093,6 @@ public class ProfileController {
           <h4 class="footer-col-title">Connect With Me</h4>
           <div class="footer-social-icons">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
           </div>
         </div>
@@ -1117,7 +1121,7 @@ public class ProfileController {
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
   <!-- Scripts — do NOT edit -->
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+<script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 </body>
 </html>

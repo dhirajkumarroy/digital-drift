@@ -1,172 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://blog.dhirajroy.com/</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/about</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/contact</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/archive</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/privacy-policy</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/disclaimer</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/gpt-6-astra-explained</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced</loc>
-    <lastmod>2026-09-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide</loc>
-    <lastmod>2026-06-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice</loc>
-    <lastmod>2026-06-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</loc>
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</loc>
-    <lastmod>2026-05-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</loc>
-    <lastmod>2026-05-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/nodejs-jwt-auth</loc>
-    <lastmod>2026-05-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup</loc>
-    <lastmod>2026-05-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/what-is-backend</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/docker-complete-guide</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/git-and-github-complete-guide</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://blog.dhirajroy.com/post/spring-boot-getting-started</loc>
-    <lastmod>2026-04-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
+  <url><loc>https://blog.dhirajroy.com/</loc></url>
+  <url><loc>https://blog.dhirajroy.com/about</loc></url>
+  <url><loc>https://blog.dhirajroy.com/contact</loc></url>
+  <url><loc>https://blog.dhirajroy.com/archive</loc></url>
+  <url><loc>https://blog.dhirajroy.com/privacy-policy</loc></url>
+  <url><loc>https://blog.dhirajroy.com/disclaimer</loc></url>
+  <url><loc>https://blog.dhirajroy.com/post/gpt-6-astra-explained</loc><lastmod>2026-09-21</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl</loc><lastmod>2026-09-21</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced</loc><lastmod>2026-09-14</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide</loc><lastmod>2026-07-20</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide</loc><lastmod>2026-06-24</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice</loc><lastmod>2026-06-21</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</loc><lastmod>2026-06-17</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</loc><lastmod>2026-06-17</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</loc><lastmod>2026-06-16</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</loc><lastmod>2026-05-18</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</loc><lastmod>2026-05-10</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/nodejs-jwt-auth</loc><lastmod>2026-05-10</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup</loc><lastmod>2026-05-05</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/what-is-backend</loc><lastmod>2026-04-24</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api</loc><lastmod>2026-05-05</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/docker-complete-guide</loc><lastmod>2026-04-22</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/git-and-github-complete-guide</loc><lastmod>2026-04-22</lastmod></url>
+  <url><loc>https://blog.dhirajroy.com/post/spring-boot-getting-started</loc><lastmod>2026-04-15</lastmod></url>
 </urlset>

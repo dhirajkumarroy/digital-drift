@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Prevent dark/light theme flash — runs before any paint -->
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
   <meta charset="UTF-8" />
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- ═══ SEO ═══ -->
-  <title>Docker Complete Guide: From Zero to Production Containers | Digital Drift</title>
+  <title>Docker Guide: From Basics to Production | Digital Drift</title>
   <meta name="description" content="A complete hands-on guide to Docker — containers vs VMs, images, Dockerfiles, volumes, networking, Docker Compose, and production best practices." />
   <meta name="keywords" content="Docker, Containers, Dockerfile, Docker Compose, DevOps, Backend, Containerization, Kubernetes" />
   <meta name="author" content="Dhiraj Roy" />
@@ -41,7 +42,7 @@
     "headline": "Docker Complete Guide: From Zero to Production Containers",
     "image": "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&auto=format&fit=crop&q=60",
     "description": "A complete hands-on guide to Docker — containers vs VMs, images, Dockerfiles, volumes, networking, Docker Compose, and production best practices.",
-    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "datePublished": "2026-04-22",
     "dateModified":  "2026-04-22",
     "url": "https://blog.dhirajroy.com/post/docker-complete-guide",
@@ -63,17 +64,21 @@
     gtag('config', 'G-VN488V6MP5');
   </script>
 
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
 
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
+  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Docker Complete Guide: From Zero to Production Containers","item":"https://blog.dhirajroy.com/post/docker-complete-guide"}]}</script>
 </head>
 <body>
-  <!-- Reading progress bar -->
-    <!-- Reading progress bar -->
-    <!-- Reading progress bar -->
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Reading progress bar — do NOT edit -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <!-- Header -->
@@ -114,7 +119,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -132,11 +137,11 @@
       <a href="/#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- Main Article -->
-    <main role="main">
+    <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
 
         <!-- ── 1. TAGS ── -->
@@ -147,6 +152,7 @@
         </div>
 
         <!-- ── 2. TITLE ── -->
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Docker Complete Guide: From Zero to Production Containers</span></nav><!-- generated:breadcrumbs:end -->
         <h1 class="post-title">Docker Complete Guide: From Zero to Production Containers</h1>
 
         <!-- ── 3. META ── -->
@@ -158,7 +164,7 @@
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&auto=format&fit=crop&q=60" alt="Docker Complete Guide: From Zero to Production Containers" class="post-banner-img" />
+          <img src="https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&auto=format&fit=crop&q=60" alt="Docker Complete Guide: From Zero to Production Containers" class="post-banner-img" fetchpriority="high" />
         </div>
 
         <!-- ── 4. POST CONTENT ── -->
@@ -201,7 +207,7 @@
             Install <strong>Docker Desktop</strong> on macOS and Windows (it bundles the Docker Engine,
             CLI, and Compose). On Linux, install the Docker Engine directly:
           </p>
-          <pre><code># Ubuntu / Debian — official install script (easiest)
+          <pre tabindex="0"><code># Ubuntu / Debian — official install script (easiest)
 curl -fsSL https://get.docker.com | sh
 
 # Add your user to the docker group (avoid typing sudo every time)
@@ -212,7 +218,7 @@ docker --version
 docker compose version</code></pre>
 
           <p>Test your installation with the classic hello-world container:</p>
-          <pre><code>docker run hello-world</code></pre>
+          <pre tabindex="0"><code>docker run hello-world</code></pre>
           <p>
             Docker pulls the <code>hello-world</code> image from Docker Hub, creates a container,
             runs it, prints a success message, and exits. That one command covered the entire
@@ -261,7 +267,7 @@ docker compose version</code></pre>
           <h2>Step 3 — Essential Docker Commands</h2>
 
           <h3>Images</h3>
-          <pre><code># Pull an image from Docker Hub
+          <pre tabindex="0"><code># Pull an image from Docker Hub
 docker pull node:20-alpine
 
 # List local images
@@ -280,7 +286,7 @@ docker tag my-app:1.0 my-app:latest
 docker push username/my-app:1.0</code></pre>
 
           <h3>Containers</h3>
-          <pre><code># Run a container (pulls image if not local, then starts it)
+          <pre tabindex="0"><code># Run a container (pulls image if not local, then starts it)
 docker run nginx
 
 # Run in detached mode (background) and map host port 8080 → container port 80
@@ -323,7 +329,7 @@ docker exec -it my-nginx bash
 docker cp my-nginx:/etc/nginx/nginx.conf ./nginx.conf</code></pre>
 
           <h3>System cleanup</h3>
-          <pre><code># Remove all stopped containers, dangling images, unused networks
+          <pre tabindex="0"><code># Remove all stopped containers, dangling images, unused networks
 docker system prune
 
 # Also remove unused volumes (be careful — data loss possible)
@@ -338,7 +344,7 @@ docker system df</code></pre>
             A Dockerfile is where most of the real work happens. Here is a production-quality
             Dockerfile for a Node.js application, with every instruction explained:
           </p>
-          <pre><code># ── Stage 1: install dependencies ──────────────────────────────
+          <pre tabindex="0"><code># ── Stage 1: install dependencies ──────────────────────────────
 # Use the official Node 20 Alpine image as the base (small, secure)
 FROM node:20-alpine AS deps
 
@@ -402,7 +408,7 @@ CMD ["node", "dist/index.js"]</code></pre>
             being sent to the Docker build context. A bloated build context dramatically slows builds.
             Always create this file at your project root:
           </p>
-          <pre><code># .dockerignore
+          <pre tabindex="0"><code># .dockerignore
 
 node_modules/
 .git/
@@ -432,7 +438,7 @@ README.md
           </p>
 
           <h3>Named volumes (recommended for production data)</h3>
-          <pre><code># Create a named volume
+          <pre tabindex="0"><code># Create a named volume
 docker volume create postgres-data
 
 # Use it when running a container
@@ -452,7 +458,7 @@ docker volume inspect postgres-data
 docker volume rm postgres-data</code></pre>
 
           <h3>Bind mounts (best for development — live-reload your source code)</h3>
-          <pre><code># Mount the current directory into /app inside the container
+          <pre tabindex="0"><code># Mount the current directory into /app inside the container
 # Changes on host are immediately reflected inside the container
 docker run -d \
   -p 3000:3000 \
@@ -469,13 +475,13 @@ docker run -d \
           </p>
 
           <h3>Port publishing</h3>
-          <pre><code># -p HOST_PORT:CONTAINER_PORT
+          <pre tabindex="0"><code># -p HOST_PORT:CONTAINER_PORT
 docker run -p 8080:80 nginx       # host 8080 → container 80
 docker run -p 127.0.0.1:8080:80  # bind to localhost only (more secure)
 docker run -P nginx               # publish ALL EXPOSE'd ports to random host ports</code></pre>
 
           <h3>Networks</h3>
-          <pre><code># Create a custom bridge network
+          <pre tabindex="0"><code># Create a custom bridge network
 docker network create my-network
 
 # Connect containers to the same network so they can reach each other by name
@@ -509,7 +515,7 @@ docker network inspect my-network</code></pre>
           </p>
 
           <h3>A production-ready Compose file</h3>
-          <pre><code># docker-compose.yml
+          <pre tabindex="0"><code># docker-compose.yml
 version: "3.9"
 
 services:
@@ -588,7 +594,7 @@ networks:
     driver: bridge</code></pre>
 
           <h3>Essential Compose commands</h3>
-          <pre><code># Start all services (build images if needed)
+          <pre tabindex="0"><code># Start all services (build images if needed)
 docker compose up
 
 # Start in detached mode
@@ -625,7 +631,7 @@ docker compose exec api sh
 docker compose run --rm api node scripts/seed.js</code></pre>
 
           <h3>Override files for dev vs production</h3>
-          <pre><code># docker-compose.override.yml — auto-loaded on top of docker-compose.yml
+          <pre tabindex="0"><code># docker-compose.override.yml — auto-loaded on top of docker-compose.yml
 # Use for development settings: bind mounts, debug ports, hot reload
 
 services:
@@ -638,7 +644,7 @@ services:
     environment:
       NODE_ENV: development
     command: npm run dev       # override CMD with a dev server</code></pre>
-          <pre><code># In CI / production: use the base file only
+          <pre tabindex="0"><code># In CI / production: use the base file only
 docker compose -f docker-compose.yml up -d</code></pre>
 
           <!-- ─────────────────────────────────────── -->
@@ -650,7 +656,7 @@ docker compose -f docker-compose.yml up -d</code></pre>
           </p>
 
           <h3>Java / Spring Boot example</h3>
-          <pre><code># Stage 1: build the jar
+          <pre tabindex="0"><code># Stage 1: build the jar
 FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
@@ -683,12 +689,12 @@ ENTRYPOINT ["java", "-jar", "app.jar"]</code></pre>
             Docker needs to know whether your container is actually healthy, not just running.
             A healthy process can still be deadlocked or unable to serve requests.
           </p>
-          <pre><code># In your Dockerfile
+          <pre tabindex="0"><code># In your Dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1</code></pre>
 
           <p>Or in Docker Compose (overrides the Dockerfile HEALTHCHECK):</p>
-          <pre><code>healthcheck:
+          <pre tabindex="0"><code>healthcheck:
   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
   interval: 30s
   timeout: 10s
@@ -705,12 +711,12 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
             Never hard-code secrets in your Dockerfile or Compose file. Use environment variables
             and <code>.env</code> files instead.
           </p>
-          <pre><code># .env  (add to .gitignore AND .dockerignore)
+          <pre tabindex="0"><code># .env  (add to .gitignore AND .dockerignore)
 POSTGRES_PASSWORD=supersecret
 JWT_SECRET=myjwtsecret
 NODE_ENV=production</code></pre>
 
-          <pre><code># docker-compose.yml — reference .env automatically
+          <pre tabindex="0"><code># docker-compose.yml — reference .env automatically
 services:
   api:
     environment:
@@ -719,7 +725,7 @@ services:
     env_file:
       - .env          # loads the entire file into the container</code></pre>
 
-          <pre><code># Pass a single variable at runtime
+          <pre tabindex="0"><code># Pass a single variable at runtime
 docker run -e NODE_ENV=production my-app
 
 # Load from a file
@@ -736,7 +742,7 @@ docker run --env-file .env my-app</code></pre>
           <p>
             A typical CI pipeline builds, tests, and pushes your image on every push to <code>main</code>.
           </p>
-          <pre><code># .github/workflows/docker.yml
+          <pre tabindex="0"><code># .github/workflows/docker.yml
 name: Build &amp; Push Docker Image
 
 on:
@@ -791,7 +797,7 @@ jobs:
 
           <!-- ─────────────────────────────────────── -->
           <h2>Docker Commands Cheat Sheet</h2>
-          <pre><code># ── Images ────────────────────────────────────────────────────
+          <pre tabindex="0"><code># ── Images ────────────────────────────────────────────────────
 docker pull &lt;image&gt;              # download from registry
 docker images                    # list local images
 docker rmi &lt;image&gt;               # remove image
@@ -877,7 +883,7 @@ docker scout cves &lt;image&gt;        # scan image for CVEs</code></pre>
 
         <!-- ── 5. AUTHOR BIO — do NOT edit ── -->
         <div class="author-bio">
-          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" width="64" height="64" loading="lazy" decoding="async" />
           <div class="author-info">
             <strong>Dhiraj Roy</strong>
             <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
@@ -891,7 +897,7 @@ docker scout cves &lt;image&gt;        # scan image for CVEs</code></pre>
             <span class="nav-label">← Previous</span>
             <span class="nav-title">Git &amp; GitHub Complete Guide</span>
           </a>
-          <a href="/post/nodejs-complete-guide" class="nav-next">
+          <a href="/post/nodejs-backend-development-production-api" class="nav-next">
             <span class="nav-label">Next →</span>
             <span class="nav-title">Node.js Complete Guide</span>
           </a>
@@ -932,11 +938,12 @@ docker scout cves &lt;image&gt;        # scan image for CVEs</code></pre>
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
-            <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
-            <li><a href="/#popular-categories" data-tag="Frontend">Frontend</a></li>
-            <li><a href="/#popular-categories" data-tag="JavaScript">JavaScript</a></li>
-            <li><a href="/#popular-categories" data-tag="DevOps">DevOps</a></li>
-            <li><a href="/#popular-categories" data-tag="Database">Database</a></li>
+            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
+            <li><a href="/?category=Backend#articles-section" data-tag="Backend">Backend</a></li>
+            <li><a href="/?category=Spring%20Boot#articles-section" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/?category=JavaScript#articles-section" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/?category=DevOps#articles-section" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/?category=Database#articles-section" data-tag="Database">Database</a></li>
           </ul>
         </div>
 
@@ -945,9 +952,6 @@ docker scout cves &lt;image&gt;        # scan image for CVEs</code></pre>
           <h4 class="footer-col-title">Connect With Me</h4>
           <div class="footer-social-icons">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
           </div>
         </div>
@@ -976,7 +980,7 @@ docker scout cves &lt;image&gt;        # scan image for CVEs</code></pre>
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
   <!-- Scripts — do NOT edit -->
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+<script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 </body>
 </html>

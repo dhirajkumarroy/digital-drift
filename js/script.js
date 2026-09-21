@@ -83,14 +83,12 @@
         filtered = filtered.filter(p => p.tags.some(t => /backend|java|spring|node|api/i.test(t)));
       } else if (activeTag === 'Frontend') {
         filtered = filtered.filter(p => p.tags.some(t => /frontend|react|ui|web|css|html/i.test(t)) || p.summary.toLowerCase().includes('frontend') || p.title.toLowerCase().includes('frontend'));
-
       } else if (activeTag === 'JavaScript') {
-        filtered = filtered.filter(p => p.tags.some(t => /javascript|js|node|tech/i.test(t)) || p.title.toLowerCase().includes('javascript') || p.summary.toLowerCase().includes('javascript'));
+        filtered = filtered.filter(p => p.tags.some(t => /javascript|node/i.test(t)) || p.title.toLowerCase().includes('javascript') || p.summary.toLowerCase().includes('javascript'));
       } else if (activeTag === 'Node.js') {
         filtered = filtered.filter(p => p.tags.some(t => /node/i.test(t)));
       } else if (activeTag === 'Laravel') {
-        filtered = filtered.filter(p => p.tags.some(t => /laravel/i.test(t)) || p.title.toLowerCase().includes('laravel'));
-
+        filtered = filtered.filter(p => p.tags.some(t => tagsMatch(t, 'Laravel')) || p.title.toLowerCase().includes('laravel'));
       } else if (activeTag === 'Database') {
         filtered = filtered.filter(p => p.tags.some(t => /database|sql|postgres/i.test(t)) || p.title.toLowerCase().includes('postgresql') || p.summary.toLowerCase().includes('database'));
       } else if (activeTag === 'DevOps') {
@@ -113,6 +111,7 @@
   // ── RENDER FEATURED POST ──────────────────────────────────
   function renderFeatured() {
     if (!featuredEl) return;
+    if (featuredEl.children.length) return;
     const featured = BLOG_POSTS.find(p => p.featured) || BLOG_POSTS[0];
     if (!featured) { featuredEl.style.display = 'none'; return; }
 
@@ -127,8 +126,8 @@
       <article class="featured-card fade-in-section">
         <div class="featured-image-container">
           <a href="${escapeHtml(featured.url)}" class="featured-image-link" aria-label="${escapeHtml(featured.title)}">
-            <span class="badge-new">NEW</span>
-            <img src="${escapeHtml(featured.image || '/android-chrome-512x512.png')}" alt="${escapeHtml(featured.title)}" class="featured-image" loading="eager" />
+            <span class="badge-new">FEATURED</span>
+            <img src="${escapeHtml(featured.image || '/android-chrome-512x512.png')}" alt="${escapeHtml(featured.title)}" class="featured-image" width="800" height="500" loading="lazy" decoding="async" />
           </a>
         </div>
         <div class="featured-text-content">
@@ -141,7 +140,7 @@
           <p class="featured-card-summary">${escapeHtml(featured.summary)}</p>
           <div class="card-author-meta">
             <div class="author-avatar-group">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Dhiraj Roy" class="author-avatar-img" />
+              <img src="/android-chrome-192x192.png" alt="" class="author-avatar-img" width="32" height="32" loading="lazy" />
               <span class="author-name">Dhiraj Roy</span>
             </div>
             <span class="meta-item">
@@ -170,13 +169,14 @@
     if (!popularEl) return;
 
     const POPULAR_ITEMS = BLOG_POSTS.slice(0, 5).map(post => ({
-      ...post, image: post.image || '/android-chrome-192x192.png', readTime: formatReadTime(post.readTime)
+      ...post,
+      readTime: formatReadTime(post.readTime)
     }));
 
     popularEl.innerHTML = POPULAR_ITEMS.map((p, idx) => `
       <a href="${escapeHtml(p.url)}" class="popular-post-row">
         <span class="pop-rank-circle">${idx + 1}</span>
-        <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}" class="pop-thumb" width="42" height="42" />
+        <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}" class="pop-thumb" width="42" height="42" loading="lazy" decoding="async" />
         <div class="pop-content">
           <h4 class="pop-title">${escapeHtml(p.title)}</h4>
           <span class="pop-time">${escapeHtml(p.readTime)}</span>
@@ -191,6 +191,7 @@
     if (!postsContainer) return;
 
     updateFeaturedVisibility();
+
     const filtered = getFilteredPosts();
     const total    = filtered.length;
     const start    = currentPage * POSTS_PER_PAGE;
@@ -235,7 +236,7 @@
 
       card.innerHTML = `
         <a href="${escapeHtml(post.url)}" class="card-image-link" aria-label="${escapeHtml(post.title)}">
-          <img src="${escapeHtml(post.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(post.title)}" class="card-image" loading="lazy" />
+          <img src="${escapeHtml(post.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(post.title)}" class="card-image" width="800" height="500" loading="lazy" decoding="async" />
         </a>
         <div class="card-body">
           <div class="card-tags">${tagPills}</div>
@@ -312,8 +313,10 @@
     if (page < 0 || page >= totalPages) return;
     currentPage = page;
     renderPosts();
+    const currentButton = paginationEl && paginationEl.querySelector('[aria-current="page"]');
+    if (currentButton) currentButton.focus({ preventScroll: true });
     const anchor = document.getElementById('articles-section');
-    if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (anchor) anchor.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
   }
 
   // ── FILTER BAR ────────────────────────────────────────────
@@ -342,10 +345,10 @@
       { id: 'all', label: 'All', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>' },
       { id: 'System Design', label: 'System Design', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6.7 6.5l3.6 10"/><path d="M17.3 6.5l-3.6 10"/><path d="M7 5h10"/></svg>' },
       { id: 'Backend', label: 'Backend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>' },
-      { id: 'Frontend', label: 'Frontend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' },
+      { id: 'AI', label: 'AI', icon: '✦' },
+      { id: 'Spring Boot', label: 'Spring Boot', icon: '☘' },
       { id: 'JavaScript', label: 'JavaScript', icon: '<span class="icon-badge-js">JS</span>' },
       { id: 'Node.js', label: 'Node.js', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M12 2l8 4.5v9l-8 4.5-8-4.5v-9z"/></svg>' },
-      { id: 'Laravel', label: 'Laravel', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zm9 5v10l-9 5V12l9-5zm-9 10L3 12V7l9 5v10z"/></svg>' },
       { id: 'Database', label: 'Database', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>' },
       { id: 'DevOps', label: 'DevOps', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.267-8-12.356-8-5.096 0-5.096 8 0 8 5.09 0 7.26-8 12.356-8z"/></svg>' }
     ];
@@ -353,7 +356,7 @@
     tagFilterBar.innerHTML = '';
     CATEGORIES.forEach(cat => {
       const a = document.createElement('a');
-      a.href = '#';
+      a.href = cat.id === 'all' ? '/#articles-section' : '/?category=' + encodeURIComponent(cat.id) + '#articles-section';
       const isActive = activeTag
         ? tagsMatch(cat.id, activeTag)
         : cat.id === 'all';
@@ -384,38 +387,56 @@
     document.documentElement.classList.toggle('dark', !isLight);
     if (moonIcon) moonIcon.style.display = isLight ? 'block' : 'none';
     if (sunIcon)  sunIcon.style.display  = isLight ? 'none'  : 'block';
+    if (themeToggle) themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
   }
 
   function initTheme() {
-    let savedTheme;
-    try { savedTheme = localStorage.getItem('theme'); } catch (_) {}
-    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    applyTheme(savedTheme ? savedTheme === 'light' : Boolean(prefersLight));
+    applyTheme(!document.documentElement.classList.contains('dark'));
   }
 
   function toggleTheme() {
     const isLight = document.documentElement.classList.contains('dark');
     applyTheme(isLight);
-    try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch (_) {}
+    try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch (e) { /* Theme still works without storage. */ }
   }
 
   // ── MOBILE MENU ───────────────────────────────────────────
   function toggleMobileMenu() {
-    if (mobileMenu) mobileMenu.classList.toggle('active');
+    setMobileMenu(mobileMenu && !mobileMenu.classList.contains('active'));
   }
+
+  function setMobileMenu(open) {
+    if (!mobileMenu || !mobileMenuBtn) return;
+    mobileMenu.classList.toggle('active', Boolean(open));
+    mobileMenuBtn.setAttribute('aria-expanded', String(Boolean(open)));
+    mobileMenuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+
+  if (mobileMenu) mobileMenu.addEventListener('click', e => {
+    if (e.target.closest('a')) setMobileMenu(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
+      setMobileMenu(false);
+      mobileMenuBtn.focus();
+    }
+  });
+  window.matchMedia('(min-width: 993px)').addEventListener('change', e => {
+    if (e.matches) setMobileMenu(false);
+  });
 
   document.addEventListener('click', e => {
     if (
       mobileMenu && mobileMenu.classList.contains('active') &&
       !mobileMenu.contains(e.target) &&
       mobileMenuBtn && !mobileMenuBtn.contains(e.target)
-    ) mobileMenu.classList.remove('active');
+    ) setMobileMenu(false);
   });
 
   // ── BACK TO TOP ───────────────────────────────────────────
   function initBackToTop() {
     if (!backToTop) return;
-    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }));
   }
 
   // ── READING PROGRESS ─────────────────────────────────────
@@ -451,10 +472,10 @@
   document.addEventListener('keydown', e => {
     const tag = document.activeElement.tagName;
     const isSearchShortcut = e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k');
-    if (isSearchShortcut && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+    if (searchInput && isSearchShortcut && tag !== 'INPUT' && tag !== 'TEXTAREA' && !document.activeElement.isContentEditable) {
       e.preventDefault();
       if (searchInput) {
-        searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        searchInput.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' });
         searchInput.focus();
         searchInput.select();
       }
@@ -474,6 +495,8 @@
       const href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
       if (href.startsWith('#')) return;
       a.classList.toggle('active', href === path);
+      if (href === path) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
     });
   }
 
@@ -484,13 +507,17 @@
       const btn = document.createElement('button');
       btn.className = 'copy-code-btn';
       btn.textContent = 'Copy';
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const code = pre.querySelector('code');
-        navigator.clipboard.writeText(code ? code.textContent : pre.textContent).then(() => {
+        try {
+          const content = code ? code.textContent : Array.from(pre.childNodes).filter(node => node !== btn).map(node => node.textContent).join('');
+          await navigator.clipboard.writeText(content);
           btn.textContent = 'Copied!';
           btn.classList.add('copied');
           setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-        });
+        } catch (error) {
+          window.showToast('Copy is unavailable. Select the code and copy it manually.');
+        }
       });
       pre.style.position = 'relative';
       pre.appendChild(btn);
@@ -514,7 +541,7 @@
           ? tagsMatch(chipTag, currentTag)
           : chipTag === '';
         chip.classList.toggle('active', isActive);
-        chip.setAttribute('aria-current', isActive ? 'true' : 'false');
+        chip.setAttribute('aria-pressed', String(isActive));
       });
     }
 
@@ -575,7 +602,7 @@
             </div>
           </a>
         `).join('');
-        group.innerHTML = `<div class="archive-year-badge">📅 ${escapeHtml(year)} <span style="font-size:0.82rem; font-weight:600; opacity:0.65; margin-left:4px;">(${byYear[year].length})</span></div><div class="archive-list">${items}</div>`;
+        group.innerHTML = `<div class="archive-year-badge">📅 ${escapeHtml(year)} <span style="font-size:0.82rem; font-weight:600; margin-left:4px;">(${byYear[year].length})</span></div><div class="archive-list">${items}</div>`;
         archiveList.appendChild(group);
       });
       initFadeIn();
@@ -605,6 +632,7 @@
     const el = document.createElement('div');
     el.className = 'toast ' + (type || '');
     el.textContent = msg;
+    el.setAttribute('role', 'status');
     container.appendChild(el);
     setTimeout(() => el.remove(), 3200);
   };
@@ -624,7 +652,7 @@
     if (headerSearchBtn) {
       headerSearchBtn.addEventListener('click', () => {
         if (searchInput) {
-          searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          searchInput.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' });
           setTimeout(() => searchInput.focus(), 250);
         }
       });
@@ -648,7 +676,7 @@
     const postContent = postArticle.querySelector('.post-content');
     if (!postTitleEl || !postContent) return;
 
-    const shareUrl = encodeURIComponent(window.location.href);
+    const shareUrl = encodeURIComponent(document.querySelector('link[rel="canonical"]')?.href || window.location.href);
     const shareTitle = encodeURIComponent(postTitleEl.textContent.trim());
 
     const twitterUrl  = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`;
@@ -757,13 +785,14 @@
     if (headings.length < 2) return;
 
     // Check if TOC container already exists in article
-    let tocBox = postContent.querySelector('.table-of-contents') || postContent.querySelector('[style*="Table of Contents"]');
+    let tocBox = postContent.querySelector('.table-of-contents, .auto-toc-box, nav[aria-label="Table of contents"]');
+    if (!tocBox) tocBox = Array.from(postContent.querySelectorAll('h2, h3, strong')).find(h => /^(?:📑\s*)?(?:table of contents|on this page)$/i.test(h.textContent.trim()));
     if (!tocBox) {
       // Create auto-generated TOC
       const autoToc = document.createElement('div');
       autoToc.className = 'auto-toc-box';
       let tocHtml = '<strong>Table of Contents</strong><ul class="auto-toc-list">';
-
+      
       headings.forEach((h, index) => {
         if (!h.id) {
           h.id = 'heading-' + index + '-' + h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -783,6 +812,7 @@
     }
 
     // Scroll spy for headings
+    if (!('IntersectionObserver' in window)) return;
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -811,12 +841,12 @@
     const currentPost = BLOG_POSTS.find(p => p.url === currentPath || currentPath.endsWith(p.slug) || currentPath.endsWith(p.slug + '.html'));
 
     // 1. Author Bio Card
-    if (!postContent.querySelector('.author-bio-card')) {
+    if (!postArticle.querySelector('.author-bio-card, .author-bio')) {
       const authorCard = document.createElement('div');
       authorCard.className = 'author-bio-card';
       authorCard.innerHTML = `
         <div class="author-bio-avatar-wrapper">
-          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-bio-avatar" />
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-bio-avatar" width="72" height="72" loading="lazy" />
         </div>
         <div class="author-bio-content">
           <div class="author-bio-header">
@@ -843,9 +873,9 @@
       newsletterCard.innerHTML = `
         <div class="newsletter-icon">⚡</div>
         <div class="newsletter-content">
-          <h3>Subscribe to Digital Drift Digest</h3>
-          <p>Get high-quality, practical engineering guides on Java 21, Spring Boot, microservices, and system design in your RSS reader.</p>
-          <p><a href="/feed.xml" class="btn-primary">Subscribe via RSS</a></p>
+          <h3>Follow Digital Drift</h3>
+          <p>Get new backend and system design guides in your favorite RSS reader.</p>
+          <a href="/feed.xml" class="btn-sidebar-subscribe feed-link">Subscribe via RSS</a>
         </div>
       `;
       postContent.appendChild(newsletterCard);
@@ -863,7 +893,7 @@
           <div class="related-posts-grid">
             ${related.map(p => `
               <a href="${escapeHtml(p.url)}" class="related-post-card">
-                <img src="${escapeHtml(p.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(p.title)}" class="related-post-img" loading="lazy" />
+                <img src="${escapeHtml(p.image || '/android-chrome-192x192.png')}" alt="${escapeHtml(p.title)}" class="related-post-img" width="90" height="70" loading="lazy" decoding="async" />
                 <div class="related-post-info">
                   <span class="related-post-tag">${escapeHtml(p.tags[0])}</span>
                   <h4 class="related-post-heading">${escapeHtml(p.title)}</h4>

@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <!-- Prevent dark/light theme flash — runs before any paint -->
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>New Post — Digital Drift Admin</title>
   <!-- Noindex: keep this out of search results -->
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
   <style>
     /* Admin-only tweaks */
     body { padding-bottom: 4rem; }
@@ -94,6 +94,7 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="reading-progress" id="reading-progress"></div>
 
   <div class="container">
@@ -114,7 +115,7 @@
       </div>
     </header>
 
-    <div class="admin-container">
+    <div id="main-content" role="main" tabindex="-1" class="admin-container">
       <!-- Header -->
       <div class="admin-header">
         <div>
@@ -130,6 +131,7 @@
         <ol class="step-list">
           <li>Fill in the metadata and content sections below, then click <strong>Generate</strong>.</li>
           <li>Copy the <strong>Post HTML</strong> tab → save as <code>/post/your-slug.html</code>.</li>
+          <li>After adding the registry entry, run <code>node scripts/build-seo.js</code> and <code>python3 scripts/check-site.py</code>.</li>
           <li>Copy the <strong>Registry Entry</strong> tab → paste at the <strong>top</strong> of <code>BLOG_POSTS</code> in <code>/js/posts-data.js</code>.</li>
         </ol>
       </div>
@@ -243,8 +245,8 @@
   <!-- Toast container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <script src="/js/posts-data.js?v=4"></script>
-  <script src="/js/script.js?v=4"></script>
+  <script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
   <script>
   (function () {
     /* ── Helpers ──────────────────────────────────────────── */
@@ -456,9 +458,10 @@
 
       const displayDate = formatDisplayDate(isoDate);
       const id          = nextId();
-      const url         = `/post/${slug}.html`;
+      const url         = `/post/${slug}`;
       const tagStr      = tags.map(t => `<span class="tag" data-tag="${esc(t)}">${esc(t)}</span>`).join('\n            ');
-      const schemaTagsStr = tags.map(t => `"${t}"`).join(', ');
+      const jsonText = value => JSON.stringify(value).replace(/</g, '\\u003c');
+      const schemaTagsStr = tags.map(t => JSON.stringify(t).replace(/</g, '\\u003c')).join(', ');
       const contentHtml = buildContentHtml();
       const absoluteImage = image.startsWith('http') ? image : `https://blog.dhirajroy.com${image}`;
 
@@ -468,10 +471,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}<\/script>
   <title>${esc(title)} | Digital Drift</title>
   <meta name="description" content="${esc(summary)}" />
   <meta name="author" content="Dhiraj Roy" />
-  <link rel="canonical" href="https://blog.dhirajroy.com/post/${esc(slug)}.html" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/${esc(slug)}" />
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -481,7 +485,7 @@
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(summary)}" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://blog.dhirajroy.com/post/${esc(slug)}.html" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/${esc(slug)}" />
   <meta property="og:image" content="${esc(absoluteImage)}" />
   <meta property="og:site_name" content="Digital Drift" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -492,13 +496,13 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "${esc(title)}",
-    "description": "${esc(summary)}",
-    "image": "${esc(absoluteImage)}",
+    "headline": ${jsonText(title)},
+    "description": ${jsonText(summary)},
+    "image": ${jsonText(absoluteImage)},
     "author": { "@type": "Person", "name": "Dhiraj Roy" },
     "datePublished": "${esc(isoDate)}",
     "dateModified": "${esc(isoDate)}",
-    "url": "https://blog.dhirajroy.com/post/${esc(slug)}.html",
+    "url": "https://blog.dhirajroy.com/post/${esc(slug)}",
     "keywords": [${schemaTagsStr}],
     "publisher": {
       "@type": "Organization",
@@ -514,9 +518,10 @@
     gtag('js', new Date());
     gtag('config', 'G-VN488V6MP5');
   <\/script>
-  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="reading-progress" id="reading-progress"></div>
   <div class="container">
     <header class="header">
@@ -536,7 +541,7 @@
             <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
           </svg>
         </button>
-        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+        <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -550,6 +555,7 @@
       <a href="/archive">Archive</a>
     </nav>
 
+    <main id="main-content" tabindex="-1">
     <article class="blog-post">
       <div class="tags">
         ${tagStr}
@@ -589,6 +595,7 @@ ${contentHtml}
         </a>
       </nav>
     </article>
+    </main>
 
     <footer class="footer">
       <p>&copy; <span id="current-year"></span> Digital Drift · Built by Dhiraj Roy</p>
@@ -602,13 +609,13 @@ ${contentHtml}
 
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
-  <script src="/js/posts-data.js?v=4"><\/script>
-  <script src="/js/script.js?v=4"><\/script>
+  <script src="/js/posts-data.js?v=7"><\/script>
+  <script src="/js/script.js?v=7"><\/script>
 </body>
 </html>`;
 
       /* ── Registry Entry ──────────────────────────────── */
-      const tagsArrayStr = tags.map(t => `"${t}"`).join(', ');
+      const tagsArrayStr = tags.map(t => JSON.stringify(t)).join(', ');
       const entry = `  {
     id: ${id},
     slug: "${slug}",
@@ -616,7 +623,7 @@ ${contentHtml}
     summary: "${summary.replace(/"/g, '\\"')}",
     date: "${displayDate}",
     dateISO: "${isoDate}",
-    url: "/post/${slug}.html",
+    url: "/post/${slug}",
     image: "${image.replace(/"/g, '\\"')}",
     tags: [${tagsArrayStr}],
     readTime: ${readTime},

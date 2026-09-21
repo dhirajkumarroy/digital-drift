@@ -1,25 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" class="light">
 <head>
-  <!-- Prevent dark/light theme flash — runs before any paint, defaults to light -->
-  <script>
-    try {
-      var __t = localStorage.getItem("theme");
-      if (__t === "dark") {
-        document.documentElement.classList.add("dark");
-        document.documentElement.classList.remove("light");
-      } else {
-        document.documentElement.classList.add("light");
-        document.documentElement.classList.remove("dark");
-      }
-    } catch(e) {}
-  </script>
   <meta charset="UTF-8" />
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
-  <title>Digital Drift | Backend, AI &amp; Programming Blog</title>
-  <meta name="description" content="Digital Drift — Backend, AI, and programming blogs by Dhiraj Roy. Learn Python, Java, Spring Boot, and modern development." />
+  <title>Digital Drift | Backend &amp; System Design Tutorials</title>
+  <meta name="description" content="Practical backend and system design tutorials by Dhiraj Roy. Learn Java, Spring Boot, Node.js, databases, Docker, and AI with code and architecture examples." />
   <meta name="keywords" content="Java, Spring Boot, Backend, AI, Python, Programming, Blog, Dhiraj Roy" />
   <meta name="author" content="Dhiraj Roy" />
 
@@ -35,8 +25,6 @@
   <meta name="theme-color" content="#F8FAFC" />
 
   <!-- Preconnect -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Digital Drift — Backend &amp; AI Blog" />
@@ -58,7 +46,7 @@
     "@type": "Blog",
     "name": "Digital Drift",
     "url": "https://blog.dhirajroy.com",
-    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "description": "Backend, AI, and programming blogs with real-world projects."
   }
   </script>
@@ -72,14 +60,19 @@
     gtag('config', 'G-VN488V6MP5');
   </script>
 
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
 
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
+  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <!-- Reading progress bar (fixed top) -->
   <div class="reading-progress" id="reading-progress"></div>
 
@@ -127,7 +120,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -145,7 +138,7 @@
       <a href="#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- 1. Editorial Hero Section -->
@@ -174,7 +167,7 @@
 
       <div class="hero-visual-wrapper">
         <div class="hero-illustration-box">
-          <img src="/images/hero-workspace.jpg" alt="Developer Workspace with Laptop, Code, and Tech Stacks" class="hero-illustration-img" />
+          <img src="/images/hero-workspace.jpg" alt="Developer Workspace with Laptop, Code, and Tech Stacks" class="hero-illustration-img" width="1264" height="848" fetchpriority="high" />
         </div>
       </div>
     </section>
@@ -192,64 +185,8 @@
     <!-- 3. Main Content Area: Articles Column (Featured + Latest) + Sidebar -->
     <div id="articles-section" class="main-content-layout">
       <!-- Left Column: Featured Article + Articles Grid -->
-      <main class="articles-column" role="main">
-        <!-- Featured Article (rendered by JS) -->
-        <section id="featured-post" class="featured-section"></section>
-
-        <div class="section-top-header">
-          <div class="section-title-wrap-row">
-            <span class="section-icon-latest">📑</span>
-            <h2 class="section-title">Latest Articles</h2>
-          </div>
-          <div class="section-header-right">
-            <span class="posts-count-badge" id="posts-count-badge"><!-- generated:start -->18 articles<!-- generated:end --></span>
-            <a href="/archive" class="section-action-link">View all <span class="arrow">→</span></a>
-          </div>
-        </div>
-
-        <div id="blog-posts-container" class="posts-grid"><!-- generated:start --><article class="blog-card">
-    <a href="/post/gpt-6-astra-explained" class="card-image-link"><img src="/images/gpt-6-astra-explained.jpg" alt="GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares" class="card-image" loading="lazy" /></a>
-    <div class="card-body"><div class="card-tags"><span class="tag">AI</span><span class="tag">Tech</span></div>
-    <h3 class="card-title"><a href="/post/gpt-6-astra-explained">GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares</a></h3>
-    <p class="card-summary">A comprehensive developer guide to OpenAI&#39;s GPT-6 Astra. Explore technical specs, 1.05M context window, API pricing, benchmarks, computer-use features, and GPT-5.6 Sol comparison.</p><div class="card-footer"><time datetime="2026-09-21">Sep 21, 2026</time><span>22 min read</span></div></div>
-  </article>
-<article class="blog-card">
-    <a href="/post/system-design-url-shortener-tinyurl" class="card-image-link"><img src="/images/system-design-url-shortener.jpg" alt="System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide" class="card-image" loading="lazy" /></a>
-    <div class="card-body"><div class="card-tags"><span class="tag">System Design</span><span class="tag">Architecture</span></div>
-    <h3 class="card-title"><a href="/post/system-design-url-shortener-tinyurl">System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide</a></h3>
-    <p class="card-summary">Master the classic system design interview question. Learn capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.</p><div class="card-footer"><time datetime="2026-09-21">Sep 21, 2026</time><span>18 min read</span></div></div>
-  </article>
-<article class="blog-card">
-    <a href="/post/system-design-roadmap-beginner-to-advanced" class="card-image-link"><img src="/images/system-design-roadmap.jpg" alt="The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced" class="card-image" loading="lazy" /></a>
-    <div class="card-body"><div class="card-tags"><span class="tag">System Design</span><span class="tag">Architecture</span></div>
-    <h3 class="card-title"><a href="/post/system-design-roadmap-beginner-to-advanced">The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced</a></h3>
-    <p class="card-summary">A linear, five-phase system design roadmap for developers. Master networking, data storage, distributed systems, reliability, and interview execution.</p><div class="card-footer"><time datetime="2026-09-14">Sep 14, 2026</time><span>10 min read</span></div></div>
-  </article>
-<article class="blog-card">
-    <a href="/post/spring-boot-file-upload-download-complete-guide" class="card-image-link"><img src="https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki" alt="Spring Boot File Upload and Download — Complete Guide" class="card-image" loading="lazy" /></a>
-    <div class="card-body"><div class="card-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span></div>
-    <h3 class="card-title"><a href="/post/spring-boot-file-upload-download-complete-guide">Spring Boot File Upload and Download — Complete Guide</a></h3>
-    <p class="card-summary">Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, validation, security, and production practices.</p><div class="card-footer"><time datetime="2026-07-20">Jul 20, 2026</time><span>22 min read</span></div></div>
-  </article>
-<article class="blog-card">
-    <a href="/post/spring-boot-pagination-sorting-complete-guide" class="card-image-link"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&amp;auto=format&amp;fit=crop&amp;q=60" alt="Spring Boot Pagination and Sorting — Complete Guide" class="card-image" loading="lazy" /></a>
-    <div class="card-body"><div class="card-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span></div>
-    <h3 class="card-title"><a href="/post/spring-boot-pagination-sorting-complete-guide">Spring Boot Pagination and Sorting — Complete Guide</a></h3>
-    <p class="card-summary">Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, Sort, validation, and production practices.</p><div class="card-footer"><time datetime="2026-06-24">Jun 24, 2026</time><span>19 min read</span></div></div>
-  </article>
-<article class="blog-card">
-    <a href="/post/spring-boot-global-exception-handling-controlleradvice" class="card-image-link"><img src="/images/spring-boot-exception-handling.jpg" alt="Spring Boot Global Exception Handling with @ControllerAdvice" class="card-image" loading="lazy" /></a>
-    <div class="card-body"><div class="card-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span></div>
-    <h3 class="card-title"><a href="/post/spring-boot-global-exception-handling-controlleradvice">Spring Boot Global Exception Handling with @ControllerAdvice</a></h3>
-    <p class="card-summary">Master spring boot exception handling with Java 21, Spring Boot 3.x, custom exceptions, validation, @ControllerAdvice, error DTOs, tests, and production advice.</p><div class="card-footer"><time datetime="2026-06-21">Jun 21, 2026</time><span>16 min read</span></div></div>
-  </article><!-- generated:end --></div>
-        <nav id="pagination" class="pagination" aria-label="Blog post pages"></nav>
-      </main>
-
-      <!-- Right Column: Sidebar -->
-      <aside class="sidebar-column" aria-label="Sidebar">
-        <!-- 1. Search Box Widget -->
-        <div class="sidebar-widget search-widget">
+      <main id="main-content" tabindex="-1" class="articles-column" role="main">
+        <div class="article-search search-widget">
           <div class="search-container">
             <label for="search-input" class="sr-only">Search blog posts</label>
             <span class="search-icon" aria-hidden="true">
@@ -266,12 +203,101 @@
             <button id="search-clear" class="search-clear" aria-label="Clear search">✕</button>
           </div>
         </div>
+        <!-- Featured Article (rendered by JS) -->
+        <section id="featured-post" class="featured-section"><!-- generated:featured:start -->
+<div class="section-top-header">
+  <h2 class="section-title">Featured Article</h2><a href="/archive" class="section-action-link">View all →</a>
+</div>
+<article class="featured-card">
+  <div class="featured-image-container"><a href="/post/what-is-backend" class="featured-image-link" aria-label="What is Backend Development? The Complete Beginner&apos;s Guide"><span class="badge-new">FEATURED</span><img src="https://lh3.googleusercontent.com/d/1To1A9K5lT-LY2qwMikyUSykJMbau_ZHi" alt="" class="featured-image" width="800" height="500" loading="lazy" decoding="async" /></a></div>
+  <div class="featured-text-content">
+    <div class="card-tags"><span class="tag">Backend</span><span class="tag">Education</span></div>
+    <h3 class="featured-card-title"><a href="/post/what-is-backend">What is Backend Development? The Complete Beginner&apos;s Guide</a></h3>
+    <p class="featured-card-summary">Understand what backend development really is — servers, APIs, databases, authentication, and how all the pieces fit together to power every app you use.</p>
+    <div class="card-author-meta"><span class="author-name">Dhiraj Roy</span><time class="meta-item" datetime="2026-04-24">Apr 24, 2026</time><span class="meta-item">12 min read</span></div>
+  </div>
+</article>
+<!-- generated:featured:end --></section>
+
+        <div class="section-top-header">
+          <div class="section-title-wrap-row">
+            <span class="section-icon-latest">📑</span>
+            <h2 class="section-title">Latest Articles</h2>
+          </div>
+          <div class="section-header-right">
+            <span class="posts-count-badge" id="posts-count-badge" role="status" aria-live="polite">18 articles</span>
+            <a href="/archive" class="section-action-link">View all <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <div id="blog-posts-container" class="posts-grid"><!-- generated:posts:start -->
+<article class="blog-card">
+  <a href="/post/gpt-6-astra-explained" class="card-image-link" aria-label="GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares"><img src="/images/gpt-6-astra-explained.jpg" alt="" class="card-image" width="800" height="500" loading="lazy" decoding="async" /></a>
+  <div class="card-body">
+    <div class="card-tags"><span class="tag">AI</span><span class="tag">Tech</span></div>
+    <h3 class="card-title"><a href="/post/gpt-6-astra-explained">GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares</a></h3>
+    <p class="card-summary">A comprehensive developer guide to OpenAI&apos;s GPT-6 Astra. Explore technical specs, 1.05M context window, API pricing, benchmarks, computer-use features, and GPT-5.6 Sol comparison.</p>
+    <div class="card-footer"><time class="meta-item" datetime="2026-09-21">Sep 21, 2026</time><span class="meta-item">22 min read</span></div>
+  </div>
+</article>
+<article class="blog-card">
+  <a href="/post/system-design-url-shortener-tinyurl" class="card-image-link" aria-label="System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide"><img src="/images/system-design-url-shortener.jpg" alt="" class="card-image" width="800" height="500" loading="lazy" decoding="async" /></a>
+  <div class="card-body">
+    <div class="card-tags"><span class="tag">System Design</span><span class="tag">Architecture</span></div>
+    <h3 class="card-title"><a href="/post/system-design-url-shortener-tinyurl">System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide</a></h3>
+    <p class="card-summary">Master the classic system design interview question. Learn capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.</p>
+    <div class="card-footer"><time class="meta-item" datetime="2026-09-21">Sep 21, 2026</time><span class="meta-item">18 min read</span></div>
+  </div>
+</article>
+<article class="blog-card">
+  <a href="/post/system-design-roadmap-beginner-to-advanced" class="card-image-link" aria-label="The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced"><img src="/images/system-design-roadmap.jpg" alt="" class="card-image" width="800" height="500" loading="lazy" decoding="async" /></a>
+  <div class="card-body">
+    <div class="card-tags"><span class="tag">System Design</span><span class="tag">Architecture</span></div>
+    <h3 class="card-title"><a href="/post/system-design-roadmap-beginner-to-advanced">The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced</a></h3>
+    <p class="card-summary">A linear, five-phase system design roadmap for developers. Master networking, data storage, distributed systems, reliability, and interview execution.</p>
+    <div class="card-footer"><time class="meta-item" datetime="2026-09-14">Sep 14, 2026</time><span class="meta-item">10 min read</span></div>
+  </div>
+</article>
+<article class="blog-card">
+  <a href="/post/spring-boot-file-upload-download-complete-guide" class="card-image-link" aria-label="Spring Boot File Upload and Download — Complete Guide"><img src="https://lh3.googleusercontent.com/d/1H41h-FlOLt13VZtmVaH_yuDpU7FIj7ki" alt="" class="card-image" width="800" height="500" loading="lazy" decoding="async" /></a>
+  <div class="card-body">
+    <div class="card-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span></div>
+    <h3 class="card-title"><a href="/post/spring-boot-file-upload-download-complete-guide">Spring Boot File Upload and Download — Complete Guide</a></h3>
+    <p class="card-summary">Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, validation, security, and production practices.</p>
+    <div class="card-footer"><time class="meta-item" datetime="2026-07-20">Jul 20, 2026</time><span class="meta-item">22 min read</span></div>
+  </div>
+</article>
+<article class="blog-card">
+  <a href="/post/spring-boot-pagination-sorting-complete-guide" class="card-image-link" aria-label="Spring Boot Pagination and Sorting — Complete Guide"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&amp;auto=format&amp;fit=crop&amp;q=60" alt="" class="card-image" width="800" height="500" loading="lazy" decoding="async" /></a>
+  <div class="card-body">
+    <div class="card-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span></div>
+    <h3 class="card-title"><a href="/post/spring-boot-pagination-sorting-complete-guide">Spring Boot Pagination and Sorting — Complete Guide</a></h3>
+    <p class="card-summary">Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, Sort, validation, and production practices.</p>
+    <div class="card-footer"><time class="meta-item" datetime="2026-06-24">Jun 24, 2026</time><span class="meta-item">19 min read</span></div>
+  </div>
+</article>
+<article class="blog-card">
+  <a href="/post/spring-boot-global-exception-handling-controlleradvice" class="card-image-link" aria-label="Spring Boot Global Exception Handling with @ControllerAdvice"><img src="/images/spring-boot-exception-handling.jpg" alt="" class="card-image" width="800" height="500" loading="lazy" decoding="async" /></a>
+  <div class="card-body">
+    <div class="card-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span></div>
+    <h3 class="card-title"><a href="/post/spring-boot-global-exception-handling-controlleradvice">Spring Boot Global Exception Handling with @ControllerAdvice</a></h3>
+    <p class="card-summary">Master spring boot exception handling with Java 21, Spring Boot 3.x, custom exceptions, validation, @ControllerAdvice, error DTOs, tests, and production advice.</p>
+    <div class="card-footer"><time class="meta-item" datetime="2026-06-21">Jun 21, 2026</time><span class="meta-item">16 min read</span></div>
+  </div>
+</article>
+<!-- generated:posts:end --></div>
+        <nav id="pagination" class="pagination" aria-label="Blog post pages"></nav>
+      </main>
+
+      <!-- Right Column: Sidebar -->
+      <aside class="sidebar-column" aria-label="Sidebar">
+
 
         <!-- 2. Popular Posts Widget -->
         <div class="sidebar-widget popular-posts-widget">
           <div class="widget-header">
             <span class="widget-icon">🔥</span>
-            <h3 class="widget-title">Popular Posts</h3>
+            <h3 class="widget-title">Recent Articles</h3>
           </div>
           <div id="popular-posts-list" class="popular-posts-list"></div>
         </div>
@@ -280,10 +306,11 @@
         <div id="newsletter-section" class="sidebar-widget newsletter-widget">
           <div class="widget-header">
             <span class="widget-icon">✉</span>
-            <h3 class="widget-title">Newsletter</h3>
+            <h3 class="widget-title">Follow new articles</h3>
           </div>
-          <p class="newsletter-desc">Follow the latest articles, tutorials and resources in your RSS reader.</p>
-          <p><a href="/feed.xml" class="btn-primary">Subscribe via RSS</a></p>
+          <p class="newsletter-desc">Subscribe in your favorite RSS reader to get new engineering guides as they are published.</p>
+          <a href="/feed.xml" class="btn-sidebar-subscribe feed-link">Subscribe via RSS</a>
+          <p class="newsletter-disclaimer">Copy the feed link into your RSS reader. No email address needed.</p>
         </div>
 
         <!-- 4. Let's Build Something Great Together Card Widget -->
@@ -294,15 +321,6 @@
           <div class="build-card-socials">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
@@ -346,7 +364,7 @@
           <ul class="footer-link-list">
             <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
             <li><a href="#popular-categories" data-tag="Backend">Backend</a></li>
-            <li><a href="#popular-categories" data-tag="Frontend">Frontend</a></li>
+            <li><a href="#popular-categories" data-tag="Spring Boot">Spring Boot</a></li>
             <li><a href="#popular-categories" data-tag="JavaScript">JavaScript</a></li>
             <li><a href="#popular-categories" data-tag="DevOps">DevOps</a></li>
             <li><a href="#popular-categories" data-tag="Database">Database</a></li>
@@ -358,9 +376,6 @@
           <h4 class="footer-col-title">Connect With Me</h4>
           <div class="footer-social-icons">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
           </div>
         </div>
@@ -389,7 +404,7 @@
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
   <!-- Scripts -->
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+  <script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 </body>
 </html>

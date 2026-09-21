@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
   <meta charset="UTF-8" />
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spring Boot Global Exception Handling with @ControllerAdvice | Digital Drift</title>
-  <meta name="description" content="Learn spring boot exception handling with Java 21, Spring Boot 3.x, Gradle, @ControllerAdvice, custom exceptions, validation, consistent REST API error responses, and complete code." />
+  <title>Spring Boot Exception Handling: @ControllerAdvice | Digital Drift</title>
+  <meta name="description" content="Handle Spring Boot API errors with @ControllerAdvice, custom exceptions, validation, and consistent responses. Includes Java examples and production tips." />
   <meta name="keywords" content="spring boot exception handling, controlleradvice spring boot, spring boot global exception handler, spring boot custom exception, rest api error handling spring boot, Java 21, Spring Boot 3, Gradle" />
   <meta name="author" content="Dhiraj Roy" />
   <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice" />
@@ -14,14 +15,14 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <meta property="og:title" content="Spring Boot Global Exception Handling with @ControllerAdvice" />
-  <meta property="og:description" content="Build consistent, production-ready REST API errors with Spring Boot 3.x, custom exceptions, validation, and @ControllerAdvice." />
+  <meta property="og:description" content="Handle Spring Boot API errors with @ControllerAdvice, custom exceptions, validation, and consistent responses. Includes Java examples and production tips." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice" />
   <meta property="og:image" content="https://blog.dhirajroy.com/images/spring-boot-exception-handling.jpg" />
   <meta property="og:site_name" content="Digital Drift" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Spring Boot Global Exception Handling with @ControllerAdvice" />
-  <meta name="twitter:description" content="A practical Spring Boot exception handling guide with Java 21, custom exceptions, validation, error DTOs, tests, and production advice." />
+  <meta name="twitter:description" content="Handle Spring Boot API errors with @ControllerAdvice, custom exceptions, validation, and consistent responses. Includes Java examples and production tips." />
   <meta name="twitter:image" content="https://blog.dhirajroy.com/images/spring-boot-exception-handling.jpg" />
   <script type="application/ld+json">
   {
@@ -30,7 +31,7 @@
     "headline": "Spring Boot Global Exception Handling with @ControllerAdvice",
     "image": "https://blog.dhirajroy.com/images/spring-boot-exception-handling.jpg",
     "description": "Learn spring boot exception handling with Java 21, Spring Boot 3.x, Gradle, @ControllerAdvice, custom exceptions, validation, and consistent REST API error responses.",
-    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "datePublished": "2026-06-21",
     "dateModified": "2026-06-21",
     "url": "https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice",
@@ -51,14 +52,19 @@
   </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VN488V6MP5');</script>
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
+  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot Global Exception Handling with @ControllerAdvice","item":"https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice"}]}</script>
 </head>
 <body>
-    <!-- Reading progress bar -->
-    <!-- Reading progress bar -->
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Reading progress bar — do NOT edit -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <!-- Header -->
@@ -99,7 +105,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -117,19 +123,20 @@
       <a href="/#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- Main Article -->
-    <main role="main">
+    <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
         <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot Global Exception Handling with @ControllerAdvice</span></nav><!-- generated:breadcrumbs:end -->
         <h1 class="post-title">Spring Boot Global Exception Handling with @ControllerAdvice</h1>
         <div class="post-meta"><span>📅 Jun 21, 2026</span><span>⏱ 16 min read</span><span>✍ Dhiraj Roy</span></div>
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="/images/spring-boot-exception-handling.jpg" alt="Spring Boot Global Exception Handling with @ControllerAdvice" class="post-banner-img" />
+          <img src="/images/spring-boot-exception-handling.jpg" alt="Spring Boot Global Exception Handling with @ControllerAdvice" class="post-banner-img" width="1376" height="768" fetchpriority="high" />
         </div>
         <div class="post-content">
           <p><strong>Spring boot exception handling</strong> is what turns a functional API into a dependable one. A client may request a user that does not exist, submit an invalid email address, try to create a duplicate account, or trigger an unexpected database failure. Your API still needs to return a clear, predictable response. Without a deliberate error strategy, callers receive inconsistent payloads, misleading status codes, or internal details that should never leave the server.</p>
@@ -158,7 +165,7 @@
 
           <h2 id="setup">Project Setup</h2>
           <p>Create a Gradle project with Java 21 and Spring Boot 3.x. Add Spring Web and Validation. The sample below stores users in memory to keep attention on error handling; the same pattern works with Spring Data JPA and PostgreSQL.</p>
-          <pre><code class="language-groovy">plugins {
+          <pre tabindex="0"><code class="language-groovy">plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
@@ -187,7 +194,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }</code></pre>
           <h3>Folder Structure</h3>
-          <pre><code class="language-text">src/main/java/com/digitaldrift/exceptiondemo/
+          <pre tabindex="0"><code class="language-text">src/main/java/com/digitaldrift/exceptiondemo/
 ├── ExceptionDemoApplication.java
 ├── controller/
 │   └── UserController.java
@@ -203,7 +210,7 @@ tasks.named('test') {
 
           <h2 id="code">Complete Source Code</h2>
           <h3>Application Class</h3>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -217,7 +224,7 @@ public class ExceptionDemoApplication {
 
           <h3>Create ErrorResponse DTO</h3>
           <p>A response DTO is the center of a consistent <strong>rest api error handling spring boot</strong> design. A Java record is concise and immutable. It includes an application-specific error code and an optional map for validation fields.</p>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.dto;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.dto;
 
 import java.time.Instant;
 import java.util.Map;
@@ -235,7 +242,7 @@ public record ErrorResponse(
 
           <h3>Validation Request DTO</h3>
           <p>Bean Validation keeps malformed input out of the service layer. Add <code>@Valid</code> to the controller request parameter to activate these annotations.</p>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.dto;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -260,14 +267,14 @@ public record CreateUserRequest(
 
           <h3>Create Custom Exceptions</h3>
           <p>Custom exceptions tell the global handler what kind of failure occurred. They should represent application meaning, not replace every Java exception in the system.</p>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
         super(message);
     }
 }</code></pre>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
 
 public class BusinessException extends RuntimeException {
     public BusinessException(String message) {
@@ -277,7 +284,7 @@ public class BusinessException extends RuntimeException {
 
           <h3>Global Exception Handler: @ControllerAdvice and @ExceptionHandler</h3>
           <p><code>@ControllerAdvice</code> applies controller-related behavior across the application. Each <code>@ExceptionHandler</code> method catches a type, creates the standard response, and chooses an HTTP status. This is the core of a <strong>controlleradvice spring boot</strong> implementation.</p>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.exception;
 
 import com.digitaldrift.exceptiondemo.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -360,7 +367,7 @@ public class GlobalExceptionHandler {
 
           <h3>Service Example</h3>
           <p>The service throws domain-relevant exceptions. In a database-backed application, the lookup would use a repository; the error-handling shape remains the same.</p>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.service;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.service;
 
 import com.digitaldrift.exceptiondemo.dto.CreateUserRequest;
 import com.digitaldrift.exceptiondemo.exception.BusinessException;
@@ -402,7 +409,7 @@ public class UserService {
           <p>The short in-memory store only makes the exception paths easy to follow. In a real application, a database-generated ID and repository would replace it.</p>
 
           <h3>Controller Example</h3>
-          <pre><code class="language-java">package com.digitaldrift.exceptiondemo.controller;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.exceptiondemo.controller;
 
 import com.digitaldrift.exceptiondemo.dto.CreateUserRequest;
 import com.digitaldrift.exceptiondemo.service.UserService;
@@ -440,7 +447,7 @@ public class UserController {
           <h2 id="responses">Standard API Error Format and Example Responses</h2>
           <p>Clients should be able to parse every error the same way. The values may change, but the keys should remain consistent. A useful minimum is timestamp, numeric status, reason phrase, machine-readable code, safe message, path, and validation errors.</p>
           <h3>400 Bad Request: Validation Failure</h3>
-          <pre><code class="language-json">{
+          <pre tabindex="0"><code class="language-json">{
   "timestamp": "2026-06-21T10:15:30Z",
   "status": 400,
   "error": "Bad Request",
@@ -454,7 +461,7 @@ public class UserController {
   }
 }</code></pre>
           <h3>404 Not Found</h3>
-          <pre><code class="language-json">{
+          <pre tabindex="0"><code class="language-json">{
   "timestamp": "2026-06-21T10:16:00Z",
   "status": 404,
   "error": "Not Found",
@@ -464,7 +471,7 @@ public class UserController {
   "validationErrors": {}
 }</code></pre>
           <h3>409 Conflict: Business Rule</h3>
-          <pre><code class="language-json">{
+          <pre tabindex="0"><code class="language-json">{
   "timestamp": "2026-06-21T10:17:00Z",
   "status": 409,
   "error": "Conflict",
@@ -474,7 +481,7 @@ public class UserController {
   "validationErrors": {}
 }</code></pre>
           <h3>500 Internal Server Error</h3>
-          <pre><code class="language-json">{
+          <pre tabindex="0"><code class="language-json">{
   "timestamp": "2026-06-21T10:18:00Z",
   "status": 500,
   "error": "Internal Server Error",
@@ -509,7 +516,7 @@ public class UserController {
 
           <h2 id="testing">Testing Error Responses</h2>
           <p>Test error handling like any other API contract. A focused MVC test verifies both status and JSON keys.</p>
-          <pre><code class="language-java">@WebMvcTest(UserController.class)
+          <pre tabindex="0"><code class="language-java">@WebMvcTest(UserController.class)
 class UserControllerTest {
 
     @Autowired
@@ -533,7 +540,7 @@ class UserControllerTest {
 
           <h2>Postman Examples</h2>
           <p>Start the application with <code>./gradlew bootRun</code>. In Postman, send a valid <code>POST http://localhost:8080/api/users</code> request with <code>Content-Type: application/json</code>:</p>
-          <pre><code class="language-json">{
+          <pre tabindex="0"><code class="language-json">{
   "name": "Ava Patel",
   "email": "ava@example.com",
   "age": 28
@@ -541,7 +548,7 @@ class UserControllerTest {
           <p>Then try a blank name, invalid email, and age below 18. Confirm that each failure returns <code>400</code>, error code <code>VALIDATION_FAILED</code>, and a populated <code>validationErrors</code> object. Request <code>GET /api/users/99</code> for a 404 response, then post the same email again to see a 409 conflict.</p>
 
           <h2>cURL Examples</h2>
-          <pre><code class="language-bash">curl -X POST http://localhost:8080/api/users \
+          <pre tabindex="0"><code class="language-bash">curl -X POST http://localhost:8080/api/users \
   -H "Content-Type: application/json" \
   -d '{"name":"Ava Patel","email":"ava@example.com","age":28}'
 
@@ -563,11 +570,11 @@ curl -X POST http://localhost:8080/api/users \
           <p>Good Spring Boot exception handling gives every failed request an intentional outcome. You created a standard error DTO, custom not-found and business exceptions, a global <code>@ControllerAdvice</code>, validation handling for <code>MethodArgumentNotValidException</code>, safe generic handling, and testable client responses.</p>
           <p>Keep the central idea simple: expected errors should help clients recover, unexpected errors should help operators investigate, and neither should expose internal implementation details. That small discipline pays off quickly as your API grows.</p>
         </div>
-        <div class="author-bio"><img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" /><div class="author-info"><strong>Dhiraj Roy</strong><p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p></div></div>
+        <div class="author-bio"><img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" width="64" height="64" loading="lazy" decoding="async" /><div class="author-info"><strong>Dhiraj Roy</strong><p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p></div></div>
         <nav class="post-nav" aria-label="Post navigation"><a href="/post/spring-boot-postgresql-crud-jpa-hibernate" class="nav-prev"><span class="nav-label">← Previous</span><span class="nav-title">Spring Boot PostgreSQL CRUD with JPA and Hibernate</span></a></nav>
       </article>
     </main>
-     </div><!-- /.container -->
+  </div><!-- /.container -->
 
   <!-- Multi-Column Footer -->
   <footer class="footer-v2">
@@ -600,11 +607,12 @@ curl -X POST http://localhost:8080/api/users \
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
-            <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
-            <li><a href="/#popular-categories" data-tag="Frontend">Frontend</a></li>
-            <li><a href="/#popular-categories" data-tag="JavaScript">JavaScript</a></li>
-            <li><a href="/#popular-categories" data-tag="DevOps">DevOps</a></li>
-            <li><a href="/#popular-categories" data-tag="Database">Database</a></li>
+            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
+            <li><a href="/?category=Backend#articles-section" data-tag="Backend">Backend</a></li>
+            <li><a href="/?category=Spring%20Boot#articles-section" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/?category=JavaScript#articles-section" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/?category=DevOps#articles-section" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/?category=Database#articles-section" data-tag="Database">Database</a></li>
           </ul>
         </div>
 
@@ -613,9 +621,6 @@ curl -X POST http://localhost:8080/api/users \
           <h4 class="footer-col-title">Connect With Me</h4>
           <div class="footer-social-icons">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
           </div>
         </div>
@@ -640,7 +645,7 @@ curl -X POST http://localhost:8080/api/users \
     </div>
   </footer>
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+<script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 </body>
 </html>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
   <meta charset="UTF-8" />
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spring Boot Pagination and Sorting — Complete Guide | Digital Drift</title>
+  <title>Spring Boot Pagination and Sorting | Digital Drift</title>
   <meta name="description" content="Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, PageRequest, Sort, validation, and complete code." />
   <meta name="keywords" content="spring boot pagination and sorting, spring data jpa pagination, spring boot pageable example, spring boot sorting example, pagination in spring boot rest api, Java 21, Spring Boot 3, PostgreSQL, Gradle" />
   <meta name="author" content="Dhiraj Roy" />
@@ -32,14 +33,19 @@
   </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VN488V6MP5');</script>
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
+  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot Pagination and Sorting — Complete Guide","item":"https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide"}]}</script>
 </head>
 <body>
-    <!-- Reading progress bar -->
-    <!-- Reading progress bar -->
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Reading progress bar — do NOT edit -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <!-- Header -->
@@ -80,7 +86,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -98,19 +104,20 @@
       <a href="/#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- Main Article -->
-    <main role="main">
+    <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
         <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot Pagination and Sorting — Complete Guide</span></nav><!-- generated:breadcrumbs:end -->
         <h1 class="post-title">Spring Boot Pagination and Sorting — Complete Guide</h1>
         <div class="post-meta"><span>📅 Jun 24, 2026</span><span>⏱ 19 min read</span><span>✍ Dhiraj Roy</span></div>
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60" alt="Spring Boot Pagination and Sorting — Complete Guide" class="post-banner-img" />
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60" alt="Spring Boot Pagination and Sorting — Complete Guide" class="post-banner-img" fetchpriority="high" />
         </div>
         <div class="post-content">
           <p><strong>Spring boot pagination and sorting</strong> is the difference between an API that works with ten records and one that remains useful when it has ten million. A product catalog, support dashboard, customer list, audit log, or admin panel rarely needs every row at once. Returning a massive dataset slows the database, uses unnecessary network bandwidth, makes browser interfaces sluggish, and creates an awkward experience for the person trying to find one item.</p>
@@ -134,7 +141,7 @@
 
           <h2 id="setup">Project Setup</h2>
           <p>Create a Gradle project with Java 21 and Spring Boot 3.x. Add Spring Web, Spring Data JPA, Validation, and the PostgreSQL driver. This is a conventional <strong>spring data jpa pagination</strong> setup; no special pagination library is required.</p>
-          <pre><code class="language-groovy">plugins {
+          <pre tabindex="0"><code class="language-groovy">plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
@@ -160,7 +167,7 @@ dependencies {
 }
 
 tasks.named('test') { useJUnitPlatform() }</code></pre>
-          <pre><code class="language-yaml">spring:
+          <pre tabindex="0"><code class="language-yaml">spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/product_db
     username: product_user
@@ -175,7 +182,7 @@ server:
   port: 8080</code></pre>
           <p>Use environment variables or a secret manager instead of literal credentials in production. Also replace <code>ddl-auto: update</code> with Flyway or Liquibase migrations before deploying.</p>
           <h3>Folder Structure</h3>
-          <pre><code class="language-text">src/main/java/com/digitaldrift/catalog/
+          <pre tabindex="0"><code class="language-text">src/main/java/com/digitaldrift/catalog/
 ├── CatalogApplication.java
 ├── controller/ProductController.java
 ├── dto/ProductRequest.java
@@ -190,7 +197,7 @@ server:
           <h2 id="code">Complete Implementation</h2>
           <h3>Create Product Entity</h3>
           <p>The entity is the PostgreSQL table model. Store money as <code>BigDecimal</code>, not <code>double</code>, to avoid floating-point surprises. The entity also keeps timestamps that make a useful default sort.</p>
-          <pre><code class="language-java">package com.digitaldrift.catalog.entity;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -237,7 +244,7 @@ public class Product {
 
           <h3>Create DTOs and Validation</h3>
           <p>Do not return JPA entities directly. A request DTO defines what the client may send; a response DTO defines the stable public shape. Validation belongs at the API boundary, before expensive persistence work begins.</p>
-          <pre><code class="language-java">package com.digitaldrift.catalog.dto;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -252,7 +259,7 @@ public record ProductRequest(
         @NotNull @Min(0) Integer stockQuantity,
         @NotBlank @Size(max = 80) String category
 ) { }</code></pre>
-          <pre><code class="language-java">package com.digitaldrift.catalog.dto;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.dto;
 
 import com.digitaldrift.catalog.entity.Product;
 import java.math.BigDecimal;
@@ -270,7 +277,7 @@ public record ProductResponse(
 
           <h3>Pagination Response Model</h3>
           <p>Spring's <code>Page</code> object is excellent internally, but its JSON format exposes framework details and can vary with configuration. A custom response makes the API contract deliberate and easy for frontend teams to consume.</p>
-          <pre><code class="language-java">package com.digitaldrift.catalog.dto;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.dto;
 
 import org.springframework.data.domain.Page;
 import java.util.List;
@@ -297,7 +304,7 @@ public record PagedResponse&lt;T&gt;(
 
           <h3>Create Repository Layer</h3>
           <p><code>JpaRepository</code> already includes the pagination and sorting methods from <code>PagingAndSortingRepository</code>. In older tutorials you may see those interfaces extended separately. With current Spring Data, extending <code>JpaRepository&lt;Product, Long&gt;</code> gives you CRUD, <code>findAll(Pageable)</code>, and sorting support.</p>
-          <pre><code class="language-java">package com.digitaldrift.catalog.repository;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.repository;
 
 import com.digitaldrift.catalog.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -307,7 +314,7 @@ public interface ProductRepository extends JpaRepository&lt;Product, Long&gt; {
 
           <h3>Create Service Layer</h3>
           <p>The service owns the pagination policy. It limits request size, allowlists sortable fields, and appends <code>id</code> as a tie-breaker. This matters because clients should not be allowed to sort arbitrary entity properties or request an accidental page of 100,000 rows.</p>
-          <pre><code class="language-java">package com.digitaldrift.catalog.service;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.service;
 
 import com.digitaldrift.catalog.dto.PagedResponse;
 import com.digitaldrift.catalog.dto.ProductResponse;
@@ -359,7 +366,7 @@ public class ProductService {
 
           <h3>Create Controller Layer</h3>
           <p>This <strong>spring boot pageable example</strong> exposes understandable query parameters while keeping policy in the service. The controller provides defaults: page zero, 20 records, newest products first.</p>
-          <pre><code class="language-java">package com.digitaldrift.catalog.controller;
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.catalog.controller;
 
 import com.digitaldrift.catalog.dto.PagedResponse;
 import com.digitaldrift.catalog.dto.ProductResponse;
@@ -393,7 +400,7 @@ public class ProductController {
           <h2>Implement Pagination with Pageable and PageRequest</h2>
           <p><code>Pageable</code> is the Spring Data interface that describes a requested page. <code>PageRequest</code> is the common immutable implementation. In the service above, <code>PageRequest.of(page, size, sort)</code> contains all three concerns in one object. Passing it to <code>repository.findAll(pageRequest)</code> makes Hibernate generate a limited query plus a count query for the total number of rows.</p>
           <p>Some controllers accept <code>Pageable pageable</code> directly. That is concise and works well internally:</p>
-          <pre><code class="language-java">@GetMapping("/internal")
+          <pre tabindex="0"><code class="language-java">@GetMapping("/internal")
 public Page&lt;ProductResponse&gt; list(Pageable pageable) {
     return productRepository.findAll(pageable).map(ProductResponse::from);
 }</code></pre>
@@ -401,19 +408,19 @@ public Page&lt;ProductResponse&gt; list(Pageable pageable) {
 
           <h2>Implement Sorting with Sort.by()</h2>
           <p>A <strong>spring boot sorting example</strong> begins with <code>Sort.by("price")</code>. Add a direction with <code>Sort.by(Sort.Direction.ASC, "price")</code> or <code>Sort.by(Sort.Direction.DESC, "createdAt")</code>. For multiple fields, chain orders:</p>
-          <pre><code class="language-java">Sort sort = Sort.by("category").ascending()
+          <pre tabindex="0"><code class="language-java">Sort sort = Sort.by("category").ascending()
         .and(Sort.by("name").ascending())
         .and(Sort.by("id").ascending());</code></pre>
           <p>The appended ID gives a stable order when two products have the same category and name. Choose a default sort deliberately. A page without a defined order can look correct in development and become unpredictable after a database plan changes.</p>
 
           <h2 id="api">Pagination and Sorting Together</h2>
           <p>The endpoint combines both features:</p>
-          <pre><code class="language-text">GET /api/products?page=0&amp;size=20&amp;sortBy=price&amp;direction=asc</code></pre>
+          <pre tabindex="0"><code class="language-text">GET /api/products?page=0&amp;size=20&amp;sortBy=price&amp;direction=asc</code></pre>
           <p>The service produces a <code>PageRequest</code> with an ascending price sort and a secondary ascending ID sort. PostgreSQL returns the first 20 records in that deterministic order. The API then maps the content into DTOs and returns pagination metadata with it.</p>
           <h3>API Endpoints</h3>
           <ul><li><strong>Default page:</strong> <code>GET /api/products</code></li><li><strong>Pagination only:</strong> <code>GET /api/products?page=2&amp;size=10</code></li><li><strong>Sorting only:</strong> <code>GET /api/products?sortBy=name&amp;direction=asc</code></li><li><strong>Combined:</strong> <code>GET /api/products?page=0&amp;size=25&amp;sortBy=stockQuantity&amp;direction=asc</code></li></ul>
           <h3>Example JSON Response</h3>
-          <pre><code class="language-json">{
+          <pre tabindex="0"><code class="language-json">{
   "content": [
     {
       "id": 14,
@@ -444,7 +451,7 @@ public Page&lt;ProductResponse&gt; list(Pageable pageable) {
 
           <h2>PostgreSQL Sample Data</h2>
           <p>Populate the table with a few products before testing. In a real project, use Flyway seed migrations or a local development fixture rather than manually editing production data.</p>
-          <pre><code class="language-sql">INSERT INTO products (name, price, stock_quantity, category, created_at)
+          <pre tabindex="0"><code class="language-sql">INSERT INTO products (name, price, stock_quantity, category, created_at)
 VALUES
   ('Mechanical Keyboard', 129.99, 25, 'Accessories', NOW()),
   ('Wireless Mouse', 49.99, 9, 'Accessories', NOW()),
@@ -455,7 +462,7 @@ VALUES
 
           <h2>Global Exception Handling Integration</h2>
           <p>The service throws <code>IllegalArgumentException</code> for negative pages, oversized page sizes, and unapproved sort fields. A global handler turns those into consistent <code>400 Bad Request</code> JSON instead of an unhelpful server error.</p>
-          <pre><code class="language-java">@ExceptionHandler(IllegalArgumentException.class)
+          <pre tabindex="0"><code class="language-java">@ExceptionHandler(IllegalArgumentException.class)
 public ResponseEntity&lt;ErrorResponse&gt; handleIllegalArgument(
         IllegalArgumentException exception,
         HttpServletRequest request
@@ -472,7 +479,7 @@ public ResponseEntity&lt;ErrorResponse&gt; handleIllegalArgument(
           <p>Pagination reduces the amount of data transferred and the amount of Java heap used per request. It also protects a database from expensive accidental scans. But it is not magic: the count query used to calculate <code>totalElements</code> can still be costly on a large filtered table, and deep offset pages make the database skip many rows.</p>
           <h3>Database Indexing</h3>
           <p>Create indexes based on real filters and sorts. For a common category filter ordered by newest first, a composite index can help:</p>
-          <pre><code class="language-sql">CREATE INDEX idx_products_category_created_at_id
+          <pre tabindex="0"><code class="language-sql">CREATE INDEX idx_products_category_created_at_id
 ON products (category, created_at DESC, id DESC);</code></pre>
           <p>Do not index every column. Each index consumes storage and makes inserts or updates more expensive. Use PostgreSQL <code>EXPLAIN ANALYZE</code> against real query shapes before adding one.</p>
           <h3>Query Optimization and Caching</h3>
@@ -493,7 +500,7 @@ ON products (category, created_at DESC, id DESC);</code></pre>
           <p>Run the API with <code>./gradlew bootRun</code> and create a Postman collection with these requests:</p>
           <ul><li><code>GET http://localhost:8080/api/products</code> should return page 0 with size 20.</li><li><code>GET http://localhost:8080/api/products?page=1&amp;size=2</code> should return the second two-record page.</li><li><code>GET http://localhost:8080/api/products?sortBy=price&amp;direction=asc</code> should put the lowest price first.</li><li><code>GET http://localhost:8080/api/products?size=500</code> should return 400 with <code>INVALID_ARGUMENT</code>.</li><li><code>GET http://localhost:8080/api/products?sortBy=password</code> should return 400 because the field is not allowlisted.</li></ul>
           <h2>cURL Examples</h2>
-          <pre><code class="language-bash">curl "http://localhost:8080/api/products?page=0&amp;size=10"
+          <pre tabindex="0"><code class="language-bash">curl "http://localhost:8080/api/products?page=0&amp;size=10"
 
 curl "http://localhost:8080/api/products?sortBy=name&amp;direction=asc"
 
@@ -514,11 +521,11 @@ curl "http://localhost:8080/api/products?size=500"</code></pre>
           <p>Spring Boot pagination and sorting is a small feature with a large production impact. You built a bounded, stable product listing API with PostgreSQL, Spring Data JPA, <code>PageRequest</code>, <code>Sort</code>, DTOs, validation, an allowlisted sort policy, and a custom pagination response.</p>
           <p>Carry this same pattern to users, orders, transactions, logs, and any other growing dataset. Start with a sensible default page, a clear sort, a strict maximum size, and measured indexes. Your API will be faster, easier to consume, and much calmer under real load.</p>
         </div>
-        <div class="author-bio"><img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" /><div class="author-info"><strong>Dhiraj Roy</strong><p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p></div></div>
+        <div class="author-bio"><img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" width="64" height="64" loading="lazy" decoding="async" /><div class="author-info"><strong>Dhiraj Roy</strong><p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p></div></div>
         <nav class="post-nav" aria-label="Post navigation"><a href="/post/spring-boot-global-exception-handling-controlleradvice" class="nav-prev"><span class="nav-label">← Previous</span><span class="nav-title">Spring Boot Global Exception Handling with @ControllerAdvice</span></a></nav>
       </article>
     </main>
-    </div><!-- /.container -->
+  </div><!-- /.container -->
 
   <!-- Multi-Column Footer -->
   <footer class="footer-v2">
@@ -551,11 +558,12 @@ curl "http://localhost:8080/api/products?size=500"</code></pre>
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
-            <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
-            <li><a href="/#popular-categories" data-tag="Frontend">Frontend</a></li>
-            <li><a href="/#popular-categories" data-tag="JavaScript">JavaScript</a></li>
-            <li><a href="/#popular-categories" data-tag="DevOps">DevOps</a></li>
-            <li><a href="/#popular-categories" data-tag="Database">Database</a></li>
+            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
+            <li><a href="/?category=Backend#articles-section" data-tag="Backend">Backend</a></li>
+            <li><a href="/?category=Spring%20Boot#articles-section" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/?category=JavaScript#articles-section" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/?category=DevOps#articles-section" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/?category=Database#articles-section" data-tag="Database">Database</a></li>
           </ul>
         </div>
 
@@ -564,9 +572,6 @@ curl "http://localhost:8080/api/products?size=500"</code></pre>
           <h4 class="footer-col-title">Connect With Me</h4>
           <div class="footer-social-icons">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
           </div>
         </div>
@@ -591,7 +596,7 @@ curl "http://localhost:8080/api/products?size=500"</code></pre>
     </div>
   </footer>
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+<script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 </body>
 </html>

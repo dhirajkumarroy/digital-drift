@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Prevent dark/light theme flash — runs before any paint -->
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
   <meta charset="UTF-8" />
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- ═══ SEO — edit every line in this block ═══ -->
-  <title>Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions | Digital Drift</title>
+  <title>Node.js RBAC: Roles and Permissions for APIs | Digital Drift</title>
   <meta name="description" content="Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js and Node.js roles and permissions." />
   <meta name="keywords" content="RBAC in Node.js, Role-Based Access Control Node.js, Node.js roles and permissions, secure API authorization Node.js, Backend, Production Ready" />
   <meta name="author" content="Dhiraj Roy" />
@@ -41,7 +42,7 @@
     "headline": "Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions",
     "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60",
     "description": "Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js.",
-    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "datePublished": "2026-05-10",
     "dateModified":  "2026-05-10",
     "url": "https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions",
@@ -108,17 +109,21 @@
   </script>
 
   <!-- CSS — do NOT edit -->
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
 
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
+  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions","item":"https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions"}]}</script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <!-- Reading progress bar — do NOT edit -->
-    <!-- Reading progress bar -->
-    <!-- Reading progress bar -->
   <div class="reading-progress" id="reading-progress"></div>
 
   <!-- Header -->
@@ -159,7 +164,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -177,11 +182,11 @@
       <a href="/#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- Main Article -->
-    <main role="main">
+    <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
 
         <!-- ── 1. TAGS ─────────────────────────────────────── -->
@@ -192,6 +197,7 @@
         </div>
 
         <!-- ── 2. TITLE ────────────────────────────────────── -->
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles &amp; Permissions</span></nav><!-- generated:breadcrumbs:end -->
         <h1 class="post-title">Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles & Permissions</h1>
 
         <!-- ── 3. META ─────────────────────────────────────── -->
@@ -203,7 +209,7 @@
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60" alt="Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles &amp; Permissions" class="post-banner-img" />
+          <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60" alt="Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles &amp; Permissions" class="post-banner-img" fetchpriority="high" />
         </div>
 
         <!-- ── 4. POST CONTENT ─────────────────────────────── -->
@@ -263,11 +269,11 @@
 
           <h3>1. Project Setup</h3>
           <p>Install the required packages to handle JWTs and Express middleware.</p>
-          <pre><code>npm install express jsonwebtoken dotenv mongoose</code></pre>
+          <pre tabindex="0"><code>npm install express jsonwebtoken dotenv mongoose</code></pre>
 
           <h3>2. User Role Model</h3>
           <p>Your database schema must define the user's role. Here is how it looks in Mongoose (MongoDB):</p>
-          <pre><code>// models/User.js
+          <pre tabindex="0"><code>// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -284,12 +290,12 @@ module.exports = mongoose.model('User', userSchema);</code></pre>
 
           <h3>3. JWT Authentication Middleware</h3>
           <p>Before checking <em>roles</em>, we must establish <em>identity</em>. This middleware verifies the token and attaches the user payload (which includes their role) to the request.</p>
-          <pre><code>// middleware/auth.middleware.js
+          <pre tabindex="0"><code>// middleware/auth.middleware.js
 const jwt = require('jsonwebtoken');
 
 exports.requireAuth = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({ error: 'Authentication required' });
   }
@@ -305,7 +311,7 @@ exports.requireAuth = (req, res, next) => {
 
           <h3>4. Role Middleware (The RBAC Engine)</h3>
           <p>Now, we create a dynamic middleware factory that accepts allowed roles and blocks anyone else.</p>
-          <pre><code>// middleware/role.middleware.js
+          <pre tabindex="0"><code>// middleware/role.middleware.js
 
 exports.requireRole = (...allowedRoles) => {
   return (req, res, next) => {
@@ -321,7 +327,7 @@ exports.requireRole = (...allowedRoles) => {
 
           <h3>5. Protected Routes & Admin-Only Routes</h3>
           <p>Combine both middlewares in your Express router to securely lock down endpoints.</p>
-          <pre><code>// routes/api.js
+          <pre tabindex="0"><code>// routes/api.js
 const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('../middleware/auth.middleware');
@@ -364,7 +370,7 @@ module.exports = router;</code></pre>
             <li><strong>Weak Admin Route Protection:</strong> Forgetting to add <code>requireAuth</code> before <code>requireRole</code>. The role middleware will crash or fail open if <code>req.user</code> is undefined.</li>
           </ul>
 
-          <div style="background:#1e293b; border-left:4px solid #ef4444; padding:1rem; margin:1.5rem 0; color: #f8fafc;">
+          <div style="background:var(--color-card-sub); border-left:4px solid #ef4444; padding:1rem; margin:1.5rem 0; color:var(--color-text);">
             ⚠️ <strong>Warning:</strong> If you include the user's role directly in the JWT payload, remember that JWTs are immutable. If you demote an Admin to a User, their existing JWT will still say 'admin' until it expires. You must handle token revocation for privilege changes!
           </div>
 
@@ -384,7 +390,7 @@ module.exports = router;</code></pre>
 
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">RBAC vs ABAC?</h3>
             <p style="margin-top: 0;">RBAC restricts access based on a user's role (e.g., Admin). ABAC (Attribute-Based Access Control) is more granular, restricting access based on attributes of the user, resource, or environment (e.g., 'only the author of this post can edit it').</p>
-            
+
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Is RBAC scalable?</h3>
             <p style="margin-top: 0;">Yes, RBAC is highly scalable. By grouping permissions into roles, you only need to manage a few roles rather than assigning specific permissions to thousands of individual users.</p>
 
@@ -408,7 +414,7 @@ module.exports = router;</code></pre>
           <p>
             Securing routes is a massive milestone. The next steps involve protecting your infrastructure from abuse using API rate limiting, delegating access using OAuth2, locking down Microservices security, and mastering Docker deployment to ship your application reliably.
           </p>
-          
+
           <!-- INTERNAL LINK STRATEGY -->
           <p>Check out our related guides:</p>
           <ul>
@@ -428,7 +434,7 @@ module.exports = router;</code></pre>
 
         <!-- ── 5. AUTHOR BIO — do NOT edit ──────────────── -->
         <div class="author-bio">
-          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" />
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" width="64" height="64" loading="lazy" decoding="async" />
           <div class="author-info">
             <strong>Dhiraj Roy</strong>
             <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
@@ -479,11 +485,12 @@ module.exports = router;</code></pre>
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
-            <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
-            <li><a href="/#popular-categories" data-tag="Frontend">Frontend</a></li>
-            <li><a href="/#popular-categories" data-tag="JavaScript">JavaScript</a></li>
-            <li><a href="/#popular-categories" data-tag="DevOps">DevOps</a></li>
-            <li><a href="/#popular-categories" data-tag="Database">Database</a></li>
+            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
+            <li><a href="/?category=Backend#articles-section" data-tag="Backend">Backend</a></li>
+            <li><a href="/?category=Spring%20Boot#articles-section" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/?category=JavaScript#articles-section" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/?category=DevOps#articles-section" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/?category=Database#articles-section" data-tag="Database">Database</a></li>
           </ul>
         </div>
 
@@ -492,9 +499,6 @@ module.exports = router;</code></pre>
           <h4 class="footer-col-title">Connect With Me</h4>
           <div class="footer-social-icons">
             <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
             <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
           </div>
         </div>
@@ -521,8 +525,8 @@ module.exports = router;</code></pre>
 
   <!-- do NOT edit these three lines -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+<script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 
 </body>
 </html>

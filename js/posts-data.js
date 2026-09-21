@@ -8,7 +8,8 @@
  *  1. Open  /admin/  in your browser → fill the form → click Generate.
  *  2. Copy the generated HTML → save as  /post/<slug>.html
  *  3. Copy the generated entry below → paste at the TOP of BLOG_POSTS.
- *  4. Run node scripts/build-seo.js to update static listings, routes, sitemap and RSS.
+ *  4. Run node scripts/build-seo.js and python3 scripts/check-site.py.
+ *     Commit the generated listings, routes, sitemap, and feed with the post.
  *
  *  Field Reference
  *  ───────────────

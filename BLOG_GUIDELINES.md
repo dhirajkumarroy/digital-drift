@@ -96,7 +96,7 @@ Every HTML post in `/post/<slug>.html` must contain the following core structura
 ### 1. Document Head & Anti-FOUC Script
 Prevents theme flashing before initial paint:
 ```html
-<script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+<script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
 ```
 
 ### 2. SEO & Open Graph Metadata
@@ -106,16 +106,16 @@ Prevents theme flashing before initial paint:
 - **OpenGraph & Twitter**: Points to `https://blog.dhirajroy.com/images/<slug>.jpg`.
 
 ### 3. Schema.org Structured Data
-Always include both:
-1. `Article`: Enhances search appearance with headline, author, dates, and banner image.
-2. `FAQPage`: Powers Google's rich FAQ accordions with 3–4 high-value questions and answers.
+Include `Article` with an accurate headline, author profile URL, publication/modification dates, and banner image. The build also generates visible breadcrumbs and matching `BreadcrumbList` data.
+
+`FAQPage` is optional and must match visible questions and answers. Google discontinued FAQ rich results on May 7, 2026; do not promise FAQ accordions or a ranking increase. See [Google Search documentation updates](https://developers.google.com/search/updates#may-2026).
 
 ### 4. Reading Progress & Post Banner
 - `<div class="reading-progress" id="reading-progress"></div>`
 - Banner image placed inside `.post-banner-wrapper`:
   ```html
   <div class="post-banner-wrapper">
-    <img src="/images/<slug>.jpg" alt="<Full Title>" class="post-banner-img" />
+    <img src="/images/<slug>.jpg" alt="<Full Title>" class="post-banner-img" width="1376" height="768" fetchpriority="high" />
   </div>
   ```
 
@@ -143,7 +143,7 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
 <html lang="en">
 <head>
   <!-- Prevent dark/light theme flash — runs before any paint -->
-  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -222,13 +222,14 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
   </script>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="stylesheet" href="/css/style.css?v=7" />
 
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002" crossorigin="anonymous"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <!-- Reading progress bar -->
   <div class="reading-progress" id="reading-progress"></div>
 
@@ -270,7 +271,7 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Subscribe
           </a>
-          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -288,11 +289,11 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
       <a href="/#popular-categories">Categories</a>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
-      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
     </nav>
 
     <!-- Main Article -->
-    <main role="main">
+    <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
         <!-- Tags -->
         <div class="tags">
@@ -387,9 +388,9 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
             <h4 class="footer-col-title">Connect With Me</h4>
             <div class="footer-social-icons">
               <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+
+
+
               <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
             </div>
           </div>
@@ -416,8 +417,8 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
   </div>
 
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-  <script src="/js/posts-data.js?v=6"></script>
-  <script src="/js/script.js?v=6"></script>
+  <script src="/js/posts-data.js?v=7"></script>
+  <script src="/js/script.js?v=7"></script>
 </body>
 </html>
 ```
@@ -516,3 +517,12 @@ git push origin main
 ```
 
 Cloudflare Pages / Netlify will automatically detect the push and deploy your new blog post globally within seconds! 🚀
+
+
+## Audit and publishing checks
+
+After updating a post or the registry, run `node scripts/build-seo.js` and `python3 scripts/check-site.py`. Commit the generated homepage/archive listings, post breadcrumbs, `_redirects`, `sitemap.xml`, and `feed.xml` with the source. The build validates clean canonical URLs and uses actual article modification dates; do not change dates just to make content look fresh.
+
+Use `/post/_template.html` for the current shared layout. The admin generator is a drafting helper; compare its output with that template before publishing. Keep tables inside a keyboard-focusable `.table-scroll` region, provide intrinsic image dimensions, and use the shared theme initialization and current asset versions.
+
+RSS is the current subscription method. The contact form prepares an email draft; it does not deliver mail from the website. Only show successful email submission after a configured provider confirms delivery acceptance.

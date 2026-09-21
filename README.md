@@ -1,6 +1,6 @@
 # Digital Drift 🚀
 
-Digital Drift is a lightning-fast, static tech blog focused on Backend Engineering, AI, and Programming. Built entirely with vanilla HTML, CSS, and JavaScript, it guarantees maximum performance, exceptional SEO, and zero build-step overhead.
+Digital Drift is a lightning-fast, static tech blog focused on Backend Engineering, AI, and Programming. Built entirely with vanilla HTML, CSS, and JavaScript, it serves static pages with a small publishing script for article listings, routes, and SEO files.
 
 The blog features a custom-built local Admin Dashboard to generate new posts and automated Node.js scripts for production-ready SEO.
 
@@ -57,6 +57,7 @@ Publishing new content is simple and requires no backend servers or databases.
 5. **Update SEO & RSS**:
    ```bash
    node scripts/build-seo.js
+   python3 scripts/check-site.py
    ```
    This rebuilds the static homepage and archive listings, clean URL routes, `sitemap.xml`, and `feed.xml`. Run it after every registry change and commit the generated files so articles remain visible without JavaScript.
 6. **Preview & Deploy**:
@@ -67,20 +68,28 @@ Publishing new content is simple and requires no backend servers or databases.
 
 ## 🚀 Running Locally
 
-Because the project is purely static, you can use any basic HTTP server to run the site locally.
+Use the bundled preview server so clean URLs, canonical redirects, response headers, and missing-page status codes match the hosting configuration:
 
-If you have Node.js installed, use the included preview server:
 ```bash
+node scripts/build-seo.js
+python3 scripts/check-site.py
 node scripts/serve.js
 ```
 
-Alternatively, if you use Python:
+Visit `http://localhost:3456`. The preview server binds to localhost. Set `PORT` to use another port. It supports the clean article URLs used by this site.
+
+Run the build after editing the post registry and commit its generated files. The homepage includes six initial cards and a featured article; the archive includes every post in static HTML. JavaScript adds searching, filtering, and pagination.
+
+Subscriptions currently use RSS. The contact form opens an email draft; users send it from their email app. See [AUDIT.md](AUDIT.md) for findings, validation, and remaining deployment/content work.
+
+Optional browser checks require Google Chrome and development-only audit tools. With the preview server running, install those tools outside the site and run:
+
 ```bash
-# Python 3
-python -m http.server 3000
+npm install --prefix /tmp/digital-drift-audit playwright@1.63.0 @axe-core/playwright@4.13.0
+NODE_PATH=/tmp/digital-drift-audit/node_modules node scripts/check-browser.cjs
 ```
 
-For the Node preview server, visit `http://localhost:3456`. It supports the clean article URLs used by this site.
+The browser check blocks external requests, tests five viewport widths and both themes, and writes JSON results and screenshots to the system temporary directory under `digital-drift-audit`. It does not measure production Core Web Vitals.
 
 ## 👨‍💻 Author
 
