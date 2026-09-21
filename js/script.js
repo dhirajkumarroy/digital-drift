@@ -56,14 +56,14 @@
         filtered = filtered.filter(p => p.tags.some(t => /backend|java|spring|node|api/i.test(t)));
       } else if (activeTag === 'Frontend') {
         filtered = filtered.filter(p => p.tags.some(t => /frontend|react|ui|web|css|html/i.test(t)) || p.summary.toLowerCase().includes('frontend') || p.title.toLowerCase().includes('frontend'));
-        if (filtered.length === 0) filtered = BLOG_POSTS.slice(0, 4);
+
       } else if (activeTag === 'JavaScript') {
         filtered = filtered.filter(p => p.tags.some(t => /javascript|js|node|tech/i.test(t)) || p.title.toLowerCase().includes('javascript') || p.summary.toLowerCase().includes('javascript'));
       } else if (activeTag === 'Node.js') {
         filtered = filtered.filter(p => p.tags.some(t => /node/i.test(t)));
       } else if (activeTag === 'Laravel') {
-        filtered = filtered.filter(p => p.tags.some(t => /laravel|backend/i.test(t)) || p.title.toLowerCase().includes('laravel'));
-        if (filtered.length === 0) filtered = BLOG_POSTS.slice(0, 4);
+        filtered = filtered.filter(p => p.tags.some(t => /laravel/i.test(t)) || p.title.toLowerCase().includes('laravel'));
+
       } else if (activeTag === 'Database') {
         filtered = filtered.filter(p => p.tags.some(t => /database|sql|postgres/i.test(t)) || p.title.toLowerCase().includes('postgresql') || p.summary.toLowerCase().includes('database'));
       } else if (activeTag === 'DevOps') {
@@ -106,8 +106,7 @@
         </div>
         <div class="featured-text-content">
           <div class="card-tags">
-            <span class="tag tag-pill tag-blue">Frontend</span>
-            <span class="tag tag-pill tag-subtle">${escapeHtml(featured.tags[0] || 'React')}</span>
+            ${featured.tags.slice(0, 2).map(getTagHtml).join('')}
           </div>
           <h3 class="featured-card-title">
             <a href="${escapeHtml(featured.url)}">${escapeHtml(featured.title)}</a>
@@ -138,38 +137,9 @@
     const popularEl = document.getElementById('popular-posts-list');
     if (!popularEl) return;
 
-    const POPULAR_ITEMS = [
-      {
-        title: "React 18 Complete Guide",
-        readTime: "12 min read",
-        image: "/images/pop-react.svg",
-        url: BLOG_POSTS[0] ? BLOG_POSTS[0].url : "/post/what-is-backend"
-      },
-      {
-        title: "Laravel 11 Guide",
-        readTime: "11 min read",
-        image: "/images/pop-laravel.svg",
-        url: BLOG_POSTS[1] ? BLOG_POSTS[1].url : "/post/spring-boot-pagination-sorting-complete-guide"
-      },
-      {
-        title: "Node.js Backend Guide",
-        readTime: "16 min read",
-        image: "/images/pop-node.svg",
-        url: "/post/nodejs-backend-development-production-api"
-      },
-      {
-        title: "MySQL Indexing Explained",
-        readTime: "9 min read",
-        image: "/images/pop-mysql.svg",
-        url: "/post/spring-boot-postgresql-crud-jpa-hibernate"
-      },
-      {
-        title: "Deploy Laravel on VPS",
-        readTime: "14 min read",
-        image: "/images/pop-vps.svg",
-        url: "/post/docker-complete-guide"
-      }
-    ];
+    const POPULAR_ITEMS = BLOG_POSTS.slice(0, 5).map(post => ({
+      ...post, image: post.image || '/android-chrome-192x192.png', readTime: formatReadTime(post.readTime)
+    }));
 
     popularEl.innerHTML = POPULAR_ITEMS.map((p, idx) => `
       <a href="${escapeHtml(p.url)}" class="popular-post-row">
@@ -185,24 +155,8 @@
   }
 
   // ── RENDER POST CARDS ─────────────────────────────────────
-  async function renderPosts() {
+  function renderPosts() {
     if (!postsContainer) return;
-
-    // Skeleton loader matching cards
-    postsContainer.innerHTML = '<div class="skeleton-grid">' +
-      Array(Math.min(POSTS_PER_PAGE, 6)).fill(`
-        <div class="skeleton-card">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-body">
-            <div class="skeleton-line" style="width:30%"></div>
-            <div class="skeleton-line" style="height:1.2rem;width:85%"></div>
-            <div class="skeleton-line" style="width:95%"></div>
-            <div class="skeleton-line" style="width:70%"></div>
-            <div class="skeleton-line" style="width:40%;margin-top:0.5rem"></div>
-          </div>
-        </div>`).join('') + '</div>';
-
-    await new Promise(r => setTimeout(r, 140));
 
     const filtered = getFilteredPosts();
     const total    = filtered.length;
@@ -386,19 +340,16 @@
   }
 
   function initTheme() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const isLight = !isDark;
-    if (isLight && !document.documentElement.classList.contains('light')) {
-      document.documentElement.classList.add('light');
-    }
-    if (moonIcon) moonIcon.style.display = isLight ? 'block' : 'none';
-    if (sunIcon)  sunIcon.style.display  = isLight ? 'none'  : 'block';
+    let savedTheme;
+    try { savedTheme = localStorage.getItem('theme'); } catch (_) {}
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    applyTheme(savedTheme ? savedTheme === 'light' : Boolean(prefersLight));
   }
 
   function toggleTheme() {
     const isLight = document.documentElement.classList.contains('dark');
     applyTheme(isLight);
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch (_) {}
   }
 
   // ── MOBILE MENU ───────────────────────────────────────────
@@ -751,7 +702,7 @@
       const autoToc = document.createElement('div');
       autoToc.className = 'auto-toc-box';
       let tocHtml = '<strong>Table of Contents</strong><ul class="auto-toc-list">';
-      
+
       headings.forEach((h, index) => {
         if (!h.id) {
           h.id = 'heading-' + index + '-' + h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -832,11 +783,8 @@
         <div class="newsletter-icon">⚡</div>
         <div class="newsletter-content">
           <h3>Subscribe to Digital Drift Digest</h3>
-          <p>Get high-quality, practical engineering guides on Java 21, Spring Boot, microservices, and system design sent straight to your inbox.</p>
-          <form class="newsletter-form" onsubmit="event.preventDefault(); if(window.showToast) window.showToast('🎉 Thank you for subscribing to Digital Drift!'); this.reset();">
-            <input type="email" placeholder="Enter your email address…" required class="newsletter-input" />
-            <button type="submit" class="btn-primary newsletter-btn">Subscribe Free</button>
-          </form>
+          <p>Get high-quality, practical engineering guides on Java 21, Spring Boot, microservices, and system design in your RSS reader.</p>
+          <p><a href="/feed.xml" class="btn-primary">Subscribe via RSS</a></p>
         </div>
       `;
       postContent.appendChild(newsletterCard);

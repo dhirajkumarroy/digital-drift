@@ -20,13 +20,25 @@ const root = path.resolve(__dirname, '..');
 const PORT = 3456;
 
 const server = http.createServer((req, res) => {
-  let reqPath = req.url.split('?')[0];
-  let filePath = path.join(root, reqPath === '/' ? 'index.html' : reqPath);
+  let reqPath;
+  try { reqPath = decodeURIComponent(req.url.split('?')[0]); }
+  catch (_) { res.writeHead(400); return res.end('Bad Request'); }
+  let filePath = path.resolve(root, '.' + reqPath);
+  const relative = path.relative(root, filePath);
+  if (relative.startsWith('..') || path.isAbsolute(relative) || relative.split(path.sep).some(part => part.startsWith('.'))) {
+    res.writeHead(403);
+    return res.end('Forbidden');
+  }
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    filePath = path.join(filePath, 'index.html');
+  }
+  let status = 200;
 
   if (!fs.existsSync(filePath) && fs.existsSync(filePath + '.html')) {
     filePath = filePath + '.html';
   } else if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    filePath = path.join(root, 'index.html');
+    filePath = path.join(root, '404.html');
+    status = 404;
   }
 
   fs.readFile(filePath, (err, data) => {
@@ -35,7 +47,7 @@ const server = http.createServer((req, res) => {
       return res.end('404 Not Found');
     }
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'text/plain' });
+    res.writeHead(status, { 'Content-Type': (MIME[ext] || 'text/plain') + '; charset=utf-8' });
     res.end(data);
   });
 });
@@ -43,4 +55,3 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`Preview server running at http://localhost:${PORT}/`);
 });
-

@@ -26,7 +26,8 @@ function generateSitemap() {
     { url: '/about', priority: '0.8', changefreq: 'monthly' },
     { url: '/contact', priority: '0.8', changefreq: 'monthly' },
     { url: '/archive', priority: '0.7', changefreq: 'weekly' },
-    { url: '/privacy-policy', priority: '0.4', changefreq: 'yearly' }
+    { url: '/privacy-policy', priority: '0.4', changefreq: 'yearly' },
+    { url: '/disclaimer', priority: '0.4', changefreq: 'yearly' }
   ];
 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -76,7 +77,7 @@ function generateRSS() {
   xml += `    <atom:link href="${DOMAIN}/feed.xml" rel="self" type="application/rss+xml" />\n\n`;
 
   for (const post of posts) {
-    const postDate = new Date(post.dateISO + 'T00:00:00').toUTCString();
+    const postDate = new Date(post.dateISO + 'T00:00:00Z').toUTCString();
     // Escape special characters in XML
     const escapeXml = (unsafe) => unsafe.replace(/[<>&'"]/g, c => {
         switch (c) {
@@ -111,5 +112,6 @@ function generateRSS() {
   console.log(`✅ Generated feed.xml (RSS) with ${posts.length} items`);
 }
 
+require('./build-listings')(posts);
 generateSitemap();
 generateRSS();

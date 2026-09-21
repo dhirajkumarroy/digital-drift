@@ -5,15 +5,26 @@
     <link>https://blog.dhirajroy.com</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <pubDate>Mon, 14 Sep 2026 11:40:37 GMT</pubDate>
-    <lastBuildDate>Mon, 14 Sep 2026 11:40:37 GMT</lastBuildDate>
+    <pubDate>Mon, 21 Sep 2026 08:26:21 GMT</pubDate>
+    <lastBuildDate>Mon, 21 Sep 2026 08:26:21 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced</title>
+      <link>https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced</link>
+      <guid>https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced</guid>
+      <pubDate>Mon, 14 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A linear, five-phase system design roadmap for developers. Master networking, data storage, distributed systems, reliability, and interview execution.</description>
+      <category>System Design</category>
+      <category>Architecture</category>
+      <category>Backend</category>
+    </item>
 
     <item>
       <title>Spring Boot File Upload and Download — Complete Guide</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide</guid>
-      <pubDate>Sun, 19 Jul 2026 18:30:00 GMT</pubDate>
+      <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
       <description>Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, validation, security, and production practices.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -24,7 +35,7 @@
       <title>Spring Boot Pagination and Sorting — Complete Guide</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-pagination-sorting-complete-guide</guid>
-      <pubDate>Tue, 23 Jun 2026 18:30:00 GMT</pubDate>
+      <pubDate>Wed, 24 Jun 2026 00:00:00 GMT</pubDate>
       <description>Learn spring boot pagination and sorting with Java 21, Spring Boot 3.x, PostgreSQL, Gradle, Spring Data JPA, Pageable, Sort, validation, and production practices.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -35,7 +46,7 @@
       <title>Spring Boot Global Exception Handling with @ControllerAdvice</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice</guid>
-      <pubDate>Sat, 20 Jun 2026 18:30:00 GMT</pubDate>
+      <pubDate>Sun, 21 Jun 2026 00:00:00 GMT</pubDate>
       <description>Master spring boot exception handling with Java 21, Spring Boot 3.x, custom exceptions, validation, @ControllerAdvice, error DTOs, tests, and production advice.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -46,7 +57,7 @@
       <title>Spring Boot PostgreSQL CRUD with JPA and Hibernate</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</guid>
-      <pubDate>Tue, 16 Jun 2026 18:30:00 GMT</pubDate>
+      <pubDate>Wed, 17 Jun 2026 00:00:00 GMT</pubDate>
       <description>Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, and complete source code.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -57,7 +68,7 @@
       <title>Spring Boot JWT Authentication — Complete Guide</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-jwt-authentication-complete-guide</guid>
-      <pubDate>Tue, 16 Jun 2026 18:30:00 GMT</pubDate>
+      <pubDate>Wed, 17 Jun 2026 00:00:00 GMT</pubDate>
       <description>Master spring boot jwt authentication with Java 21, Spring Boot 3.x, Spring Security, Gradle, complete code, tests, and production tips.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -68,7 +79,7 @@
       <title>How to Build a REST API with Spring Boot in 30 Minutes</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</guid>
-      <pubDate>Mon, 15 Jun 2026 18:30:00 GMT</pubDate>
+      <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
       <description>Build a Spring Boot REST API in 30 minutes with CRUD endpoints, Java records, JSON requests, and curl testing.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -79,7 +90,7 @@
       <title>API Rate Limiting in Node.js (2026) – Protect Production APIs from Abuse</title>
       <link>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</link>
       <guid>https://blog.dhirajroy.com/post/nodejs-api-rate-limiting</guid>
-      <pubDate>Sun, 17 May 2026 18:30:00 GMT</pubDate>
+      <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
       <description>Master API Rate Limiting in Node.js. Learn how to protect APIs from abuse, configure express rate limit, and implement production-level API security in Node.js.</description>
       <category>Node.js</category>
       <category>Backend</category>
@@ -90,7 +101,7 @@
       <title>Role-Based Access Control (RBAC) in Node.js (2026) – Secure APIs with Roles &amp; Permissions</title>
       <link>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</link>
       <guid>https://blog.dhirajroy.com/post/nodejs-rbac-roles-permissions</guid>
-      <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
+      <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
       <description>Master RBAC in Node.js. Build secure API authorization Node.js systems with proper Role-Based Access Control Node.js and Node.js roles and permissions.</description>
       <category>Node.js</category>
       <category>Backend</category>
@@ -101,7 +112,7 @@
       <title>Node.js Refresh Token Authentication (2026) – Secure Scalable Login Systems</title>
       <link>https://blog.dhirajroy.com/post/nodejs-jwt-auth</link>
       <guid>https://blog.dhirajroy.com/post/nodejs-jwt-auth</guid>
-      <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
+      <pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>
       <description>Master Node.js Refresh Token Authentication. Build a secure authentication Node.js system with JWT refresh token Node.js and a scalable refresh token implementation.</description>
       <category>Node.js</category>
       <category>Backend</category>
@@ -112,7 +123,7 @@
       <title>Spring Boot REST API (2026) – Java 21 Production Setup</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-rest-api-java-21-production-setup</guid>
-      <pubDate>Mon, 04 May 2026 18:30:00 GMT</pubDate>
+      <pubDate>Tue, 05 May 2026 00:00:00 GMT</pubDate>
       <description>Learn how to build a production-ready Spring Boot 3 REST API using Java 21, virtual threads, record classes, and modern backend architecture.</description>
       <category>Java</category>
       <category>Spring Boot</category>
@@ -123,7 +134,7 @@
       <title>What is Backend Development? The Complete Beginner&apos;s Guide</title>
       <link>https://blog.dhirajroy.com/post/what-is-backend</link>
       <guid>https://blog.dhirajroy.com/post/what-is-backend</guid>
-      <pubDate>Thu, 23 Apr 2026 18:30:00 GMT</pubDate>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 GMT</pubDate>
       <description>Understand what backend development really is — servers, APIs, databases, authentication, and how all the pieces fit together to power every app you use.</description>
       <category>Backend</category>
       <category>Education</category>
@@ -134,7 +145,7 @@
       <title>Node.js Backend Development (2026) – Build a Production-Ready REST API</title>
       <link>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api</link>
       <guid>https://blog.dhirajroy.com/post/nodejs-backend-development-production-api</guid>
-      <pubDate>Thu, 23 Apr 2026 18:30:00 GMT</pubDate>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 GMT</pubDate>
       <description>Learn Node.js backend development from scratch. Master Express.js, async programming, and build a production-ready REST API. Complete 2026 developer guide.</description>
       <category>Node.js backend</category>
       <category>Tech</category>
@@ -145,7 +156,7 @@
       <title>Docker Complete Guide: From Zero to Production Containers</title>
       <link>https://blog.dhirajroy.com/post/docker-complete-guide</link>
       <guid>https://blog.dhirajroy.com/post/docker-complete-guide</guid>
-      <pubDate>Tue, 21 Apr 2026 18:30:00 GMT</pubDate>
+      <pubDate>Wed, 22 Apr 2026 00:00:00 GMT</pubDate>
       <description>Master Docker end-to-end — containers vs VMs, Dockerfiles, volumes, networking, Docker Compose, multi-stage builds, and production best practices.</description>
       <category>Backend</category>
       <category>Tech</category>
@@ -156,7 +167,7 @@
       <title>Git &amp; GitHub Complete Guide: From Zero to Production Workflow</title>
       <link>https://blog.dhirajroy.com/post/git-and-github-complete-guide</link>
       <guid>https://blog.dhirajroy.com/post/git-and-github-complete-guide</guid>
-      <pubDate>Tue, 21 Apr 2026 18:30:00 GMT</pubDate>
+      <pubDate>Wed, 22 Apr 2026 00:00:00 GMT</pubDate>
       <description>Master Git and GitHub end-to-end — version control fundamentals, essential commands, branching strategies, pull requests, and CI/CD workflows used in real teams.</description>
       <category>Backend</category>
       <category>Tech</category>
@@ -167,7 +178,7 @@
       <title>Getting Started with Spring Boot: Build Your First REST API</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-getting-started</link>
       <guid>https://blog.dhirajroy.com/post/spring-boot-getting-started</guid>
-      <pubDate>Tue, 14 Apr 2026 18:30:00 GMT</pubDate>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 GMT</pubDate>
       <description>A hands-on guide to Spring Boot — project setup, key annotations, controllers, and a working REST API in under 30 minutes.</description>
       <category>Java</category>
       <category>Spring Boot</category>

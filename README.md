@@ -54,7 +54,7 @@ Publishing new content is simple and requires no backend servers or databases.
    ```bash
    node scripts/build-seo.js
    ```
-   This will automatically rebuild your `sitemap.xml` and `feed.xml` to include your new post.
+   This rebuilds the static homepage and archive listings, clean URL routes, `sitemap.xml`, and `feed.xml`. Run it after every registry change and commit the generated files so articles remain visible without JavaScript.
 
 ## 🚀 Running Locally
 
@@ -62,7 +62,7 @@ Because the project is purely static, you can use any basic HTTP server to run t
 
 If you have Node.js installed, you can use `npx`:
 ```bash
-npx serve .
+node scripts/serve.js
 ```
 
 Alternatively, if you use Python:
@@ -71,10 +71,14 @@ Alternatively, if you use Python:
 python -m http.server 3000
 ```
 
-Then visit `http://localhost:3000` in your browser.
+For the Node preview server, visit `http://localhost:3456`. It supports the clean article URLs used by this site.
 
 ## 👨‍💻 Author
 
 Built and maintained by **Dhiraj Roy**
 - GitHub: [@dhirajkumarroy](https://github.com/dhirajkumarroy)
 - Blog: [https://blog.dhirajroy.com](https://blog.dhirajroy.com)
+
+## Validation
+
+Run `node scripts/check.js` to check generated listings, category filtering, and preview routes. Run `node scripts/build-seo.js` before publishing.
