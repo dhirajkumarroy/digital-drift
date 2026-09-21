@@ -5,9 +5,31 @@
     <link>https://blog.dhirajroy.com</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <pubDate>Mon, 21 Sep 2026 08:26:21 GMT</pubDate>
-    <lastBuildDate>Mon, 21 Sep 2026 08:26:21 GMT</lastBuildDate>
+    <pubDate>Mon, 21 Sep 2026 08:32:37 GMT</pubDate>
+    <lastBuildDate>Mon, 21 Sep 2026 08:32:37 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares</title>
+      <link>https://blog.dhirajroy.com/post/gpt-6-astra-explained</link>
+      <guid>https://blog.dhirajroy.com/post/gpt-6-astra-explained</guid>
+      <pubDate>Mon, 21 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A comprehensive developer guide to OpenAI&apos;s GPT-6 Astra. Explore technical specs, 1.05M context window, API pricing, benchmarks, computer-use features, and GPT-5.6 Sol comparison.</description>
+      <category>AI</category>
+      <category>Tech</category>
+      <category>Developer Tool</category>
+    </item>
+
+    <item>
+      <title>System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide</title>
+      <link>https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl</link>
+      <guid>https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl</guid>
+      <pubDate>Mon, 21 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Master the classic system design interview question. Learn capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.</description>
+      <category>System Design</category>
+      <category>Architecture</category>
+      <category>Backend</category>
+    </item>
 
     <item>
       <title>The Complete System Design Roadmap: A Step-by-Step Guide from Beginner to Advanced</title>

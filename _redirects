@@ -9,6 +9,10 @@
 /privacy-policy /privacy-policy.html 200
 /disclaimer.html /disclaimer 301
 /disclaimer /disclaimer.html 200
+/post/gpt-6-astra-explained.html /post/gpt-6-astra-explained 301
+/post/gpt-6-astra-explained /post/gpt-6-astra-explained.html 200
+/post/system-design-url-shortener-tinyurl.html /post/system-design-url-shortener-tinyurl 301
+/post/system-design-url-shortener-tinyurl /post/system-design-url-shortener-tinyurl.html 200
 /post/system-design-roadmap-beginner-to-advanced.html /post/system-design-roadmap-beginner-to-advanced 301
 /post/system-design-roadmap-beginner-to-advanced /post/system-design-roadmap-beginner-to-advanced.html 200
 /post/spring-boot-file-upload-download-complete-guide.html /post/spring-boot-file-upload-download-complete-guide 301

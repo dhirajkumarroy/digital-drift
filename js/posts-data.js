@@ -3,12 +3,12 @@
  *  Digital Drift — Post Registry  v3
  * ============================================================
  *
- *  HOW TO ADD A NEW POST (3 steps)
+ *  HOW TO ADD A NEW POST (4 steps)
  *  ────────────────────────────────
  *  1. Open  /admin/  in your browser → fill the form → click Generate.
  *  2. Copy the generated HTML → save as  /post/<slug>.html
  *  3. Copy the generated entry below → paste at the TOP of BLOG_POSTS.
- *  That's it — both index and archive update automatically.
+ *  4. Run node scripts/build-seo.js to update static listings, routes, sitemap and RSS.
  *
  *  Field Reference
  *  ───────────────
@@ -26,6 +26,34 @@
 
 const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
+
+  {
+    id: 22,
+    slug: "gpt-6-astra-explained",
+    title: "GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares",
+    summary: "A comprehensive developer guide to OpenAI's GPT-6 Astra. Explore technical specs, 1.05M context window, API pricing, benchmarks, computer-use features, and GPT-5.6 Sol comparison.",
+    date: "Sep 21, 2026",
+    dateISO: "2026-09-21",
+    url: "/post/gpt-6-astra-explained",
+    image: "/images/gpt-6-astra-explained.jpg",
+    tags: ["AI", "Tech", "Developer Tool"],
+    readTime: 22,
+    featured: false
+  },
+
+  {
+    id: 21,
+    slug: "system-design-url-shortener-tinyurl",
+    title: "System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide",
+    summary: "Master the classic system design interview question. Learn capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.",
+    date: "Sep 21, 2026",
+    dateISO: "2026-09-21",
+    url: "/post/system-design-url-shortener-tinyurl",
+    image: "/images/system-design-url-shortener.jpg",
+    tags: ["System Design", "Architecture", "Backend"],
+    readTime: 18,
+    featured: false
+  },
 
   {
     id: 20,

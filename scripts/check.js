@@ -20,11 +20,53 @@ async function main() {
     assert.ok(read('_redirects').includes(`${post.url} ${post.url}.html 200`));
   }
   const source = read('js/script.js');
+  new vm.Script(source, { filename: 'js/script.js' });
+  const categoryHelpers = source.slice(source.indexOf('  function tagsMatch('), source.indexOf('  function getTagHtml('));
   const filter = source.slice(source.indexOf('  function getFilteredPosts()'), source.indexOf('  function renderFeatured()'));
   for (const tag of ['Laravel', 'Frontend']) {
-    assert.equal(vm.runInNewContext(filter + '; getFilteredPosts().length', {
+    assert.equal(vm.runInNewContext(categoryHelpers + filter + '; getFilteredPosts().length', {
       BLOG_POSTS: [{ tags: ['Backend'], title: 'Backend', summary: 'Backend guide' }], activeTag: tag, searchQuery: ''
     }), 0, `${tag} must not show unrelated articles`);
+  }
+  const expectedSystemDesign = Array.from(posts.filter(post => post.tags.includes('System Design')), post => post.url);
+  assert.ok(expectedSystemDesign.includes('/post/system-design-url-shortener-tinyurl'));
+  for (const category of ['System%20Design', 'system+design', '%20System%20Design%20']) {
+    const matching = vm.runInNewContext(categoryHelpers + filter + `
+      const activeTag = readCategoryFromUrl();
+      getFilteredPosts().map(post => post.url);
+    `, {
+      BLOG_POSTS: posts, searchQuery: '', URLSearchParams,
+      window: { location: { search: '?category=' + category } }
+    });
+    assert.deepEqual(Array.from(matching), expectedSystemDesign, `Category URL must select only System Design posts: ${category}`);
+  }
+  assert.equal(vm.runInNewContext(categoryHelpers + filter + '; getFilteredPosts().length', {
+    BLOG_POSTS: posts, activeTag: 'System Design', searchQuery: 'TinyURL'
+  }), 1, 'Search must narrow the selected category');
+  assert.equal(vm.runInNewContext(categoryHelpers + filter + '; getFilteredPosts().length', {
+    BLOG_POSTS: posts, activeTag: 'Unknown category', searchQuery: ''
+  }), 0, 'Unknown categories must not show unrelated posts');
+  for (const pathname of ['/', '/archive']) {
+    let changedUrl;
+    const location = new URL(`https://blog.dhirajroy.com${pathname}?ref=test#articles-section`);
+    const context = vm.createContext({
+      URL, URLSearchParams,
+      window: { location, history: { replaceState(_state, _title, url) {
+        changedUrl = new URL(url, location);
+        location.href = changedUrl.href;
+      } } }
+    });
+    vm.runInContext(categoryHelpers + '; syncCategoryUrl("System Design");', context);
+    assert.equal(changedUrl.searchParams.get('category'), 'System Design');
+    assert.equal(vm.runInContext('readCategoryFromUrl()', context), 'System Design');
+    assert.equal(changedUrl.pathname, pathname);
+    assert.equal(changedUrl.searchParams.get('ref'), 'test');
+    assert.equal(changedUrl.hash, '#articles-section');
+    vm.runInContext('syncCategoryUrl(null)', context);
+    assert.equal(changedUrl.searchParams.has('category'), false, 'All must clear the category from the URL');
+    assert.equal(vm.runInContext('readCategoryFromUrl()', context), '');
+    assert.equal(changedUrl.searchParams.get('ref'), 'test');
+    assert.equal(changedUrl.hash, '#articles-section');
   }
   const server = spawn(process.execPath, ['scripts/serve.js'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
   try {
@@ -43,6 +85,6 @@ async function main() {
       assert.equal((await fetch('http://localhost:3456' + post.url)).status, 200, post.url);
     }
   } finally { server.kill(); }
-  console.log(`Checks passed: static listings, repeatable build, filters, preview routes, and ${posts.length} articles.`);
+  console.log(`Checks passed: static listings, repeatable build, runtime syntax, category URLs, filters, preview routes, and ${posts.length} articles.`);
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

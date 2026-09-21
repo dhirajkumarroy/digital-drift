@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var __t=localStorage.getItem("theme"),__p=!window.matchMedia("(prefers-color-scheme: dark)").matches;if(__t==="light"||(!__t&&__p)){document.documentElement.classList.add("light");}}catch(e){}</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide | Digital Drift</title>
+  <meta name="description" content="Learn how to design a scalable URL shortener like TinyURL or Bitly. Step-by-step system design interview guide covering capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects." />
+  <meta name="keywords" content="system design url shortener, tinyurl system design, system design interview, base62 encoding, key generation service, redis caching, distributed systems, backend architecture" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide" />
+  <meta property="og:description" content="Learn how to design a scalable URL shortener like TinyURL or Bitly. Step-by-step system design interview guide covering capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/images/system-design-url-shortener.jpg" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide" />
+  <meta name="twitter:description" content="Learn how to design a scalable URL shortener like TinyURL or Bitly. Step-by-step system design interview guide covering capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/images/system-design-url-shortener.jpg" />
+
+  <!-- Structured Data (Article) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide",
+    "image": "https://blog.dhirajroy.com/images/system-design-url-shortener.jpg",
+    "description": "Learn how to design a scalable URL shortener like TinyURL or Bitly. Step-by-step system design interview guide covering capacity estimation, Base62 encoding, Key Generation Service (KGS), Redis caching, database sharding, and 301 vs 302 redirects.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy" },
+    "datePublished": "2026-09-21",
+    "dateModified": "2026-09-21",
+    "url": "https://blog.dhirajroy.com/post/system-design-url-shortener-tinyurl",
+    "keywords": ["system design url shortener", "tinyurl system design", "system design interview", "base62 encoding", "key generation service", "redis caching", "distributed systems", "backend architecture"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Structured Data (FAQ) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between HTTP 301 and HTTP 302 redirects in a URL shortener?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "HTTP 301 (Moved Permanently) causes browsers to cache the destination URL locally, so subsequent clicks bypass your server entirely. This reduces server load but prevents tracking real-time click analytics. HTTP 302 (Found) or 307 (Temporary Redirect) ensures every user click routes through your server, allowing accurate telemetry and analytics tracking at the expense of higher request volume."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is Base62 used instead of Base64 or Hexadecimal for short URLs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Base62 uses alphanumeric characters [0-9, a-z, A-Z], which are completely URL-safe without requiring URL encoding. Base64 includes '+' and '/' (or '=' padding) which can break in URL query params or paths unless specially URL-escaped. Hexadecimal (Base16) uses only 16 characters, requiring significantly longer short keys to represent the same number of unique URLs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does a Key Generation Service (KGS) prevent duplicate keys and race conditions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Key Generation Service pre-generates billions of unique random or sequential Base62 keys offline and stores them in a data store. KGS workers load non-overlapping blocks of keys into local memory using an atomic coordinator like Apache ZooKeeper or Redis INCR ranges. When an application server requests a key, KGS hands one over instantaneously with zero collision risk and zero runtime hashing computation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should we use a Relational (SQL) or NoSQL database for a URL shortener?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both work well, but NoSQL distributed key-value/document stores (such as DynamoDB, Cassandra, or MongoDB) naturally fit this use case because records are simple key-value pairs (short_key -> original_url), there are no complex relational joins, and NoSQL horizontally shards seamlessly across partitions as data expands into tens of billions of rows."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css?v=5" />
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Brand Logo -->
+        <a href="/" class="brand-logo" aria-label="Digital Drift Home">
+          <div class="logo-mark">D</div>
+          <div class="logo-text-group">
+            <span class="logo-title">Digital Drift</span>
+            <span class="logo-tagline">Code · Learn · Build · Grow</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav-desktop" aria-label="Main Navigation">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <div class="nav-dropdown-item">
+            <a href="/#popular-categories">Categories <span class="nav-chevron">⌄</span></a>
+          </div>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme" title="Toggle theme">
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <a href="/#newsletter-section" id="header-subscribe-btn" class="btn-subscribe">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            Subscribe
+          </a>
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-menu" class="nav-mobile" aria-label="Mobile navigation">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/#popular-categories">Categories</a>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">✉ Subscribe to Digest</a>
+    </nav>
+
+    <!-- Main Article -->
+    <main role="main">
+      <article class="blog-post">
+        <!-- Tags -->
+        <div class="tags">
+          <span class="tag" data-tag="System Design">System Design</span>
+          <span class="tag" data-tag="Architecture">Architecture</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="post-title">System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide</h1>
+
+        <!-- Meta -->
+        <div class="post-meta">
+          <span>📅 Sep 21, 2026</span>
+          <span>⏱ 18 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- Post Banner Image -->
+        <div class="post-banner-wrapper">
+          <img src="/images/system-design-url-shortener.jpg" alt="System Design: How to Design a Scalable URL Shortener (TinyURL) — Step-by-Step Architecture Guide" class="post-banner-img" />
+        </div>
+
+        <!-- Post Content -->
+        <div class="post-content">
+          <p>In our foundational guide, <a href="/post/system-design-roadmap-beginner-to-advanced">The Complete System Design Roadmap</a>, we outlined the five phases of mastering distributed software systems: Networking Foundations, Data &amp; Storage, Distributed Communication, Scale &amp; Reliability, and Interview Execution. Once you grasp the core theory, the very best way to cement your intuition is to design an end-to-end production architecture for a classic real-world problem.</p>
+
+          <p>Among all software architecture problems, <strong>Designing a Scalable URL Shortener (like TinyURL, Bitly, or Dub.co)</strong> is arguably the most famous and instructive question ever asked in engineering interviews at Google, Meta, Amazon, and Stripe. On the surface, the problem sounds deceptively trivial: take a long URL, produce a 7-character string, and redirect users who click it. Yet when you examine the requirements at modern internet scale—handling hundreds of millions of new URLs monthly, billions of redirects, sub-15ms redirection latencies, global high availability, and analytics tracking—you encounter almost every fundamental architectural trade-off in distributed computing.</p>
+
+          <p>In this comprehensive, step-by-step guide, we will design a URL shortening system from the ground up. We will cover requirements gathering, back-of-the-envelope capacity estimations, API contracts, hashing algorithms versus distributed token generators (KGS), SQL versus NoSQL storage models, Redis caching, database sharding, and edge-case mitigations like cache stampedes and malicious link abuse.</p>
+
+          <!-- Table of Contents -->
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0; border: 1px solid var(--color-border);">
+            <strong>Table of Contents</strong>
+            <ul style="margin-top: 1rem; columns: 2; -webkit-columns: 2; -moz-columns: 2; line-height: 1.8;">
+              <li><a href="#problem-statement">1. Problem Statement &amp; Real-World Context</a></li>
+              <li><a href="#requirements">2. System Requirements (Functional &amp; Non-Functional)</a></li>
+              <li><a href="#capacity-estimation">3. Back-of-the-Envelope Capacity Estimations</a></li>
+              <li><a href="#api-design">4. REST API Interface &amp; HTTP Redirect Semantics</a></li>
+              <li><a href="#encoding-strategies">5. URL Encoding &amp; Short Key Generation Strategies</a></li>
+              <li><a href="#data-storage">6. Data Storage &amp; Database Schema Design</a></li>
+              <li><a href="#high-level-architecture">7. High-Level Architecture &amp; Request Flows</a></li>
+              <li><a href="#distributed-caching">8. Distributed Caching &amp; Eviction Strategy</a></li>
+              <li><a href="#sharding-replication">9. Database Partitioning &amp; High Availability</a></li>
+              <li><a href="#analytics-pipeline">10. Telemetry &amp; Asynchronous Click Analytics</a></li>
+              <li><a href="#security-resilience">11. Security, Rate Limiting &amp; Edge Cases</a></li>
+              <li><a href="#interview-rubric">12. Interview Defense Checklist &amp; Trade-offs</a></li>
+              <li><a href="#faq">13. Frequently Asked Questions (FAQ)</a></li>
+              <li><a href="#conclusion">14. Conclusion &amp; Next Steps</a></li>
+            </ul>
+          </div>
+
+          <h2 id="problem-statement">1. Problem Statement &amp; Real-World Context</h2>
+          <p>A <strong>URL Shortener</strong> takes an arbitrary, lengthy web address (such as <code>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate?ref=twitter&amp;campaign=summer26</code>) and converts it into a concise, compact alias (e.g., <code>https://tiny.ly/8f7A1b</code>). When a visitor accesses the short link, the service immediately resolves the identifier and redirects the user's browser to the destination.</p>
+
+          <p>Beyond simply saving characters on SMS and social platforms, production shorteners serve several vital business purposes:</p>
+          <ul>
+            <li><strong>Link Aesthetics &amp; Cleanliness:</strong> Long tracking URLs are unwieldy, visually cluttered, and prone to line-wrapping truncation in messaging channels.</li>
+            <li><strong>Branded Domains &amp; Masking:</strong> Enterprises use custom branded domains (such as <code>git.io</code> or <code>amzn.to</code>) to maintain brand recognition and trust.</li>
+            <li><strong>Marketing &amp; Campaign Attribution:</strong> Redirect services capture referrer headers, device fingerprints, geographic regions, and timestamps before dispatching the user, giving marketing teams rich attribution metrics.</li>
+            <li><strong>Link Retargeting &amp; Dynamic Routing:</strong> The underlying destination URL can be updated dynamically in the database without altering the published short link on physical flyers, print QR codes, or billboards.</li>
+          </ul>
+
+          <h2 id="requirements">2. System Requirements (Functional &amp; Non-Functional)</h2>
+          <p>In any architectural interview or production RFC, never begin drawing database tables or servers until you establish clear functional and non-functional boundaries.</p>
+
+          <h3>Functional Requirements (What the system MUST do)</h3>
+          <ol>
+            <li><strong>Shorten URL:</strong> Given a valid original URL, the system must generate a unique, compact short link (e.g., <code>https://tiny.ly/8f7A1b</code>).</li>
+            <li><strong>Redirection:</strong> When a user navigates to a short link, the system must resolve it and redirect them to the original destination with negligible delay.</li>
+            <li><strong>Custom Aliases (Optional / Premium):</strong> Users should have the option to specify custom vanity aliases (e.g., <code>https://tiny.ly/system-design</code>) if available.</li>
+            <li><strong>Configurable Expiration:</strong> URLs can have an optional expiration date (Time-To-Live). Once expired, the link should return an HTTP 404 or 410 Gone.</li>
+            <li><strong>Analytics &amp; Metrics:</strong> Track basic interaction telemetry (total clicks, referrers, country of origin, and browser agent) for each short link.</li>
+          </ol>
+
+          <h3>Non-Functional Requirements (System qualities &amp; constraints)</h3>
+          <ol>
+            <li><strong>Ultra-High Availability (99.99%):</strong> The redirection path is mission-critical. If the redirect server is down, links posted across social media and marketing campaigns fail.</li>
+            <li><strong>Ultra-Low Latency:</strong> Link resolution and redirection must complete in <strong>under 15–20 milliseconds</strong>. Users should experience virtually instantaneous redirection.</li>
+            <li><strong>Read-Heavy Traffic Asymmetry:</strong> The system is vastly read-heavy. There will be roughly 100 reads (redirect clicks) for every 1 write (new URL generated).</li>
+            <li><strong>Tamper-Proof &amp; Non-Predictable Keys:</strong> Short URLs must not be easily guessable sequentially (e.g., <code>/0001</code>, <code>/0002</code>), which would allow attackers to scrape private corporate links.</li>
+            <li><strong>Fault Tolerance &amp; Scalability:</strong> The service must seamlessly scale to billions of stored URLs without degradation in query latency.</li>
+          </ol>
+
+          <h2 id="capacity-estimation">3. Back-of-the-Envelope Capacity Estimations</h2>
+          <p>Capacity estimation validates whether our storage, memory, and networking choices will survive real traffic. Let us make reasonable industry assumptions and calculate scale for a <strong>5-year planning horizon</strong>.</p>
+
+          <div style="background: var(--color-card); padding: 1.25rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <strong>Traffic Assumptions:</strong>
+            <ul style="margin: 0.5rem 0 0 1rem; line-height: 1.8;">
+              <li><strong>New URL Writes:</strong> 100 million new URLs created per month (~3.3 million URLs per day).</li>
+              <li><strong>Read-to-Write Ratio:</strong> 100 : 1.</li>
+              <li><strong>Redirection Reads:</strong> 10 billion link redirects per month (~330 million redirects per day).</li>
+            </ul>
+          </div>
+
+          <h3>1. Queries Per Second (QPS)</h3>
+          <ul>
+            <li><strong>Write QPS:</strong><br />
+              $$\text{Daily Writes} = \frac{100{,}000{,}000}{30 \text{ days}} \approx 3{,}333{,}333 \text{ writes/day}$$
+              $$\text{Write QPS} = \frac{3{,}333{,}333}{86{,}400 \text{ seconds}} \approx \mathbf{38.5 \text{ writes/sec}} \quad (\text{Peak} \approx \mathbf{80 \text{ QPS}})$$
+            </li>
+            <li><strong>Read QPS (Redirects):</strong><br />
+              $$\text{Daily Reads} = \frac{10{,}000{,}000{,}000}{30 \text{ days}} \approx 333{,}333{,}333 \text{ reads/day}$$
+              $$\text{Read QPS} = \frac{333{,}333{,}333}{86{,}400 \text{ seconds}} \approx \mathbf{3{,}858 \text{ reads/sec}} \quad (\text{Peak } 2\times \approx \mathbf{8{,}000 \text{ QPS}})$$
+            </li>
+          </ul>
+          <p><strong>Key Insight:</strong> 40 writes/sec is trivial for any single relational or NoSQL database. However, 4,000 to 8,000 read QPS requires caching and read replicas so the primary database is never saturated.</p>
+
+          <h3>2. Storage Requirements (5 Years)</h3>
+          <p>Let us estimate the disk space required for each record:</p>
+          <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                <th style="padding: 8px;">Field</th>
+                <th style="padding: 8px;">Data Type</th>
+                <th style="padding: 8px;">Approximate Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><code>short_key</code></td>
+                <td style="padding: 8px;">VARCHAR(7)</td>
+                <td style="padding: 8px;">7 Bytes</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><code>original_url</code></td>
+                <td style="padding: 8px;">VARCHAR(2048)</td>
+                <td style="padding: 8px;">~500 Bytes (average)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><code>user_id</code></td>
+                <td style="padding: 8px;">UUID / BIGINT</td>
+                <td style="padding: 8px;">16 Bytes</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><code>created_at</code></td>
+                <td style="padding: 8px;">TIMESTAMP</td>
+                <td style="padding: 8px;">8 Bytes</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><code>expires_at</code></td>
+                <td style="padding: 8px;">TIMESTAMP</td>
+                <td style="padding: 8px;">8 Bytes</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px;"><strong>Total per Record</strong></td>
+                <td style="padding: 8px;"><strong>Row + Index Overhead</strong></td>
+                <td style="padding: 8px;"><strong>~550 Bytes</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ul>
+            <li><strong>Total Records in 5 Years:</strong> $100\text{M} \times 12 \text{ months} \times 5 \text{ years} = \mathbf{6 \text{ Billion Records}}$.</li>
+            <li><strong>Total Storage:</strong> $6\text{ Billion} \times 550 \text{ Bytes} \approx \mathbf{3.3 \text{ Terabytes}}$.</li>
+          </ul>
+          <p><strong>Conclusion:</strong> 3.3 TB across 5 years is surprisingly manageable. A modern SSD RAID array or single distributed database cluster can easily store this volume.</p>
+
+          <h3>3. Memory &amp; Cache Requirements (The 80/20 Rule)</h3>
+          <p>According to the Pareto Principle (80/20 rule), roughly 20% of your URLs generate 80% of all redirect traffic (viral posts, homepage links, breaking news). By caching this hot 20% in an in-memory cache like Redis, we can serve 80%+ of read requests directly from RAM in less than 2 milliseconds.</p>
+          <ul>
+            <li><strong>Daily Redirect Volume:</strong> ~330 Million requests per day.</li>
+            <li><strong>20% Hot Working Set:</strong> $330\text{M} \times 0.20 = 66\text{ Million URLs/day}$.</li>
+            <li><strong>Cache Memory Needed:</strong> $66\text{ Million} \times 550 \text{ Bytes} \approx \mathbf{36.3 \text{ Gigabytes RAM}}$.</li>
+          </ul>
+          <p>36 GB of RAM is easily accommodated on a modest two-node Redis cluster with high availability replication.</p>
+
+          <h2 id="api-design">4. REST API Interface &amp; HTTP Redirect Semantics</h2>
+          <p>Our API layer provides clear, stateless endpoints adhering to standard HTTP semantics.</p>
+
+          <h3>Endpoint 1: Create Short URL</h3>
+          <pre><code class="language-http">POST /api/v1/shorten
+Content-Type: application/json
+Authorization: Bearer &lt;api_token&gt;
+
+{
+  "original_url": "https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced",
+  "custom_alias": "sys-roadmap",  // Optional vanity alias
+  "expires_in_days": 365            // Optional TTL
+}</code></pre>
+
+          <p><strong>Response (HTTP 201 Created):</strong></p>
+          <pre><code class="language-json">{
+  "short_url": "https://tiny.ly/sys-roadmap",
+  "short_key": "sys-roadmap",
+  "original_url": "https://blog.dhirajroy.com/post/system-design-roadmap-beginner-to-advanced",
+  "created_at": "2026-09-21T10:00:00Z",
+  "expires_at": "2027-09-21T10:00:00Z"
+}</code></pre>
+
+          <h3>Endpoint 2: Redirect Short URL</h3>
+          <pre><code class="language-http">GET /{shortKey}
+Host: tiny.ly</code></pre>
+
+          <p><strong>Response:</strong> Redirection status code (see below) with the <code>Location</code> header pointing to the destination URL.</p>
+
+          <h3>The Redirection Dilemma: HTTP 301 vs HTTP 302/307</h3>
+          <p>One of the most frequent senior interview questions is choosing between <code>301 Permanent Redirect</code> and <code>302/307 Temporary Redirect</code>. Let us evaluate the exact trade-offs:</p>
+
+          <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                <th style="padding: 8px;">Redirect Code</th>
+                <th style="padding: 8px;">Browser Behavior</th>
+                <th style="padding: 8px;">Server Load</th>
+                <th style="padding: 8px;">Analytics &amp; Click Tracking</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>301 Moved Permanently</strong></td>
+                <td style="padding: 8px;">Browser aggressively caches the target URL in local disk cache. Future clicks bypass our server completely.</td>
+                <td style="padding: 8px;">Extremely Low (subsequent hits never reach our server).</td>
+                <td style="padding: 8px;">❌ Poor. You miss repeat clicks and cannot track user interactions accurately.</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px;"><strong>302 Found / 307 Temporary</strong></td>
+                <td style="padding: 8px;">Browser does not cache permanently; every subsequent click sends an HTTP GET request to our server.</td>
+                <td style="padding: 8px;">Higher (every single click hits our edge/caching tier).</td>
+                <td style="padding: 8px;">✅ Excellent. Every click is intercepted, recorded, and analyzed for marketing attribution.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p><strong>Architectural Decision:</strong> If monetization and analytics tracking are core business requirements (as with Bitly and enterprise shorteners), use <strong>HTTP 302 (or 307)</strong>. If server cost minimization is paramount and analytics are irrelevant, use <strong>HTTP 301</strong>.</p>
+
+          <h2 id="encoding-strategies">5. URL Encoding &amp; Short Key Generation Strategies</h2>
+          <p>How do we turn an arbitrary URL into a concise, unique 7-character string without collisions or performance bottlenecks? Let us analyze the mathematics and engineering options.</p>
+
+          <h3>Why Base62? The Math of Key Length</h3>
+          <p>A standard URL key consists of alphanumeric characters:</p>
+          <ul>
+            <li>Lowercase letters: <code>a-z</code> (26 characters)</li>
+            <li>Uppercase letters: <code>A-Z</code> (26 characters)</li>
+            <li>Numeric digits: <code>0-9</code> (10 characters)</li>
+            <li><strong>Total Characters:</strong> $26 + 26 + 10 = \mathbf{62 \text{ characters (Base62)}}$.</li>
+          </ul>
+          <p>Unlike <strong>Base64</strong> (which includes <code>+</code>, <code>/</code>, or <code>=</code> padding that requires URL percent-encoding), Base62 is 100% URL-safe out of the box.</p>
+
+          <p>How many unique links can we represent with different key lengths?</p>
+          <ul>
+            <li>Length 6: $62^6 \approx \mathbf{56.8 \text{ Billion unique URLs}}$</li>
+            <li>Length 7: $62^7 \approx \mathbf{3.52 \text{ Trillion unique URLs}}$</li>
+            <li>Length 8: $62^8 \approx \mathbf{218 \text{ Trillion unique URLs}}$</li>
+          </ul>
+          <p>At 100 million URLs per month, our 5-year requirement is only 6 billion URLs. A <strong>7-character Base62 string</strong> provides <strong>3.52 Trillion</strong> combinations—enough capacity to run for thousands of years without exhausting the address space!</p>
+
+          <h3>Strategy A: Hashing (MD5 / SHA-256) + Base62 Truncation</h3>
+          <p>One intuitive approach is hashing the original URL:</p>
+          <ol>
+            <li>Compute the MD5 hash of <code>original_url</code>, producing a 128-bit hash (32 hexadecimal characters).</li>
+            <li>Encode the hash into Base62 and take the first 7 characters.</li>
+          </ol>
+          <p><strong>The Critical Flaw: Hash Collisions!</strong><br />
+          Because MD5 produces 128 bits and we truncate to just 7 characters (~42 bits of entropy), collisions are mathematically guaranteed under the Birthday Paradox. If two different URLs produce the same 7-character prefix, the system must append a salt or incremental counter (e.g., <code>original_url + salt</code>) and re-hash until a non-conflicting key is found. This requires iterative database checks, adding latency and contention to every write.</p>
+
+          <h3>Strategy B (Production Standard): Distributed Key Generation Service (KGS)</h3>
+          <p>Instead of calculating hashes at request time, what if the system generates unique keys <strong>ahead of time</strong>?</p>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <h4 style="margin-top:0;">How the Key Generation Service (KGS) Works:</h4>
+            <ol style="line-height: 1.8; margin-bottom: 0;">
+              <li>A standalone background process generates random, non-sequential 7-character Base62 strings offline and inserts them into a <code>key_pool</code> table.</li>
+              <li>The table has two states: <code>USED = 0</code> (available) and <code>USED = 1</code> (allocated).</li>
+              <li>When the KGS server boots up, it loads a block of keys (e.g., 10,000 keys) into fast server memory and immediately marks them as allocated in the backing database.</li>
+              <li>When application servers need a new short key, they make a blazing-fast in-memory RPC call to the KGS. The key is returned in under <strong>0.5 milliseconds</strong> with guaranteed uniqueness and zero collision checks!</li>
+            </ol>
+          </div>
+
+          <p><strong>What happens if the KGS server crashes?</strong><br />
+          If a KGS instance holding 10,000 cached keys crashes, those 10,000 keys are simply lost. Because our 7-character space contains 3.52 Trillion keys, losing a few thousand keys is completely inconsequential and does not impact data integrity.</p>
+
+          <h3>Alternative to KGS: Distributed Range Counter (Snowflake / ZooKeeper)</h3>
+          <p>Another popular production approach uses an atomic distributed counter:</p>
+          <ul>
+            <li>A coordination service like <strong>Apache ZooKeeper</strong> or a Redis cluster assigns integer ID ranges to each API worker instance (e.g., Worker 1 gets <code>1,000,000 – 1,999,999</code>, Worker 2 gets <code>2,000,000 – 2,999,999</code>).</li>
+            <li>Each worker increments its internal counter locally and converts that 64-bit integer into Base62.</li>
+            <li><strong>Example:</strong> The integer <code>11,157,105</code> converted to Base62 becomes <code>"8f7A1b"</code>.</li>
+            <li>To prevent sequential guessing attacks, workers apply a reversible bitwise shuffle/permutation algorithm before converting to Base62.</li>
+          </ul>
+
+          <h2 id="data-storage">6. Data Storage &amp; Database Schema Design</h2>
+
+          <h3>Relational (SQL) vs NoSQL Comparison</h3>
+          <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                <th style="padding: 8px;">Architecture Trait</th>
+                <th style="padding: 8px;">Relational (PostgreSQL / MySQL)</th>
+                <th style="padding: 8px;">NoSQL Key-Value (DynamoDB / Cassandra)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Data Model</strong></td>
+                <td style="padding: 8px;">Structured tables with foreign keys and relational schemas.</td>
+                <td style="padding: 8px;">Simple primary key -&gt; JSON document or byte payload.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Relational Joins</strong></td>
+                <td style="padding: 8px;">Supported (though unnecessary for basic short URL lookup).</td>
+                <td style="padding: 8px;">None required.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Horizontal Scaling</strong></td>
+                <td style="padding: 8px;">Requires manual sharding, connection pooling, and replication lag handling.</td>
+                <td style="padding: 8px;">Auto-shards natively across clusters based on partition hash key.</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px;"><strong>Ideal Fit</strong></td>
+                <td style="padding: 8px;">Great if you already have existing relational infrastructure and strict ACID billing needs.</td>
+                <td style="padding: 8px;"><strong>Optimal for high-throughput URL lookup</strong> (Cassandra, DynamoDB, MongoDB).</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>PostgreSQL Database Schema</h3>
+          <p>If implemented in PostgreSQL, the table definition is straightforward and highly index-optimized:</p>
+
+          <pre><code class="language-sql">CREATE TABLE urls (
+    short_key     VARCHAR(16) PRIMARY KEY,
+    original_url  VARCHAR(2048) NOT NULL,
+    user_id       BIGINT,
+    created_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    expires_at    TIMESTAMP WITH TIME ZONE,
+    click_count   BIGINT DEFAULT 0 NOT NULL
+);
+
+-- B-Tree Index on short_key is automatically created by the PRIMARY KEY constraint.
+-- Optional index for user dashboard queries:
+CREATE INDEX idx_urls_user_id ON urls(user_id);
+
+-- Optional index for background expiration sweeps:
+CREATE INDEX idx_urls_expires_at ON urls(expires_at) WHERE expires_at IS NOT NULL;</code></pre>
+
+          <h2 id="high-level-architecture">7. High-Level Architecture &amp; Request Flows</h2>
+          <p>Now let us assemble all distributed components into a unified, high-availability architecture diagram.</p>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0; border: 1px solid var(--color-border); font-family: monospace; font-size: 0.9rem; line-height: 1.6; overflow-x: auto;">
++-------------------------------------------------------------------------+
+|                              CLIENTS                                    |
+|              (Web Browsers, Mobile Apps, REST API Callers)              |
++-------------------------------------------------------------------------+
+                                     |
+                                     v
+                       +---------------------------+
+                       |    GeoDNS / Anycast CDN   |
+                       |  (Cloudflare / Route 53)  |
+                       +---------------------------+
+                                     |
+                                     v
+                       +---------------------------+
+                       |   Layer 7 Load Balancer   |
+                       |      (NGINX / ALB)        |
+                       +---------------------------+
+                                     |
+              +----------------------+----------------------+
+              |                                             |
+              v                                             v
+    +-------------------+                         +-------------------+
+    |  API Server #1    |                         |  API Server #2    |
+    |  (Stateless Node) |                         |  (Stateless Node) |
+    +-------------------+                         +-------------------+
+          |          \                                   /          |
+          |           \_________________________________/           |
+          |                            |                            |
+          v                            v                            v
+  +---------------+            +---------------+            +---------------+
+  | Key Gen (KGS) |            |  Redis Cache  |            | Apache Kafka  |
+  |  Token Pool   |            |  (Read Path)  |            | (Event Stream)|
+  +---------------+            +---------------+            +---------------+
+                                       |                            |
+                                       v                            v
+                               +---------------+            +---------------+
+                               |  Database     |            | Click Analytics|
+                               |  (Postgres/   |            | Worker Pool   |
+                               |   DynamoDB)   |            +---------------+
+                               +---------------+                    |
+                                       ^                            v
+                                       |                    +---------------+
+                                (Async Writes)              | ClickHouse DB |
+                                                            | (TimeSeries)  |
+                                                            +---------------+
+          </div>
+
+          <h3>End-to-End Request Flows</h3>
+
+          <h4>1. Write Flow (Creating a Short URL)</h4>
+          <ol>
+            <li>The client sends a <code>POST /api/v1/shorten</code> request containing the original long URL.</li>
+            <li>The Load Balancer terminates TLS and routes the request to an available stateless API server.</li>
+            <li>The API server validates the URL format, sanitizes parameters, and verifies client rate limits.</li>
+            <li>If a custom alias is requested, the server checks the database/cache for existence. If none was specified, the server fetches an unused 7-character key from the <strong>Key Generation Service (KGS)</strong> in local memory.</li>
+            <li>The server writes the <code>(short_key, original_url, user_id, expires_at)</code> record to the primary database.</li>
+            <li>The server pre-populates the key in the <strong>Redis Cache</strong> with an appropriate TTL to prepare for immediate sharing.</li>
+            <li>The server returns the full shortened URL payload (HTTP 201 Created) to the client.</li>
+          </ol>
+
+          <h4>2. Read Flow (Redirecting a Short URL)</h4>
+          <ol>
+            <li>A user clicks <code>https://tiny.ly/8f7A1b</code> in their browser.</li>
+            <li>The request passes through GeoDNS and hits the closest Edge Load Balancer.</li>
+            <li>The API server inspects <strong>Redis Cache</strong> for the key <code>"url:8f7A1b"</code>.</li>
+            <li><strong>Cache Hit (90%+ of queries):</strong> Redis returns the original URL in ~1ms.</li>
+            <li><strong>Cache Miss:</strong> The API server queries the Database Read Replica, populates Redis with the result, and continues.</li>
+            <li>If the link does not exist (or has expired), return an HTTP 404 Not Found.</li>
+            <li>The server asynchronously publishes a <code>LinkClickEvent</code> message to an <strong>Apache Kafka</strong> topic.</li>
+            <li>The server responds immediately to the user with an <strong>HTTP 302 Found</strong> redirect header: <code>Location: https://blog.dhirajroy.com/...</code>. The user's browser redirects instantaneously!</li>
+          </ol>
+
+          <h2 id="distributed-caching">8. Distributed Caching &amp; Eviction Strategy</h2>
+          <p>Because link redirection is intensely read-heavy, performance lives and dies by the caching tier.</p>
+
+          <h3>Cache Pattern: Cache-Aside (Lazy Loading)</h3>
+          <p>We implement the <strong>Cache-Aside</strong> pattern:</p>
+          <ol>
+            <li>Application checks Redis for the key.</li>
+            <li>If present, return immediately (Cache Hit).</li>
+            <li>If absent, read from database, write value into Redis, and return (Cache Miss).</li>
+          </ol>
+
+          <h3>Cache Eviction Policy: LRU</h3>
+          <p>When Redis reaches its maximum memory threshold (e.g., 32 GB), it must evict entries. We configure the <strong>AllKeys-LRU (Least Recently Used)</strong> policy. Links that have stopped receiving clicks naturally drop out of memory, while viral links remain pinned in RAM.</p>
+
+          <h3>Mitigating Cache Stampede &amp; Cache Penetration</h3>
+          <ul>
+            <li><strong>Cache Stampede:</strong> If a viral celebrity link with 10,000 QPS expires from cache, thousands of concurrent requests could strike the database simultaneously. We mitigate this using <strong>Mutual Exclusion Locks (Redis Mutex)</strong> or probabilistic early expiration (XFetch algorithm).</li>
+            <li><strong>Cache Penetration:</strong> Malicious bots frequently query non-existent keys (e.g., <code>tiny.ly/fakeKey99</code>). If unhandled, every request hits the database. We protect against this by placing a <strong>Bloom Filter</strong> in front of the cache or caching empty <code>null</code> values with a short 60-second TTL.</li>
+          </ul>
+
+          <h2 id="sharding-replication">9. Database Partitioning &amp; High Availability</h2>
+          <p>While 3.3 TB can fit on a modern disk, distributing storage across multiple nodes ensures we never exceed single-machine I/O limits and guarantees zero downtime during hardware maintenance.</p>
+
+          <h3>Sharding by Hash of Short Key</h3>
+          <p>We partition data horizontally across database shards using <strong>Consistent Hashing</strong> on the <code>short_key</code>:</p>
+          $$\text{Shard ID} = \text{CRC32}(\text{short\_key}) \pmod{\text{Total Shards}}$$
+          <p>This guarantees an even distribution of records across all database nodes and prevents "hot spots" where one server receives 90% of write traffic.</p>
+
+          <h3>Leader-Follower Replication</h3>
+          <p>Each database shard is configured with one Primary Leader (for writes) and two Asynchronous Read Replicas (for reads). If the primary node fails, automatic failover (via Patroni or AWS Aurora Multi-AZ) promotes a replica to leader within seconds.</p>
+
+          <h2 id="analytics-pipeline">10. Telemetry &amp; Asynchronous Click Analytics</h2>
+          <p>Updating a click counter synchronously in the primary database during the redirect request is an architectural anti-pattern. Doing a database write on every single redirect adds disk I/O, creates table row-lock contention, and inflates redirect latency from 10ms to 100ms+.</p>
+
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; border: 1px solid var(--color-border);">
+            <strong>The Asynchronous Analytics Pipeline:</strong>
+            <ol style="margin-top: 0.5rem; line-height: 1.8;">
+              <li>When a redirect occurs, the API server emits an asynchronous JSON event to a distributed log stream (e.g., <strong>Apache Kafka</strong> or <strong>RabbitMQ</strong>):
+                <pre><code class="language-json">{
+  "short_key": "8f7A1b",
+  "timestamp": "2026-09-21T10:15:32Z",
+  "referrer": "https://t.co/",
+  "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17...)",
+  "ip_address": "203.0.113.42",
+  "geo_country": "US"
+}</code></pre>
+              </li>
+              <li>A pool of decoupled stream consumers (written in Go or Java) reads events in micro-batches (e.g., every 5 seconds or 1,000 events).</li>
+              <li>The consumers aggregate counts and flush analytics data into an OLAP columnar database designed for time-series aggregation, such as <strong>ClickHouse</strong>, <strong>Apache Pinot</strong>, or AWS Timestream.</li>
+              <li>The user's analytical dashboard queries ClickHouse without placing any load on the operational redirect database.</li>
+            </ol>
+          </div>
+
+          <h2 id="security-resilience">11. Security, Rate Limiting &amp; Edge Cases</h2>
+
+          <h3>1. Malicious Link Abuse &amp; Phishing</h3>
+          <p>URL shorteners are notorious targets for spammers attempting to disguise phishing domains or malware downloads. To protect users and preserve domain reputation:</p>
+          <ul>
+            <li>During link creation, asynchronously query the <strong>Google Safe Browsing API</strong> to verify the destination host against active blacklists.</li>
+            <li>Maintain an internal blacklist of forbidden domains and malware URL patterns.</li>
+            <li>Present an interstitial warning screen for unverified accounts before redirection if suspicious parameters are detected.</li>
+          </ul>
+
+          <h3>2. Distributed Rate Limiting</h3>
+          <p>To prevent malicious bots from exhausting the key space or launching denial-of-service attacks, place a distributed rate limiter at the API gateway tier:</p>
+          <ul>
+            <li>Implement the <strong>Token Bucket</strong> or <strong>Sliding Window Log</strong> algorithm in Redis.</li>
+            <li>Enforce quotas: e.g., max 10 URL creations per minute per IP address, or 500 requests per minute for authenticated API token tiers.</li>
+            <li>Excessive requests are rejected immediately with <strong>HTTP 429 Too Many Requests</strong> without touching downstream services.</li>
+          </ul>
+
+          <h3>3. Link Expiration &amp; Garbage Collection</h3>
+          <p>How do we clean up billions of expired URLs without slowing down active traffic?</p>
+          <ul>
+            <li><strong>Lazy Deletion:</strong> When a user navigates to an expired link, the application detects that <code>expires_at &lt; NOW()</code>, deletes the key from Redis, and returns an HTTP 410 Gone. No expensive background sweeps are required for rarely accessed links.</li>
+            <li><strong>Scheduled Low-Priority Batch Purge:</strong> During off-peak hours (e.g., 03:00 UTC), a background cron worker performs chunked deletions:
+              <pre><code class="language-sql">DELETE FROM urls WHERE expires_at &lt; NOW() LIMIT 5000;</code></pre>
+            </li>
+          </ul>
+
+          <h2 id="interview-rubric">12. Interview Defense Checklist &amp; Trade-offs</h2>
+          <p>When presenting this design in a 45-minute technical interview, interviewers evaluate how fluently you justify your choices. Use this mental matrix to defend your architecture:</p>
+
+          <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                <th style="padding: 8px;">Decision Point</th>
+                <th style="padding: 8px;">Your Recommended Choice</th>
+                <th style="padding: 8px;">Architectural Justification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Encoding Method</strong></td>
+                <td style="padding: 8px;">Key Generation Service (KGS) or Counter + Base62</td>
+                <td style="padding: 8px;">Guarantees unique keys with zero collision checks and sub-millisecond generation speed.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Redirect Code</strong></td>
+                <td style="padding: 8px;">HTTP 302 Found (or 307)</td>
+                <td style="padding: 8px;">Prevents browser-level permanent caching, enabling full click telemetry and fraud detection.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Caching Tier</strong></td>
+                <td style="padding: 8px;">Redis Cluster (Cache-Aside + LRU)</td>
+                <td style="padding: 8px;">Stores top 20% hot links in RAM (~36 GB), fulfilling 80%+ reads under 2ms.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 8px;"><strong>Database</strong></td>
+                <td style="padding: 8px;">NoSQL (Cassandra/DynamoDB) or Sharded Postgres</td>
+                <td style="padding: 8px;">Simple key-value lookup semantics, seamless horizontal scaling across partitions.</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px;"><strong>Click Analytics</strong></td>
+                <td style="padding: 8px;">Asynchronous Kafka + ClickHouse</td>
+                <td style="padding: 8px;">Decouples analytics writes completely from the critical user redirect latency path.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2 id="faq">13. Frequently Asked Questions (FAQ)</h2>
+
+          <p><strong>What is the difference between HTTP 301 and HTTP 302 redirects in a URL shortener?</strong><br />
+          HTTP 301 (Moved Permanently) instructs web browsers to cache the target URL on disk, completely bypassing the shortener server on all subsequent clicks. While this reduces server compute costs, it prevents you from recording real-time analytics. HTTP 302 (Found) or 307 (Temporary Redirect) ensures every user interaction hits your server, allowing comprehensive analytics tracking.</p>
+
+          <p><strong>Why is Base62 used instead of Base64 or Hexadecimal for short URLs?</strong><br />
+          Base62 uses alphanumeric characters [0-9, a-z, A-Z], which are inherently URL-safe without escaping. Base64 introduces special symbols like <code>+</code> and <code>/</code>, which can break in URL routing or query parameters. Hexadecimal (Base16) uses only 16 symbols, requiring much longer strings to represent the same number of keys.</p>
+
+          <p><strong>How does a Key Generation Service (KGS) prevent duplicate keys and race conditions?</strong><br />
+          A Key Generation Service pre-generates unique Base62 tokens offline and maintains them in a persistent data store. Standalone KGS servers load non-overlapping blocks of tokens into local memory using an atomic coordinator (like Apache ZooKeeper or Redis INCR). When an application worker requests a key, KGS hands one over instantaneously with zero collision risk and zero runtime hashing computation.</p>
+
+          <p><strong>Should we choose a Relational (SQL) or NoSQL database for a URL shortener?</strong><br />
+          Both can work effectively, but NoSQL distributed key-value stores (such as DynamoDB, Cassandra, or ScyllaDB) naturally align with this workload because records are simple key-value pairs (short_key -&gt; original_url), there are no complex relational joins, and NoSQL horizontally partitions across multiple nodes without manual sharding logic.</p>
+
+          <h2 id="conclusion">14. Conclusion &amp; Next Steps</h2>
+          <p>Designing a scalable URL shortener is a masterclass in distributed engineering trade-offs. What begins as a simple link-forwarding service quickly demands deep consideration of encoding mathematics, database sharding, in-memory caching strategies, and asynchronous stream processing.</p>
+
+          <p>By stepping methodically through functional requirements, back-of-the-envelope calculations, and architectural trade-offs, you demonstrate the mindset of a senior engineer—building software that remains lightning-fast, resilient, and cost-effective under relentless real-world traffic.</p>
+
+          <p><strong>Where to go next:</strong> To continue your system design journey, explore our foundational guide on <a href="/post/system-design-roadmap-beginner-to-advanced">The Complete System Design Roadmap</a> or dive into backend security with our guides on <a href="/post/nodejs-api-rate-limiting">API Rate Limiting in Node.js</a> and <a href="/post/docker-complete-guide">Docker from Zero to Production</a>.</p>
+        </div>
+      </article>
+    </main>
+
+    <!-- Multi-Column Footer -->
+    <footer class="footer-v2">
+      <div class="container">
+        <div class="footer-top-grid">
+          <!-- Col 1: Brand Logo -->
+          <div class="footer-col footer-brand-col">
+            <a href="/" class="brand-logo" aria-label="Digital Drift Home">
+              <div class="logo-mark">D</div>
+              <div class="logo-text-group">
+                <span class="logo-title">Digital Drift</span>
+                <span class="logo-tagline">Code · Learn · Build · Grow</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Col 2: Quick Links -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Quick Links</h4>
+            <ul class="footer-link-list">
+              <li><a href="/">Home</a></li>
+              <li><a href="/#popular-categories">Categories</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/archive">Archive</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Categories -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Categories</h4>
+            <ul class="footer-link-list">
+              <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
+              <li><a href="/#popular-categories" data-tag="Architecture">Architecture</a></li>
+              <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
+              <li><a href="/#popular-categories" data-tag="Java">Java</a></li>
+              <li><a href="/#popular-categories" data-tag="Node.js">Node.js</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 4: Connect With Me -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Connect With Me</h4>
+            <div class="footer-social-icons">
+              <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+              <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
+            </div>
+          </div>
+
+          <!-- Col 5: Quote Box -->
+          <div class="footer-col footer-quote-col">
+            <blockquote class="footer-quote">
+              <p class="quote-text">"Small steps in the right direction lead to big results."</p>
+              <cite class="quote-author">— Digital Drift</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <p class="footer-copyright">&copy; <span id="current-year">2026</span> Digital Drift. All rights reserved.</p>
+          <div class="footer-legal-links">
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/disclaimer">Disclaimer</a>
+            <a href="/contact">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=6"></script>
+  <script src="/js/script.js?v=6"></script>
+</body>
+</html>

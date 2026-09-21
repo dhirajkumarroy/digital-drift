@@ -47,20 +47,29 @@ digital-drift/
 
 Publishing new content is simple and requires no backend servers or databases.
 
-1. **Write the Post**: Open `admin/index.html` in your browser. Fill in the metadata, write your content using the block builder, and click **Generate Output**.
-2. **Save the HTML**: Copy the generated "Post HTML" from the admin panel and save it as a new file in the `/post/` directory (e.g., `/post/my-new-article.html`).
-3. **Register the Post**: Copy the generated "Registry Entry" from the admin panel and paste it at the *very top* of the `BLOG_POSTS` array inside `js/posts-data.js`.
-4. **Update SEO & RSS**: Open your terminal in the project root and run:
+> 📖 **Comprehensive Guide**: For the complete, end-to-end technical standard (System Design roadmap, banner image generation prompts, 10-point technical article blueprint, HTML boilerplate, and quality checklist), see **[BLOG_GUIDELINES.md](BLOG_GUIDELINES.md)**.
+
+### Quick Workflow:
+1. **Write the Post**: Copy the template from `BLOG_GUIDELINES.md` or use `admin/index.html`.
+2. **Save the HTML**: Save as `/post/<slug>.html`.
+3. **Add Banner Image**: Place 16:9 image in `/images/<slug>.jpg`.
+4. **Register the Post**: Add entry at the top of `BLOG_POSTS` in `js/posts-data.js`.
+5. **Update SEO & RSS**:
    ```bash
    node scripts/build-seo.js
    ```
    This rebuilds the static homepage and archive listings, clean URL routes, `sitemap.xml`, and `feed.xml`. Run it after every registry change and commit the generated files so articles remain visible without JavaScript.
+6. **Preview & Deploy**:
+   ```bash
+   node scripts/serve.js
+   git add -A && git commit -m "Add new post" && git push origin main
+   ```
 
 ## 🚀 Running Locally
 
 Because the project is purely static, you can use any basic HTTP server to run the site locally.
 
-If you have Node.js installed, you can use `npx`:
+If you have Node.js installed, use the included preview server:
 ```bash
 node scripts/serve.js
 ```
