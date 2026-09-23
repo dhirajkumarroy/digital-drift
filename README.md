@@ -104,5 +104,3 @@ Run `node scripts/check.js` to check generated listings, category filtering, and
 Category definitions, icons, and tag aliases live in `js/categories.js`. Add accurate tags to `js/posts-data.js`; the build refreshes category links and filters across all pages and templates. Categories without published articles stay out of the menu. Menus and filters show icons and labels without article counts.
 
 Run `node scripts/check-categories.cjs` for category navigation checks in headless Chrome (no npm dependencies). It starts its own local preview server and checks desktop, mobile, keyboard, filtering, and navigation without JavaScript. Set `CHROME_PATH` if Chrome is installed in a nonstandard location.
-
-The homepage workspace is assembled from `components/hero-workspace.html`, `css/hero-workspace.css`, and `js/hero-workspace.js`. Run `node scripts/build-seo.js` after changing its HTML component to refresh the static homepage. Topic buttons select examples and real tutorial links; response previews are illustrative, and Copy copies the displayed code. Browser checks also cover this component at four screen sizes, both themes, and without JavaScript.
