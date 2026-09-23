@@ -510,6 +510,7 @@
   // ── COPY CODE BUTTONS ─────────────────────────────────────
   function initCopyCodeBtns() {
     document.querySelectorAll('pre').forEach(pre => {
+      if (pre.closest('#hero-workspace')) return;
       if (pre.querySelector('.copy-code-btn')) return;
       const btn = document.createElement('button');
       btn.className = 'copy-code-btn';

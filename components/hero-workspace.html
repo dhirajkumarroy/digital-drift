@@ -1,0 +1,60 @@
+<section id="hero-workspace" class="workspace-scene" aria-label="Interactive developer workspace">
+  <div class="workspace-heading">
+    <span class="workspace-eyebrow">A little code. A lot of possibility.</span>
+    <span class="workspace-corner-mark" aria-hidden="true">&lt;/&gt;</span>
+  </div>
+
+  <!-- Stack selectors: real buttons, progressively enhanced by hero-workspace.js. -->
+  <div class="workspace-topics" role="group" aria-label="Choose a code example" hidden>
+    <button class="workspace-topic workspace-topic-node" type="button" data-workspace-topic="node" aria-pressed="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg>
+      <span>Node.js</span>
+    </button>
+    <button class="workspace-topic workspace-topic-java" type="button" data-workspace-topic="java" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3C11 2 3 6 3 13a7 7 0 0 0 7 7c7 0 11-8 10-17Z"/><path d="m4 20 12-12M8 16v-5M8 16h5"/></svg>
+      <span>Spring Boot</span>
+    </button>
+    <button class="workspace-topic workspace-topic-ai" type="button" data-workspace-topic="ai" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/><path d="M20 2v4m-2-2h4"/></svg>
+      <span>AI &amp; code</span>
+    </button>
+  </div>
+
+  <!-- Editor and laptop frame are ordinary HTML; the example remains readable without JS. -->
+  <div class="workspace-laptop">
+    <div class="workspace-editor">
+      <div class="workspace-editor-toolbar">
+        <span class="workspace-window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span id="workspace-filename">server.js</span>
+        <span class="workspace-editor-mark" aria-hidden="true">{ }</span>
+      </div>
+      <div class="workspace-editor-caption"><span class="workspace-file-dot" aria-hidden="true"></span><span id="workspace-topic-label">Node.js</span><span>Example</span></div>
+      <pre class="workspace-code-block" tabindex="0" aria-label="Code example"><code id="workspace-code"><span class="workspace-code-line">const http = require("node:http");</span>
+<span class="workspace-code-line"></span>
+<span class="workspace-code-line">http.createServer((req, res) =&gt; {</span>
+<span class="workspace-code-line">  res.writeHead(200, {</span>
+<span class="workspace-code-line">    "Content-Type": "application/json"</span>
+<span class="workspace-code-line">  });</span>
+<span class="workspace-code-line">  res.end(JSON.stringify({ status: "ok" }));</span>
+<span class="workspace-code-line">}).listen(3000);</span></code></pre>
+      <div class="workspace-editor-actions">
+        <button id="workspace-output-toggle" type="button" aria-expanded="false" aria-controls="workspace-output" hidden>Preview response</button>
+        <button id="workspace-copy" type="button" hidden>Copy code</button>
+      </div>
+      <pre id="workspace-output" tabindex="0" aria-label="Example response" hidden>{ "status": "ok" }</pre>
+    </div>
+    <div class="workspace-laptop-base" aria-hidden="true"><span></span></div>
+  </div>
+
+  <!-- Small CSS desk components echo the original illustration without loading an image. -->
+  <div class="workspace-desk" aria-hidden="true"></div>
+  <div class="workspace-plant" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
+  <div class="workspace-books" aria-hidden="true"><span>BUILD</span><span>LEARN</span></div>
+  <div class="workspace-mug" aria-hidden="true"><span>&lt;/&gt;</span></div>
+
+  <div class="workspace-footer">
+    <span class="workspace-signoff">Learn. Build. Grow.</span>
+    <a id="workspace-guide" href="/post/nodejs-backend-development-production-api">Read the Node.js guide <span aria-hidden="true">↗</span></a>
+  </div>
+  <p id="workspace-status" class="workspace-status" role="status" aria-live="polite" aria-atomic="true"></p>
+</section>

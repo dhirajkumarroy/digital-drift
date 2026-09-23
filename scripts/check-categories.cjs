@@ -132,7 +132,7 @@ async function main() {
     };
     const viewport = width => page.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: false });
     const key = async name => {
-      const code = { Enter: 13, Tab: 9, Escape: 27, ' ': 32 }[name];
+      const code = { Enter: 13, Tab: 9, Escape: 27, ' ': 32, ArrowLeft: 37, ArrowRight: 39, Home: 36, End: 35 }[name];
       const params = { key: name, code: name === ' ' ? 'Space' : name, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
       const text = name === 'Enter' ? '\r' : name === ' ' ? ' ' : '';
       await page.call('Input.dispatchKeyEvent', {
@@ -190,6 +190,92 @@ async function main() {
       }
     };
     const expected = category => Array.from(posts.filter(post => categories.matches(post, category)), post => post.url);
+    const workspaceState = () => evaluate(`({
+      code:document.querySelector('#workspace-code').textContent,
+      filename:document.querySelector('#workspace-filename').textContent.trim(),
+      guide:document.querySelector('#workspace-guide').getAttribute('href'),
+      selected:[...document.querySelectorAll('[data-workspace-topic][aria-pressed="true"]')].map(button=>button.dataset.workspaceTopic)
+    })`);
+    const workspaceVisible = selector => evaluate(`(() => {const element=${q(selector)}; return Boolean(element && element.getClientRects().length && getComputedStyle(element).visibility !== 'hidden');})()`);
+    const selectWorkspaceTopic = async topic => {
+      await click(`[data-workspace-topic="${topic}"]`);
+      await waitFor(`${q(`[data-workspace-topic="${topic}"]`)}.getAttribute('aria-pressed') === 'true'`, `workspace selects ${topic}`);
+      const state = await workspaceState();
+      assert.deepEqual(state.selected, [topic], 'Exactly one workspace topic is selected');
+      assert.ok(state.code.trim().length > 20 && state.filename, `${topic}: readable code and filename`);
+      assert.ok(posts.some(post => post.url === state.guide), `${topic}: guide links to a published article`);
+      return state;
+    };
+
+    // The hero is rendered UI: exercise its controls, with a page-local clipboard stub.
+    await viewport(1440);
+    await navigate('/');
+    assert.equal(await evaluate(`document.querySelectorAll('#hero-workspace img').length`), 0, 'Workspace scene contains no image');
+    assert.equal(await evaluate(`document.querySelectorAll('#hero-workspace .copy-code-btn').length`), 0, 'Generic article copy controls must not be added to the hero');
+    assert.equal(await evaluate(`${q('#workspace-status')}.getAttribute('role')`), 'status');
+    const samples = {};
+    for (const topic of ['node', 'java', 'ai']) samples[topic] = await selectWorkspaceTopic(topic);
+    for (const field of ['code', 'filename', 'guide']) {
+      assert.equal(new Set(Object.values(samples).map(sample => sample[field])).size, 3, `Topics have distinct ${field}`);
+    }
+    const expectWorkspaceTopic = async topic => {
+      await waitFor(`${q(`[data-workspace-topic="${topic}"]`)}.getAttribute('aria-pressed') === 'true'`, `keyboard selects ${topic}`);
+      assert.deepEqual(await workspaceState(), samples[topic], `Keyboard updates ${topic} code, filename and guide`);
+    };
+    await evaluate(`${q('[data-workspace-topic="node"]')}.focus()`);
+    await key('Enter'); await expectWorkspaceTopic('node');
+    await key('ArrowRight'); await expectWorkspaceTopic('java');
+    await key('Home'); await expectWorkspaceTopic('node');
+    await key('End'); await expectWorkspaceTopic('ai');
+    await evaluate(`${q('[data-workspace-topic="java"]')}.focus()`);
+    await key(' '); await expectWorkspaceTopic('java');
+    await click('#workspace-output-toggle');
+    assert.equal(await evaluate(`${q('#workspace-output-toggle')}.getAttribute('aria-expanded')`), 'true');
+    assert.equal(await evaluate(`${q('#workspace-output')}.hidden`), false);
+    assert.equal(await evaluate(`${q('#workspace-output')}.getAttribute('aria-label')`), 'Example response');
+    assert.ok(await evaluate(`${q('#workspace-output')}.textContent.trim().length > 0`), 'Preview contains a representative response');
+    await click('#workspace-output-toggle');
+    assert.equal(await evaluate(`${q('#workspace-output-toggle')}.getAttribute('aria-expanded')`), 'false');
+    assert.equal(await evaluate(`${q('#workspace-output')}.hidden`), true);
+    await click('#workspace-output-toggle');
+    await selectWorkspaceTopic('ai');
+    assert.equal(await evaluate(`${q('#workspace-output')}.hidden`), true, 'Topic change hides the previous response');
+    assert.equal(await evaluate(`${q('#workspace-output-toggle')}.getAttribute('aria-expanded')`), 'false');
+    await evaluate(`window.__workspaceClipboardDescriptor=Object.getOwnPropertyDescriptor(navigator,'clipboard');
+      Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__workspaceCopied=text;}}});`);
+    try {
+      await click('#workspace-copy');
+      await waitFor(`window.__workspaceCopied === ${q('#workspace-code')}.textContent`, 'Copy receives the displayed code');
+      await waitFor(`/copied/i.test(${q('#workspace-status')}.textContent)`, 'Copy announces success');
+      await evaluate(`navigator.clipboard.writeText=async()=>{window.__workspaceCopyRejected=true;throw new Error('Clipboard rejected by test');};`);
+      await click('#workspace-copy');
+      await waitFor(`window.__workspaceCopyRejected && ${q('#workspace-status')}.textContent.trim() && !/copied/i.test(${q('#workspace-status')}.textContent)`, 'Copy failure announces useful feedback');
+    } finally {
+      await evaluate(`if(window.__workspaceClipboardDescriptor) Object.defineProperty(navigator,'clipboard',window.__workspaceClipboardDescriptor); else delete navigator.clipboard;`);
+    }
+    for (const width of [320, 375, 1024, 1440]) {
+      await viewport(width);
+      await navigate('/');
+      for (const theme of ['light', 'dark']) {
+        if (!await evaluate(`document.documentElement.classList.contains(${JSON.stringify(theme)})`)) await click('#theme-toggle');
+        await waitFor(`document.documentElement.classList.contains(${JSON.stringify(theme)})`, `workspace ${theme} theme`);
+        await checkOverflow(`${width}px ${theme} hero`);
+        assert.equal(await workspaceVisible('#workspace-code'), true, 'Hero code is visible');
+        assert.equal(await workspaceVisible('#workspace-guide'), true, 'Hero guide is visible');
+        const clippedControls = await evaluate(`(() => {
+          const scene=${q('#hero-workspace')}.getBoundingClientRect();
+          return [...document.querySelectorAll('#hero-workspace button, #workspace-guide')].filter(element=>{
+            const r=element.getBoundingClientRect();
+            return r.width && (r.left<scene.left || r.right>scene.right || r.top<scene.top || r.bottom>scene.bottom);
+          }).map(element=>element.id || element.dataset.workspaceTopic);
+        })()`);
+        assert.deepEqual(clippedControls, [], 'Hero controls must fit inside the scene');
+        const clip = await evaluate(`(() => {const r=${q('#hero-workspace')}.getBoundingClientRect();return {x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1};})()`);
+        const screenshot = await page.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip });
+        fs.writeFileSync(path.join(output, `hero-${width}-${theme}.png`), Buffer.from(screenshot.data, 'base64'));
+      }
+    }
+    console.log('PASS: hero topics, keyboard, copy feedback, example response and four responsive sizes in both themes');
 
     for (const width of [375, 1024]) {
       await viewport(width);
@@ -263,6 +349,11 @@ async function main() {
       await viewport(width);
       await navigate('/');
       assert.equal(await evaluate(`typeof window.BlogCategories`), 'undefined', 'Page JavaScript is disabled');
+      assert.equal(await workspaceVisible('#workspace-code'), true, 'Initial hero code remains visible without JavaScript');
+      assert.equal(await workspaceVisible('#workspace-guide'), true, 'Initial hero guide remains visible without JavaScript');
+      const fallback = await workspaceState();
+      assert.ok(fallback.code.trim() && posts.some(post => post.url === fallback.guide), 'Static hero has real code and a published guide');
+      assert.equal(await evaluate(`[...document.querySelectorAll('#hero-workspace button')].some(button=>button.getClientRects().length && getComputedStyle(button).visibility !== 'hidden')`), false, 'Hero interaction controls are hidden without JavaScript');
       await checkCategoryIcons(`${width} no JavaScript`);
       const menu = `${width < 993 ? '#mobile-menu' : '.nav-desktop'} .nav-categories`;
       await click(`${menu} summary`);

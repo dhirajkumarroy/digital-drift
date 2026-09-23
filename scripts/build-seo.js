@@ -35,6 +35,7 @@ for (const post of posts) {
 }
 posts.sort((a, b) => b.dateISO.localeCompare(a.dateISO));
 require('./build-navigation')(posts);
+require('./build-hero')();
 
 for (const post of posts) {
   const file = `post/${post.slug}.html`;
