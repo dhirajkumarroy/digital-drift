@@ -7,6 +7,19 @@ const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const posts = vm.runInNewContext(read('js/posts-data.js') + '; BLOG_POSTS');
 const categories = require('../js/categories.js');
+const attributes = html => Object.fromEntries([...html.matchAll(/([\w-]+)="([^"]*)"/g)].map(match => [match[1], match[2]]));
+
+function checkCategoryControl(markup, label, expectedLabel) {
+  assert.doesNotMatch(markup, /\bcategory-count\b/, `${label}: category counts must not be displayed`);
+  const icons = [...markup.matchAll(/<svg\b([^>]*)>/g)].map(match => attributes(match[1]))
+    .filter(attrs => (attrs.class || '').split(/\s+/).includes('category-icon'));
+  assert.equal(icons.length, 1, `${label}: one category icon`);
+  assert.equal(icons[0]['aria-hidden'], 'true', `${label}: decorative icon`);
+  assert.equal(icons[0].focusable, 'false', `${label}: icon must not receive focus`);
+  const text = markup.replace(/<svg\b[\s\S]*?<\/svg>/g, '').replace(/<[^>]*>/g, '').trim().replace(/\s+/g, ' ');
+  if (expectedLabel) assert.equal(text, expectedLabel, `${label}: readable category label without count`);
+  else assert.match(text, /[a-z]/i, `${label}: readable category label`);
+}
 
 async function main() {
   const generated = ['index.html', 'archive.html', '_redirects'];
@@ -48,17 +61,24 @@ async function main() {
     assert.equal(menus.length, 2, `${file}: desktop and mobile category disclosures`);
     for (const [, menu] of menus) {
       assert.match(menu, /<summary\b/, `${file}: native keyboard-accessible disclosure`);
-      const rows = [...menu.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attrs, body]) => ({
-        attrs: Object.fromEntries([...attrs.matchAll(/([\w-]+)="([^"]*)"/g)].map(match => [match[1], match[2]])), body
-      })).filter(row => row.attrs['data-category']);
+      assert.doesNotMatch(menu, /\bcategory-count\b/, `${file}: dropdown has no count badges`);
+      const allRows = [...menu.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attrs, body]) => ({ attrs: attributes(attrs), body }));
+      allRows.forEach(row => checkCategoryControl(row.body, `${file}: dropdown ${row.attrs['data-category'] || 'All articles'}`,
+        available.find(category => category.id === row.attrs['data-category'])?.label || 'All articles'));
+      const rows = allRows.filter(row => row.attrs['data-category']);
       assert.deepEqual(rows.map(row => row.attrs['data-category']), available.map(category => category.id), `${file}: populated category links`);
       rows.forEach((row, index) => {
         const category = available[index];
         const url = new URL(row.attrs.href.replace(/&amp;/g, '&'), 'https://blog.dhirajroy.com');
         assert.equal(url.pathname, '/archive', `${file}: category destination`);
         assert.equal(url.searchParams.get('category'), category.id, `${file}: encoded category URL`);
-        assert.match(row.body, new RegExp(`class="category-count"[^>]*>\\s*${category.count}\\s*<`), `${file}: category count`);
       });
+    }
+    for (const [, attrs, body] of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
+      const control = attributes(attrs);
+      if (!/(?:^|\s)(?:category-pill|archive-chip)(?:\s|$)/.test(control.class || '')) continue;
+      checkCategoryControl(body, `${file}: category filter`, available.find(category => category.id === control['data-tag'])?.label);
+      assert.ok(control.href, `${file}: category filter link remains available`);
     }
     const scripts = [...html.matchAll(/<script\b[^>]*src="([^"?]+)[^"]*"/g)].map(match => match[1]);
     const runtimeIndex = scripts.indexOf('/js/script.js');

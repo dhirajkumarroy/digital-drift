@@ -527,6 +527,8 @@ html.dark .btn-hero-secondary { color: #FFFFFF; }
   font-size: 0.85rem;
   line-height: 1;
   color: var(--color-text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 /* Native disclosures keep category navigation usable without JavaScript. */
@@ -559,6 +561,8 @@ html.dark .btn-hero-secondary { color: #FFFFFF; }
   width: 260px;
   max-height: min(560px, 70vh);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
   overscroll-behavior: contain;
   padding: 0.5rem;
   border: 1px solid var(--color-border);
@@ -570,10 +574,10 @@ html.dark .btn-hero-secondary { color: #FFFFFF; }
 .nav-categories .category-menu a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: 0.75rem;
   min-height: 44px;
-  padding: 0.6rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   border-radius: var(--radius-sm);
   color: var(--color-text);
   text-decoration: none;
@@ -586,11 +590,21 @@ html.dark .btn-hero-secondary { color: #FFFFFF; }
   color: var(--color-primary);
   background: var(--color-primary-subtle);
 }
-.category-count {
-  font-size: 0.78rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
+.category-icon { flex-shrink: 0; color: var(--category-accent, var(--color-text-secondary)); }
+.category-icon[data-category-icon="ai"] { --category-accent: #7c3aed; }
+.category-icon[data-category-icon="system design"] { --category-accent: #4f46e5; }
+.category-icon[data-category-icon="backend"] { --category-accent: #2563eb; }
+.category-icon[data-category-icon="java"] { --category-accent: #b45309; }
+.category-icon[data-category-icon="spring boot"],
+.category-icon[data-category-icon="node.js"] { --category-accent: #15803d; }
+.category-icon[data-category-icon="javascript"] { --category-accent: #a16207; }
+.category-icon[data-category-icon="database"] { --category-accent: #0369a1; }
+.category-icon[data-category-icon="devops"] { --category-accent: #6d28d9; }
+.category-icon[data-category-icon="security"] { --category-accent: #0f766e; }
+.category-menu .category-icon { width: 30px; height: 30px; padding: 5px; border-radius: 8px; background: var(--color-primary-subtle); }
+html.dark .category-icon { filter: brightness(1.65); }
+.category-pill.active .category-icon,
+.archive-chip.active .category-icon { color: inherit; filter: none; }
 .nav-mobile { max-height: calc(100dvh - 100px); overflow-y: auto; }
 .nav-mobile .nav-categories > summary { padding: 0.75rem 1rem; justify-content: space-between; }
 .nav-mobile .category-menu {

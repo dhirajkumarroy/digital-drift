@@ -169,12 +169,33 @@ async function main() {
       const bounds = await evaluate('({scroll:document.documentElement.scrollWidth,width:innerWidth})');
       assert.ok(bounds.scroll <= bounds.width + 1, `${label}: horizontal overflow ${JSON.stringify(bounds)}`);
     };
+    const checkCategoryIcons = async label => {
+      const controls = await evaluate(`({
+        counts:document.querySelectorAll('.category-menu .category-count,.category-pill .category-count,.archive-chip .category-count').length,
+        items:[...document.querySelectorAll('.category-menu a,.category-pill,.archive-chip')].map(element=>{
+          const clone=element.cloneNode(true); clone.querySelectorAll('svg').forEach(icon=>icon.remove());
+          return {category:element.dataset.category ?? element.dataset.tag,label:clone.textContent.trim().replace(/\\s+/g,' '),
+            href:element.getAttribute('href'),icons:[...element.querySelectorAll('svg.category-icon')].map(icon=>({
+              hidden:icon.getAttribute('aria-hidden'),focusable:icon.getAttribute('focusable')}))};
+        })
+      })`);
+      assert.equal(controls.counts, 0, `${label}: category controls have no count badges`);
+      assert.ok(controls.items.length > 0, `${label}: category links remain available`);
+      for (const control of controls.items) {
+        assert.deepEqual(control.icons, [{ hidden: 'true', focusable: 'false' }], `${label}: ${control.category} decorative icon`);
+        const category = available.find(item => item.id === control.category);
+        if (category) assert.equal(control.label, category.label, `${label}: category label without count`);
+        else assert.match(control.label, /^All(?: articles| Topics)?$/i, `${label}: all-category label without count`);
+        assert.ok(control.href, `${label}: ${control.category} retains its link`);
+      }
+    };
     const expected = category => Array.from(posts.filter(post => categories.matches(post, category)), post => post.url);
 
     for (const width of [375, 1024]) {
       await viewport(width);
       for (const route of ['/', '/archive', posts[0].url]) {
         await navigate(route);
+        await checkCategoryIcons(`${width} ${route}`);
         const nav = width < 993 ? '#mobile-menu' : '.nav-desktop';
         if (width < 993) await click('#mobile-menu-btn');
         const menu = `${nav} .nav-categories`;
@@ -242,6 +263,7 @@ async function main() {
       await viewport(width);
       await navigate('/');
       assert.equal(await evaluate(`typeof window.BlogCategories`), 'undefined', 'Page JavaScript is disabled');
+      await checkCategoryIcons(`${width} no JavaScript`);
       const menu = `${width < 993 ? '#mobile-menu' : '.nav-desktop'} .nav-categories`;
       await click(`${menu} summary`);
       await checkMenu(menu, true, 'Native category disclosure works without JavaScript');

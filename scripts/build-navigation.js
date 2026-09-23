@@ -12,9 +12,9 @@ module.exports = function buildNavigation(posts) {
   const topics = categories.available(posts);
   const items = [{ id: '', label: 'All articles', count: posts.length }, ...topics];
   const menu = `<details class="nav-categories">
-            <summary>Categories <span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+            <summary>Categories <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
             <div class="category-menu">${items.map(category => `
-              <a href="${categoryUrl(category.id)}" data-category="${escapeHtml(category.id)}"><span>${escapeHtml(category.label)}</span><span class="category-count">${category.count}</span></a>`).join('')}
+              <a href="${categoryUrl(category.id)}" data-category="${escapeHtml(category.id)}">${categories.icon(category.id)}<span>${escapeHtml(category.label)}</span></a>`).join('')}
             </div>
           </details>`;
   const files = [
@@ -38,17 +38,17 @@ module.exports = function buildNavigation(posts) {
     });
     // Footer category links should select a topic, not just scroll to the filter bar.
     html = html.replace(/<a href="[^"]*" data-tag="([^"]+)">/g, (_, tag) => `<a href="${categoryUrl(tag)}" data-tag="${tag}">`);
-    html = html.replace(/(style\.css|posts-data\.js|script\.js|categories\.js)\?v=\d+/g, '$1?v=8');
+    html = html.replace(/(style\.css|posts-data\.js|script\.js|categories\.js)\?v=\d+/g, '$1?v=9');
     html = html.replace(/<noscript><style>\.nav-mobile\{display:flex\}/g, '<noscript><style>@media(max-width:992px){.nav-mobile{display:flex}}');
     // Both ordinary HTML and the admin's escaped HTML template need this dependency.
-    html = html.replace(/(?:[ \t]*<script src="\/js\/categories\.js[^"\n]*"><\\?\/script>\r?\n)?([ \t]*)<script src="\/js\/script\.js\?v=8">(<\\?\/script>)/g,
-      (_, indent, close) => `${indent}<script src="/js/categories.js?v=8">${close}\n${indent}<script src="/js/script.js?v=8">${close}`);
+    html = html.replace(/(?:[ \t]*<script src="\/js\/categories\.js[^"\n]*"><\\?\/script>\r?\n)?([ \t]*)<script src="\/js\/script\.js\?v=9">(<\\?\/script>)/g,
+      (_, indent, close) => `${indent}<script src="/js/categories.js?v=9">${close}\n${indent}<script src="/js/script.js?v=9">${close}`);
     if (file === 'index.html') {
-      const links = items.map(category => `<a class="category-pill${category.id ? '' : ' active'}" href="${categoryUrl(category.id)}" data-tag="${escapeHtml(category.id || 'all')}"><span class="pill-label">${category.id ? escapeHtml(category.label) : 'All'}</span><span class="category-count">${category.count}</span></a>`).join('\n');
+      const links = items.map(category => `<a class="category-pill${category.id ? '' : ' active'}" href="${categoryUrl(category.id)}" data-tag="${escapeHtml(category.id || 'all')}">${categories.icon(category.id)}<span class="pill-label">${category.id ? escapeHtml(category.label) : 'All'}</span></a>`).join('\n');
       html = html.replace(/(<div id="tag-filter-bar"[^>]*>)[\s\S]*?(<\/div>)/, (_, open, close) => open + links + close);
     }
     if (file === 'archive.html') {
-      const links = items.map(category => `<a class="archive-chip${category.id ? '' : ' active'}" href="${categoryUrl(category.id)}" data-tag="${escapeHtml(category.id)}">${category.id ? escapeHtml(category.label) : 'All Topics'} <span class="category-count">${category.count}</span></a>`).join('\n');
+      const links = items.map(category => `<a class="archive-chip${category.id ? '' : ' active'}" href="${categoryUrl(category.id)}" data-tag="${escapeHtml(category.id)}">${categories.icon(category.id)}<span>${category.id ? escapeHtml(category.label) : 'All Topics'}</span></a>`).join('\n');
       html = html.replace(/(<div class="archive-filters-row">)[\s\S]*?(<\/div>)/, (_, open, close) => `${open}<span class="archive-filter-label">Filter:</span>\n${links}${close}`);
     }
     if (html !== original) fs.writeFileSync(filename, html);

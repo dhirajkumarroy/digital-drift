@@ -339,7 +339,7 @@
       a.className = 'category-pill' + (isActive ? ' active' : '');
       a.dataset.tag = cat.id;
       a.setAttribute('aria-current', isActive ? 'true' : 'false');
-      a.innerHTML = `<span class="pill-label">${escapeHtml(cat.label)}</span> <span class="category-count">${cat.count}</span>`;
+      a.innerHTML = `${window.BlogCategories.icon(cat.id)}<span class="pill-label">${escapeHtml(cat.label)}</span>`;
 
       a.addEventListener('click', e => {
         if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -548,7 +548,7 @@
         chip.className = 'archive-chip';
         chip.dataset.tag = category.id;
         chip.href = category.id ? '/archive?category=' + encodeURIComponent(category.id) : '/archive';
-        chip.innerHTML = `<span>${escapeHtml(category.label)}</span> <span class="category-count">${category.count}</span>`;
+        chip.innerHTML = `${window.BlogCategories.icon(category.id)}<span>${escapeHtml(category.label)}</span>`;
         archiveFilters.appendChild(chip);
       });
     }
