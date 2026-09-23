@@ -18,7 +18,7 @@ for (const file of fs.readdirSync(postDir).filter(file => file.endsWith('.html')
   const content = original
     .replace(/<body>[\s\S]*?(?=<main\b)/, () => header)
     .replace(/<\/main>[\s\S]*?<\/footer>/, () => footer)
-    .replace(/(style\.css|posts-data\.js|script\.js)\?v=\d+/g, '$1?v=7');
+    .replace(/(style\.css|posts-data\.js|script\.js|categories\.js)\?v=\d+/g, '$1?v=8');
   if (content !== original) {
     fs.writeFileSync(filePath, content);
     updatedCount++;

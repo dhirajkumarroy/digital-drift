@@ -121,7 +121,7 @@ const BLOG_POSTS = [
     dateISO: "2026-06-17",
     url: "/post/spring-boot-postgresql-crud-jpa-hibernate",
     image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60",
-    tags: ["Java", "Spring Boot", "Backend"],
+    tags: ["Java", "Spring Boot", "Backend", "Database", "PostgreSQL"],
     readTime: 20,
     featured: false
   },
@@ -243,7 +243,7 @@ const BLOG_POSTS = [
     dateISO: "2026-04-22",
     url: "/post/docker-complete-guide",
     image: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&auto=format&fit=crop&q=60",
-    tags: ["Backend", "Tech", "Productivity"],
+    tags: ["Backend", "Tech", "Productivity", "Docker", "DevOps"],
     readTime: 16,
     featured: false
   },
@@ -256,7 +256,7 @@ const BLOG_POSTS = [
     dateISO: "2026-04-22",
     url: "/post/git-and-github-complete-guide",
     image: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop&q=60",
-    tags: ["Backend", "Tech", "Productivity"],
+    tags: ["Backend", "Tech", "Productivity", "Git", "DevOps"],
     readTime: 14,
     featured: false
   },

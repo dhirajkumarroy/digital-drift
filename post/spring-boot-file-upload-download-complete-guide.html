@@ -67,10 +67,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
-  <link rel="stylesheet" href="/css/style.css?v=7" />
+  <link rel="stylesheet" href="/css/style.css?v=8" />
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002" crossorigin="anonymous"></script>
-  <noscript><style>.nav-mobile{display:flex}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <noscript><style>@media(max-width:992px){.nav-mobile{display:flex}}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
   <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot File Upload and Download — Complete Guide","item":"https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide"}]}</script>
 </head>
 <body>
@@ -95,9 +95,22 @@
         <nav class="nav-desktop" aria-label="Main Navigation">
           <a href="/">Home</a>
           <a href="/about">About</a>
-          <div class="nav-dropdown-item">
-            <a href="/#popular-categories">Categories <span class="nav-chevron">⌄</span></a>
-          </div>
+          <details class="nav-categories">
+            <summary>Categories <span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><span>All articles</span><span class="category-count">18</span></a>
+              <a href="/archive?category=AI" data-category="AI"><span>AI</span><span class="category-count">1</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><span>System Design</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><span>Backend</span><span class="category-count">17</span></a>
+              <a href="/archive?category=Java" data-category="Java"><span>Java</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><span>Spring Boot</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><span>Node.js</span><span class="category-count">4</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><span>JavaScript</span><span class="category-count">4</span></a>
+              <a href="/archive?category=Database" data-category="Database"><span>Database</span><span class="category-count">1</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><span>DevOps</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Security" data-category="Security"><span>Security</span><span class="category-count">4</span></a>
+            </div>
+          </details>
           <a href="/contact">Contact</a>
           <a href="/archive">Archive</a>
         </nav>
@@ -131,7 +144,22 @@
     <nav id="mobile-menu" class="nav-mobile" aria-label="Mobile navigation">
       <a href="/">Home</a>
       <a href="/about">About</a>
-      <a href="/#popular-categories">Categories</a>
+      <details class="nav-categories">
+            <summary>Categories <span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><span>All articles</span><span class="category-count">18</span></a>
+              <a href="/archive?category=AI" data-category="AI"><span>AI</span><span class="category-count">1</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><span>System Design</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><span>Backend</span><span class="category-count">17</span></a>
+              <a href="/archive?category=Java" data-category="Java"><span>Java</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><span>Spring Boot</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><span>Node.js</span><span class="category-count">4</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><span>JavaScript</span><span class="category-count">4</span></a>
+              <a href="/archive?category=Database" data-category="Database"><span>Database</span><span class="category-count">1</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><span>DevOps</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Security" data-category="Security"><span>Security</span><span class="category-count">4</span></a>
+            </div>
+          </details>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
       <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
@@ -862,12 +890,12 @@ public class GlobalExceptionHandler {
         <div class="footer-col">
           <h4 class="footer-col-title">Categories</h4>
           <ul class="footer-link-list">
-            <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
-            <li><a href="/?category=Backend#articles-section" data-tag="Backend">Backend</a></li>
-            <li><a href="/?category=Spring%20Boot#articles-section" data-tag="Spring Boot">Spring Boot</a></li>
-            <li><a href="/?category=JavaScript#articles-section" data-tag="JavaScript">JavaScript</a></li>
-            <li><a href="/?category=DevOps#articles-section" data-tag="DevOps">DevOps</a></li>
-            <li><a href="/?category=Database#articles-section" data-tag="Database">Database</a></li>
+            <li><a href="/archive?category=System%20Design" data-tag="System Design">System Design</a></li>
+            <li><a href="/archive?category=Backend" data-tag="Backend">Backend</a></li>
+            <li><a href="/archive?category=Spring%20Boot" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/archive?category=JavaScript" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/archive?category=DevOps" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/archive?category=Database" data-tag="Database">Database</a></li>
           </ul>
         </div>
 
@@ -900,7 +928,8 @@ public class GlobalExceptionHandler {
     </div>
   </footer>
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-<script src="/js/posts-data.js?v=7"></script>
-  <script src="/js/script.js?v=7"></script>
+<script src="/js/posts-data.js?v=8"></script>
+  <script src="/js/categories.js?v=8"></script>
+  <script src="/js/script.js?v=8"></script>
 </body>
 </html>

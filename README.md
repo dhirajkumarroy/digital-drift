@@ -100,3 +100,7 @@ Built and maintained by **Dhiraj Roy**
 ## Validation
 
 Run `node scripts/check.js` to check generated listings, category filtering, and preview routes. Run `node scripts/build-seo.js` before publishing.
+
+Category definitions and tag aliases live in `js/categories.js`. Add accurate tags to `js/posts-data.js`; the build refreshes menu counts, category links, and filters across all pages and templates. Categories without published articles stay out of the menu.
+
+Run `node scripts/check-categories.cjs` for category navigation checks in headless Chrome (no npm dependencies). It starts its own local preview server and checks desktop, mobile, keyboard, filtering, and navigation without JavaScript. Set `CHROME_PATH` if Chrome is installed in a nonstandard location.

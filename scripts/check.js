@@ -6,6 +6,7 @@ const { execFileSync, spawn } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const posts = vm.runInNewContext(read('js/posts-data.js') + '; BLOG_POSTS');
+const categories = require('../js/categories.js');
 
 async function main() {
   const generated = ['index.html', 'archive.html', '_redirects'];
@@ -21,11 +22,57 @@ async function main() {
   }
   const source = read('js/script.js');
   new vm.Script(source, { filename: 'js/script.js' });
+  new vm.Script(read('js/categories.js'), { filename: 'js/categories.js' });
+  for (const [tags, category, expected] of [
+    [[' system design '], ' SYSTEM DESIGN ', true],
+    [['Node.js backend'], 'Node.js', true], [['NodeJS'], 'JavaScript', true],
+    [['Spring Boot'], 'Java', true], [['PostgreSQL'], 'Database', true],
+    [['JavaScript'], 'Java', false], [['Tech'], 'JavaScript', false],
+    [['Digital Art'], 'DevOps', false], [['APIary'], 'Backend', false],
+    [['Node.js internals'], 'Node.js', false], [[], 'Backend', false]
+  ]) {
+    assert.equal(categories.matches({ tags }, category), expected, `${tags} membership in ${category}`);
+  }
+  const available = categories.available(posts);
+  assert.ok(available.length > 0);
+  assert.ok(!available.some(category => category.count === 0), 'Navigation must omit empty categories');
+  assert.equal(new Set(available.map(category => category.id)).size, available.length);
+  for (const category of available) {
+    assert.equal(category.count, posts.filter(post => categories.matches(post, category.id)).length);
+  }
+  const publicPages = fs.readdirSync(root).filter(file => file.endsWith('.html'))
+    .concat(fs.readdirSync(path.join(root, 'post')).filter(file => file.endsWith('.html')).map(file => 'post/' + file));
+  for (const file of publicPages) {
+    const html = read(file);
+    const menus = [...html.matchAll(/<details\b[^>]*class="[^"]*\bnav-categories\b[^"]*"[^>]*>([\s\S]*?)<\/details>/g)];
+    assert.equal(menus.length, 2, `${file}: desktop and mobile category disclosures`);
+    for (const [, menu] of menus) {
+      assert.match(menu, /<summary\b/, `${file}: native keyboard-accessible disclosure`);
+      const rows = [...menu.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attrs, body]) => ({
+        attrs: Object.fromEntries([...attrs.matchAll(/([\w-]+)="([^"]*)"/g)].map(match => [match[1], match[2]])), body
+      })).filter(row => row.attrs['data-category']);
+      assert.deepEqual(rows.map(row => row.attrs['data-category']), available.map(category => category.id), `${file}: populated category links`);
+      rows.forEach((row, index) => {
+        const category = available[index];
+        const url = new URL(row.attrs.href.replace(/&amp;/g, '&'), 'https://blog.dhirajroy.com');
+        assert.equal(url.pathname, '/archive', `${file}: category destination`);
+        assert.equal(url.searchParams.get('category'), category.id, `${file}: encoded category URL`);
+        assert.match(row.body, new RegExp(`class="category-count"[^>]*>\\s*${category.count}\\s*<`), `${file}: category count`);
+      });
+    }
+    const scripts = [...html.matchAll(/<script\b[^>]*src="([^"?]+)[^"]*"/g)].map(match => match[1]);
+    const runtimeIndex = scripts.indexOf('/js/script.js');
+    const dependencies = ['/js/categories.js'];
+    if (scripts.includes('/js/posts-data.js')) dependencies.push('/js/posts-data.js');
+    for (const dependency of dependencies) {
+      assert.ok(scripts.indexOf(dependency) >= 0 && scripts.indexOf(dependency) < runtimeIndex, `${file}: ${dependency} must load before runtime`);
+    }
+  }
   const categoryHelpers = source.slice(source.indexOf('  function tagsMatch('), source.indexOf('  function getTagHtml('));
   const filter = source.slice(source.indexOf('  function getFilteredPosts()'), source.indexOf('  function renderFeatured()'));
   for (const tag of ['Laravel', 'Frontend']) {
     assert.equal(vm.runInNewContext(categoryHelpers + filter + '; getFilteredPosts().length', {
-      BLOG_POSTS: [{ tags: ['Backend'], title: 'Backend', summary: 'Backend guide' }], activeTag: tag, searchQuery: ''
+      BLOG_POSTS: [{ tags: ['Backend'], title: 'Backend', summary: 'Backend guide' }], activeTag: tag, searchQuery: '', window: { BlogCategories: categories }
     }), 0, `${tag} must not show unrelated articles`);
   }
   const expectedSystemDesign = Array.from(posts.filter(post => post.tags.includes('System Design')), post => post.url);
@@ -36,15 +83,15 @@ async function main() {
       getFilteredPosts().map(post => post.url);
     `, {
       BLOG_POSTS: posts, searchQuery: '', URLSearchParams,
-      window: { location: { search: '?category=' + category } }
+      window: { BlogCategories: categories, location: { search: '?category=' + category } }
     });
     assert.deepEqual(Array.from(matching), expectedSystemDesign, `Category URL must select only System Design posts: ${category}`);
   }
   assert.equal(vm.runInNewContext(categoryHelpers + filter + '; getFilteredPosts().length', {
-    BLOG_POSTS: posts, activeTag: 'System Design', searchQuery: 'TinyURL'
+    BLOG_POSTS: posts, activeTag: 'System Design', searchQuery: 'TinyURL', window: { BlogCategories: categories }
   }), 1, 'Search must narrow the selected category');
   assert.equal(vm.runInNewContext(categoryHelpers + filter + '; getFilteredPosts().length', {
-    BLOG_POSTS: posts, activeTag: 'Unknown category', searchQuery: ''
+    BLOG_POSTS: posts, activeTag: 'Unknown category', searchQuery: '', window: { BlogCategories: categories }
   }), 0, 'Unknown categories must not show unrelated posts');
   for (const pathname of ['/', '/archive']) {
     let changedUrl;

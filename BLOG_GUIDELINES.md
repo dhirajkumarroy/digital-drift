@@ -222,7 +222,7 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
   </script>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="/css/style.css?v=7" />
+  <link rel="stylesheet" href="/css/style.css?v=8" />
 
   <!-- RSS Feed -->
   <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
@@ -250,9 +250,22 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
         <nav class="nav-desktop" aria-label="Main Navigation">
           <a href="/">Home</a>
           <a href="/about">About</a>
-          <div class="nav-dropdown-item">
-            <a href="/#popular-categories">Categories <span class="nav-chevron">⌄</span></a>
-          </div>
+          <details class="nav-categories">
+            <summary>Categories <span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><span>All articles</span><span class="category-count">18</span></a>
+              <a href="/archive?category=AI" data-category="AI"><span>AI</span><span class="category-count">1</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><span>System Design</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><span>Backend</span><span class="category-count">17</span></a>
+              <a href="/archive?category=Java" data-category="Java"><span>Java</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><span>Spring Boot</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><span>Node.js</span><span class="category-count">4</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><span>JavaScript</span><span class="category-count">4</span></a>
+              <a href="/archive?category=Database" data-category="Database"><span>Database</span><span class="category-count">1</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><span>DevOps</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Security" data-category="Security"><span>Security</span><span class="category-count">4</span></a>
+            </div>
+          </details>
           <a href="/contact">Contact</a>
           <a href="/archive">Archive</a>
         </nav>
@@ -286,7 +299,22 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
     <nav id="mobile-menu" class="nav-mobile" aria-label="Mobile navigation">
       <a href="/">Home</a>
       <a href="/about">About</a>
-      <a href="/#popular-categories">Categories</a>
+      <details class="nav-categories">
+            <summary>Categories <span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><span>All articles</span><span class="category-count">18</span></a>
+              <a href="/archive?category=AI" data-category="AI"><span>AI</span><span class="category-count">1</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><span>System Design</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><span>Backend</span><span class="category-count">17</span></a>
+              <a href="/archive?category=Java" data-category="Java"><span>Java</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><span>Spring Boot</span><span class="category-count">8</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><span>Node.js</span><span class="category-count">4</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><span>JavaScript</span><span class="category-count">4</span></a>
+              <a href="/archive?category=Database" data-category="Database"><span>Database</span><span class="category-count">1</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><span>DevOps</span><span class="category-count">2</span></a>
+              <a href="/archive?category=Security" data-category="Security"><span>Security</span><span class="category-count">4</span></a>
+            </div>
+          </details>
       <a href="/contact">Contact</a>
       <a href="/archive">Archive</a>
       <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
@@ -375,11 +403,11 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
           <div class="footer-col">
             <h4 class="footer-col-title">Categories</h4>
             <ul class="footer-link-list">
-              <li><a href="/?category=System%20Design#articles-section" data-tag="System Design">System Design</a></li>
-              <li><a href="/#popular-categories" data-tag="Architecture">Architecture</a></li>
-              <li><a href="/#popular-categories" data-tag="Backend">Backend</a></li>
-              <li><a href="/#popular-categories" data-tag="Java">Java</a></li>
-              <li><a href="/#popular-categories" data-tag="Node.js">Node.js</a></li>
+              <li><a href="/archive?category=System%20Design" data-tag="System Design">System Design</a></li>
+              <li><a href="/archive?category=Architecture" data-tag="Architecture">Architecture</a></li>
+              <li><a href="/archive?category=Backend" data-tag="Backend">Backend</a></li>
+              <li><a href="/archive?category=Java" data-tag="Java">Java</a></li>
+              <li><a href="/archive?category=Node.js" data-tag="Node.js">Node.js</a></li>
             </ul>
           </div>
 
@@ -417,8 +445,9 @@ Save new posts as `/post/<slug>.html`. Use this boilerplate:
   </div>
 
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
-  <script src="/js/posts-data.js?v=7"></script>
-  <script src="/js/script.js?v=7"></script>
+  <script src="/js/posts-data.js?v=8"></script>
+  <script src="/js/categories.js?v=8"></script>
+  <script src="/js/script.js?v=8"></script>
 </body>
 </html>
 ```

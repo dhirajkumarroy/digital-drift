@@ -76,6 +76,8 @@
       <category>Java</category>
       <category>Spring Boot</category>
       <category>Backend</category>
+      <category>Database</category>
+      <category>PostgreSQL</category>
     </item>
     <item>
       <title>Spring Boot JWT Authentication — Complete Guide</title>
@@ -166,6 +168,8 @@
       <category>Backend</category>
       <category>Tech</category>
       <category>Productivity</category>
+      <category>Docker</category>
+      <category>DevOps</category>
     </item>
     <item>
       <title>Git &amp; GitHub Complete Guide: From Zero to Production Workflow</title>
@@ -176,6 +180,8 @@
       <category>Backend</category>
       <category>Tech</category>
       <category>Productivity</category>
+      <category>Git</category>
+      <category>DevOps</category>
     </item>
     <item>
       <title>Getting Started with Spring Boot: Build Your First REST API</title>

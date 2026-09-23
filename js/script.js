@@ -3,7 +3,7 @@
 
   /* ============================================================
      Digital Drift — script.js  v3.1
-     Depends on: /js/posts-data.js  (BLOG_POSTS array)
+     Depends on: /js/posts-data.js and /js/categories.js
      ============================================================ */
 
   // ── CONFIG ────────────────────────────────────────────────
@@ -40,7 +40,7 @@
   function formatReadTime(min) { return min + ' min read'; }
 
   function tagsMatch(first, second) {
-    return String(first || '').toLowerCase() === String(second || '').toLowerCase();
+    return String(first || '').trim().toLowerCase() === String(second || '').trim().toLowerCase();
   }
 
   function readCategoryFromUrl() {
@@ -79,26 +79,10 @@
   function getFilteredPosts() {
     let filtered = [...BLOG_POSTS];
     if (activeTag) {
-      if (activeTag === 'Backend') {
-        filtered = filtered.filter(p => p.tags.some(t => /backend|java|spring|node|api/i.test(t)));
-      } else if (activeTag === 'Frontend') {
-        filtered = filtered.filter(p => p.tags.some(t => /frontend|react|ui|web|css|html/i.test(t)) || p.summary.toLowerCase().includes('frontend') || p.title.toLowerCase().includes('frontend'));
-      } else if (activeTag === 'JavaScript') {
-        filtered = filtered.filter(p => p.tags.some(t => /javascript|node/i.test(t)) || p.title.toLowerCase().includes('javascript') || p.summary.toLowerCase().includes('javascript'));
-      } else if (activeTag === 'Node.js') {
-        filtered = filtered.filter(p => p.tags.some(t => /node/i.test(t)));
-      } else if (activeTag === 'Laravel') {
-        filtered = filtered.filter(p => p.tags.some(t => tagsMatch(t, 'Laravel')) || p.title.toLowerCase().includes('laravel'));
-      } else if (activeTag === 'Database') {
-        filtered = filtered.filter(p => p.tags.some(t => /database|sql|postgres/i.test(t)) || p.title.toLowerCase().includes('postgresql') || p.summary.toLowerCase().includes('database'));
-      } else if (activeTag === 'DevOps') {
-        filtered = filtered.filter(p => p.tags.some(t => /devops|docker|git|cloud/i.test(t)) || p.title.toLowerCase().includes('docker') || p.title.toLowerCase().includes('git'));
-      } else {
-        filtered = filtered.filter(p => p.tags.some(t => tagsMatch(t, activeTag)));
-      }
+      filtered = filtered.filter(post => window.BlogCategories.matches(post, activeTag));
     }
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.trim().toLowerCase();
       filtered = filtered.filter(p =>
         p.title.toLowerCase().includes(q) ||
         p.summary.toLowerCase().includes(q) ||
@@ -219,6 +203,7 @@
       if (clearBtn) {
         clearBtn.addEventListener('click', () => {
           if (searchInput) searchInput.value = '';
+          if (searchClear) searchClear.classList.remove('visible');
           searchQuery = '';
           activateHomepageCategory(null);
         });
@@ -335,26 +320,17 @@
     currentPage = 0;
     syncCategoryUrl(activeTag);
     syncHomepageCategoryPills();
+    markActiveNav();
     renderPosts();
   }
 
   function buildFilterBar() {
     if (!tagFilterBar) return;
 
-    const CATEGORIES = [
-      { id: 'all', label: 'All', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>' },
-      { id: 'System Design', label: 'System Design', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M6.7 6.5l3.6 10"/><path d="M17.3 6.5l-3.6 10"/><path d="M7 5h10"/></svg>' },
-      { id: 'Backend', label: 'Backend', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>' },
-      { id: 'AI', label: 'AI', icon: '✦' },
-      { id: 'Spring Boot', label: 'Spring Boot', icon: '☘' },
-      { id: 'JavaScript', label: 'JavaScript', icon: '<span class="icon-badge-js">JS</span>' },
-      { id: 'Node.js', label: 'Node.js', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M12 2l8 4.5v9l-8 4.5-8-4.5v-9z"/></svg>' },
-      { id: 'Database', label: 'Database', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>' },
-      { id: 'DevOps', label: 'DevOps', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.267-8-12.356-8-5.096 0-5.096 8 0 8 5.09 0 7.26-8 12.356-8z"/></svg>' }
-    ];
+    const categories = [{ id: 'all', label: 'All', count: BLOG_POSTS.length }, ...window.BlogCategories.available(BLOG_POSTS)];
 
     tagFilterBar.innerHTML = '';
-    CATEGORIES.forEach(cat => {
+    categories.forEach(cat => {
       const a = document.createElement('a');
       a.href = cat.id === 'all' ? '/#articles-section' : '/?category=' + encodeURIComponent(cat.id) + '#articles-section';
       const isActive = activeTag
@@ -363,9 +339,10 @@
       a.className = 'category-pill' + (isActive ? ' active' : '');
       a.dataset.tag = cat.id;
       a.setAttribute('aria-current', isActive ? 'true' : 'false');
-      a.innerHTML = `<span class="pill-icon">${cat.icon}</span><span class="pill-label">${escapeHtml(cat.label)}</span>`;
+      a.innerHTML = `<span class="pill-label">${escapeHtml(cat.label)}</span> <span class="category-count">${cat.count}</span>`;
 
       a.addEventListener('click', e => {
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         activateHomepageCategory(cat.id === 'all' ? null : cat.id);
       });
@@ -410,22 +387,37 @@
     mobileMenu.classList.toggle('active', Boolean(open));
     mobileMenuBtn.setAttribute('aria-expanded', String(Boolean(open)));
     mobileMenuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    if (!open) mobileMenu.querySelectorAll('.nav-categories[open]').forEach(menu => { menu.open = false; });
   }
 
   if (mobileMenu) mobileMenu.addEventListener('click', e => {
     if (e.target.closest('a')) setMobileMenu(false);
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
+    if (e.key !== 'Escape') return;
+    const openCategories = Array.from(document.querySelectorAll('.nav-categories[open]'));
+    if (openCategories.length) {
+      const focusedMenu = openCategories.find(menu => menu.contains(document.activeElement)) || openCategories[0];
+      openCategories.forEach(menu => { menu.open = false; });
+      const summary = focusedMenu.querySelector('summary');
+      if (summary) summary.focus();
+      e.preventDefault();
+      return;
+    }
+    if (mobileMenu && mobileMenu.classList.contains('active')) {
       setMobileMenu(false);
       mobileMenuBtn.focus();
     }
   });
   window.matchMedia('(min-width: 993px)').addEventListener('change', e => {
+    document.querySelectorAll('.nav-categories[open]').forEach(menu => { menu.open = false; });
     if (e.matches) setMobileMenu(false);
   });
 
   document.addEventListener('click', e => {
+    document.querySelectorAll('.nav-categories[open]').forEach(menu => {
+      if (!menu.contains(e.target) || e.target.closest('.category-menu a')) menu.open = false;
+    });
     if (
       mobileMenu && mobileMenu.classList.contains('active') &&
       !mobileMenu.contains(e.target) &&
@@ -490,13 +482,28 @@
 
   // ── ACTIVE NAV LINK ───────────────────────────────────────
   function markActiveNav() {
-    const path = window.location.pathname.replace(/\/$/, '') || '/';
+    const normalizePath = pathname => pathname.replace(/\.html$/, '').replace(/\/$/, '').replace(/^\/index$/, '') || '/';
+    const path = normalizePath(window.location.pathname);
+    const selectedCategory = readCategoryFromUrl();
     document.querySelectorAll('.nav-desktop a, .nav-mobile a').forEach(a => {
-      const href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
+      const href = a.getAttribute('href') || '';
       if (href.startsWith('#')) return;
-      a.classList.toggle('active', href === path);
-      if (href === path) a.setAttribute('aria-current', 'page');
+      let target;
+      try { target = new URL(href, window.location.href); }
+      catch (_) { return; }
+      const category = target.searchParams.get('category');
+      const isCategoryLink = Boolean(a.closest('.category-menu'));
+      const samePath = normalizePath(target.pathname) === path;
+      const isActive = target.origin === window.location.origin && (category
+        ? Boolean(selectedCategory && tagsMatch(category, selectedCategory))
+        : samePath && (!isCategoryLink || !selectedCategory));
+      a.classList.toggle('active', isActive);
+      if (isActive) a.setAttribute('aria-current', samePath ? 'page' : 'true');
       else a.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('.nav-categories').forEach(menu => {
+      const summary = menu.querySelector('summary');
+      if (summary) summary.classList.toggle('active', Boolean(menu.querySelector('.category-menu a.active')));
     });
   }
 
@@ -529,10 +536,23 @@
     const archiveList   = document.getElementById('archive-list');
     const archiveMeta   = document.getElementById('archive-meta');
     const archiveSearch = document.getElementById('archive-search-input');
-    const archiveChips  = document.querySelectorAll('.archive-chip');
     if (!archiveList) return;
 
     let currentTag = readCategoryFromUrl();
+    const archiveFilters = document.querySelector('.archive-filters-row');
+    if (archiveFilters) {
+      archiveFilters.querySelectorAll('.archive-chip').forEach(chip => chip.remove());
+      const categories = [{ id: '', label: 'All Topics', count: BLOG_POSTS.length }, ...window.BlogCategories.available(BLOG_POSTS)];
+      categories.forEach(category => {
+        const chip = document.createElement('a');
+        chip.className = 'archive-chip';
+        chip.dataset.tag = category.id;
+        chip.href = category.id ? '/archive?category=' + encodeURIComponent(category.id) : '/archive';
+        chip.innerHTML = `<span>${escapeHtml(category.label)}</span> <span class="category-count">${category.count}</span>`;
+        archiveFilters.appendChild(chip);
+      });
+    }
+    const archiveChips = document.querySelectorAll('.archive-chip');
 
     function syncArchiveChips() {
       archiveChips.forEach(chip => {
@@ -541,7 +561,7 @@
           ? tagsMatch(chipTag, currentTag)
           : chipTag === '';
         chip.classList.toggle('active', isActive);
-        chip.setAttribute('aria-pressed', String(isActive));
+        chip.setAttribute('aria-current', String(isActive));
       });
     }
 
@@ -549,18 +569,21 @@
       currentTag = category || '';
       syncCategoryUrl(currentTag);
       syncArchiveChips();
+      markActiveNav();
       renderArchive(archiveSearch ? archiveSearch.value : '');
     }
 
     function renderArchive(query) {
+      query = String(query || '').trim();
       let posts = [...BLOG_POSTS];
       if (currentTag) {
-        posts = posts.filter(p => p.tags.some(t => t.toLowerCase() === currentTag.toLowerCase()));
+        posts = posts.filter(post => window.BlogCategories.matches(post, currentTag));
       }
       if (query) {
         const q = query.toLowerCase();
         posts = posts.filter(p =>
           p.title.toLowerCase().includes(q) ||
+          p.summary.toLowerCase().includes(q) ||
           p.tags.some(t => t.toLowerCase().includes(q))
         );
       }
@@ -609,11 +632,13 @@
     }
 
     window.resetArchiveFilters = function() {
+      if (archiveSearch) archiveSearch.value = '';
       activateArchiveCategory('');
     };
 
     archiveChips.forEach(chip => {
       chip.addEventListener('click', function(e) {
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         activateArchiveCategory(this.getAttribute('data-tag') || '');
       });

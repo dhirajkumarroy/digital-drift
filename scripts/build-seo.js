@@ -34,6 +34,7 @@ for (const post of posts) {
   post.modified = modified ? modified[1] : post.dateISO;
 }
 posts.sort((a, b) => b.dateISO.localeCompare(a.dateISO));
+require('./build-navigation')(posts);
 
 for (const post of posts) {
   const file = `post/${post.slug}.html`;

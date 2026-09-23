@@ -529,6 +529,80 @@ html.dark .btn-hero-secondary { color: #FFFFFF; }
   color: var(--color-text-secondary);
 }
 
+/* Native disclosures keep category navigation usable without JavaScript. */
+.nav-categories { position: relative; }
+.nav-categories > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--radius-sm);
+}
+.nav-categories > summary::-webkit-details-marker { display: none; }
+.nav-categories > summary:hover,
+.nav-categories > summary.active,
+.nav-categories[open] > summary { color: var(--color-primary); }
+.nav-categories > summary:focus-visible,
+.category-menu a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.nav-categories[open] > summary .nav-chevron { transform: rotate(180deg); }
+.category-menu {
+  position: absolute;
+  inset-block-start: calc(100% + 0.5rem);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  width: 260px;
+  max-height: min(560px, 70vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-card);
+  box-shadow: var(--shadow);
+}
+.nav-categories:not([open]) > .category-menu { display: none; }
+.nav-categories .category-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.category-menu a::after { display: none; }
+.nav-categories .category-menu a:hover,
+.nav-categories .category-menu a[aria-current="true"],
+.nav-categories .category-menu a[aria-current="page"] {
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+.category-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.nav-mobile { max-height: calc(100dvh - 100px); overflow-y: auto; }
+.nav-mobile .nav-categories > summary { padding: 0.75rem 1rem; justify-content: space-between; }
+.nav-mobile .category-menu {
+  position: static;
+  transform: none;
+  width: auto;
+  max-height: none;
+  margin: 0.25rem 0;
+  box-shadow: none;
+}
+.archive-chip { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; text-decoration: none; }
+
 /* ---------- SECTION HEADERS & TITLES ---------- */
 .section-top-header {
   display: flex;
