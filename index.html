@@ -194,8 +194,46 @@
       </div>
 
       <div class="hero-visual-wrapper">
-        <div class="hero-illustration-box">
-          <img src="/images/hero-workspace.jpg" alt="Developer Workspace with Laptop, Code, and Tech Stacks" class="hero-illustration-img" width="1264" height="848" fetchpriority="high" />
+        <div class="hero-showcase" aria-label="Interactive Developer Workspace Showcase">
+          <!-- Ambient Backlight Glow (Dynamic Theme-Aware Glow) -->
+          <div class="hero-showcase-glow" aria-hidden="true"></div>
+
+          <!-- Main 3D Workspace Frame -->
+          <div class="hero-illustration-box">
+            <img
+              src="/images/hero-workspace.jpg"
+              alt="Developer Workspace with Laptop, Code, and Tech Stacks"
+              class="hero-illustration-img"
+              width="1264"
+              height="848"
+              fetchpriority="high"
+            />
+          </div>
+
+          <!-- Floating Interactive Category Pills -->
+          <a href="/archive?category=Spring%20Boot" class="hero-floating-pill pill-spring" title="Explore Spring Boot tutorials">
+            <span class="pill-glow-dot dot-spring" aria-hidden="true"></span>
+            <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3C11 2 3 6 3 13a7 7 0 0 0 7 7c7 0 11-8 10-17Z"/><path d="m4 20 12-12M8 16v-5M8 16h5"/></svg>
+            <span>Spring Boot</span>
+          </a>
+
+          <a href="/archive?category=System%20Design" class="hero-floating-pill pill-system" title="Explore System Design roadmap">
+            <span class="pill-glow-dot dot-system" aria-hidden="true"></span>
+            <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg>
+            <span>System Design</span>
+          </a>
+
+          <a href="/archive?category=Node.js" class="hero-floating-pill pill-node" title="Explore Node.js guides">
+            <span class="pill-glow-dot dot-node" aria-hidden="true"></span>
+            <svg class="category-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg>
+            <span>Node.js</span>
+          </a>
+
+          <!-- Signature Tag echoing the doodle with modern styling -->
+          <div class="hero-floating-pill pill-motto" aria-hidden="true">
+            <span class="motto-sparkle">✨</span>
+            <span>Learn • Build • Grow</span>
+          </div>
         </div>
       </div>
     </section>
