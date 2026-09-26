@@ -5,8 +5,8 @@
   <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spring Boot Exception Handling: @ControllerAdvice | Digital Drift</title>
-  <meta name="description" content="Handle Spring Boot API errors with @ControllerAdvice, custom exceptions, validation, and consistent responses. Includes Java examples and production tips." />
+  <title>Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example | Digital Drift</title>
+  <meta name="description" content="Learn global exception handling in Spring Boot using @ControllerAdvice and @ExceptionHandler. Includes custom exceptions, error responses, validation errors and complete Java examples." />
   <meta name="keywords" content="spring boot exception handling, controlleradvice spring boot, spring boot global exception handler, spring boot custom exception, rest api error handling spring boot, Java 21, Spring Boot 3, Gradle" />
   <meta name="author" content="Dhiraj Roy" />
   <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice" />
@@ -14,23 +14,23 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <meta property="og:title" content="Spring Boot Global Exception Handling with @ControllerAdvice" />
-  <meta property="og:description" content="Handle Spring Boot API errors with @ControllerAdvice, custom exceptions, validation, and consistent responses. Includes Java examples and production tips." />
+  <meta property="og:title" content="Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example" />
+  <meta property="og:description" content="Learn global exception handling in Spring Boot using @ControllerAdvice and @ExceptionHandler. Includes custom exceptions, error responses, validation errors and complete Java examples." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice" />
   <meta property="og:image" content="https://blog.dhirajroy.com/images/spring-boot-exception-handling.jpg" />
   <meta property="og:site_name" content="Digital Drift" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Spring Boot Global Exception Handling with @ControllerAdvice" />
-  <meta name="twitter:description" content="Handle Spring Boot API errors with @ControllerAdvice, custom exceptions, validation, and consistent responses. Includes Java examples and production tips." />
+  <meta name="twitter:title" content="Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example" />
+  <meta name="twitter:description" content="Learn global exception handling in Spring Boot using @ControllerAdvice and @ExceptionHandler. Includes custom exceptions, error responses, validation errors and complete Java examples." />
   <meta name="twitter:image" content="https://blog.dhirajroy.com/images/spring-boot-exception-handling.jpg" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Spring Boot Global Exception Handling with @ControllerAdvice",
+    "headline": "Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example",
     "image": "https://blog.dhirajroy.com/images/spring-boot-exception-handling.jpg",
-    "description": "Learn spring boot exception handling with Java 21, Spring Boot 3.x, Gradle, @ControllerAdvice, custom exceptions, validation, and consistent REST API error responses.",
+    "description": "Learn global exception handling in Spring Boot using @ControllerAdvice and @ExceptionHandler. Includes custom exceptions, error responses, validation errors and complete Java examples.",
     "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "datePublished": "2026-06-21",
     "dateModified": "2026-06-21",
@@ -60,7 +60,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
   <noscript><style>@media(max-width:992px){.nav-mobile{display:flex}}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
-  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot Global Exception Handling with @ControllerAdvice","item":"https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice"}]}</script>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example","item":"https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice"}]}</script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -158,18 +158,52 @@
     <main id="main-content" tabindex="-1" role="main">
       <article class="blog-post">
         <div class="tags"><span class="tag" data-tag="Java">Java</span><span class="tag" data-tag="Spring Boot">Spring Boot</span><span class="tag" data-tag="Backend">Backend</span></div>
-        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot Global Exception Handling with @ControllerAdvice</span></nav><!-- generated:breadcrumbs:end -->
-        <h1 class="post-title">Spring Boot Global Exception Handling with @ControllerAdvice</h1>
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example</span></nav><!-- generated:breadcrumbs:end -->
+        <h1 class="post-title">Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example</h1>
         <div class="post-meta"><span>📅 Jun 21, 2026</span><span>⏱ 16 min read</span><span>✍ Dhiraj Roy</span></div>
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="/images/spring-boot-exception-handling.jpg" alt="Spring Boot Global Exception Handling with @ControllerAdvice" class="post-banner-img" width="1376" height="768" fetchpriority="high" />
+          <img src="/images/spring-boot-exception-handling.jpg" alt="Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example" class="post-banner-img" width="1376" height="768" fetchpriority="high" />
         </div>
         <div class="post-content">
           <p><strong>Spring boot exception handling</strong> is what turns a functional API into a dependable one. A client may request a user that does not exist, submit an invalid email address, try to create a duplicate account, or trigger an unexpected database failure. Your API still needs to return a clear, predictable response. Without a deliberate error strategy, callers receive inconsistent payloads, misleading status codes, or internal details that should never leave the server.</p>
           <p>This guide builds a production-minded global exception handler using <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, and <strong>Gradle</strong>. You will create an error DTO, custom exceptions, a <code>@ControllerAdvice</code> class, validation handlers, controller and service examples, JSON responses, Postman checks, cURL commands, and practical guidance for logs, monitoring, and security.</p>
           <blockquote>Start with <a href="/post/spring-boot-getting-started">Spring Boot Getting Started</a> if controllers and request mappings are new to you. For a working API foundation, see <a href="/post/spring-boot-rest-api-30-minutes">How to Build a REST API with Spring Boot in 30 Minutes</a>.</blockquote>
+
+          <!-- Quick Answer: Immediate Code Pattern for High Search Intent -->
+          <div style="background: var(--color-card); border: 2px solid var(--color-action); border-radius: var(--radius); padding: 1.5rem; margin: 2rem 0; box-shadow: var(--shadow-sm);">
+            <div style="display:flex; align-items:center; gap: 0.6rem; margin-bottom: 0.75rem;">
+              <span style="font-size: 1.25rem;">⚡</span>
+              <h3 style="margin: 0; font-size: 1.15rem; color: var(--color-navy);">TL;DR: The Complete @RestControllerAdvice Pattern</h3>
+            </div>
+            <p style="margin-bottom: 1rem; font-size: 0.92rem; color: var(--color-text-secondary);">Looking for the quick production boilerplate? Here is the standard global exception handler that catches custom business exceptions (404), validation errors (400), and unexpected server errors (500) using Spring Boot 3 &amp; Java 21:</p>
+            <pre tabindex="0"><code class="language-java">@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    // 1. Handle Custom Business / Not Found Exception (HTTP 404)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleNotFound(ResourceNotFoundException ex, HttpServletRequest req) {
+        ErrorResponse error = new ErrorResponse(404, "NOT_FOUND", ex.getMessage(), req.getRequestURI(), Instant.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // 2. Handle DTO Validation Failures (HTTP 400 Bad Request)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;ValidationErrorResponse&gt; handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
+        Map&lt;String, String&gt; errors = ex.getBindingResult().getFieldErrors().stream()
+            .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage, (a, b) -&gt; a));
+        return ResponseEntity.badRequest().body(new ValidationErrorResponse(400, "Validation failed", errors, req.getRequestURI(), Instant.now()));
+    }
+
+    // 3. Catch-all Fallback for Unexpected Server Errors (HTTP 500)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;ErrorResponse&gt; handleGlobal(Exception ex, HttpServletRequest req) {
+        return ResponseEntity.internalServerError().body(new ErrorResponse(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred", req.getRequestURI(), Instant.now()));
+    }
+}</code></pre>
+          </div>
+
           <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;"><strong>Table of Contents</strong><ul style="margin-top: 1rem;"><li><a href="#why">Why exception handling matters</a></li><li><a href="#concepts">Exception concepts</a></li><li><a href="#setup">Project setup and structure</a></li><li><a href="#code">Complete source code</a></li><li><a href="#responses">API responses and validation</a></li><li><a href="#testing">Testing, Postman, and cURL</a></li><li><a href="#production">Production practices</a></li><li><a href="#faq">FAQ and interview questions</a></li></ul></div>
 
           <h2 id="why">Why Spring Boot Exception Handling Matters</h2>

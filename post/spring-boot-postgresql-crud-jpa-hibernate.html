@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Spring Boot PostgreSQL CRUD with JPA and Hibernate | Digital Drift</title>
-  <meta name="description" content="Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, sorting, and complete source code." />
-  <meta name="keywords" content="spring boot postgresql crud, spring boot jpa tutorial, hibernate crud example, spring boot postgresql example, spring data jpa tutorial, Java 21, Spring Boot 3, Gradle" />
+  <title>Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example | Digital Drift</title>
+  <meta name="description" content="Build a complete Spring Boot PostgreSQL CRUD REST API with Spring Data JPA and Hibernate. Includes application.properties, entity, repository, service, and curl examples." />
+  <meta name="keywords" content="spring boot postgresql, spring boot postgresql crud, spring and postgresql, spring hibernate postgresql, spring boot jpa tutorial, Java 21, Spring Boot 3, Gradle" />
   <meta name="author" content="Dhiraj Roy" />
   <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate" />
 
@@ -18,30 +18,30 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <meta property="og:title" content="Spring Boot PostgreSQL CRUD with JPA and Hibernate" />
-  <meta property="og:description" content="A beginner-friendly spring boot postgresql crud guide with Java 21, Spring Boot 3.x, Gradle, DTOs, validation, exceptions, pagination, sorting, and production tips." />
+  <meta property="og:title" content="Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example" />
+  <meta property="og:description" content="Build a complete Spring Boot PostgreSQL CRUD REST API with Spring Data JPA and Hibernate. Includes application.properties, entity, repository, service, and curl examples." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60" />
   <meta property="og:site_name" content="Digital Drift" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Spring Boot PostgreSQL CRUD with JPA and Hibernate" />
-  <meta name="twitter:description" content="Build a production-focused CRUD REST API using Spring Boot 3.x, PostgreSQL, Spring Data JPA, Hibernate, Java 21, and Gradle." />
+  <meta name="twitter:title" content="Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example" />
+  <meta name="twitter:description" content="Build a complete Spring Boot PostgreSQL CRUD REST API with Spring Data JPA and Hibernate. Includes application.properties, entity, repository, service, and curl examples." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60" />
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Spring Boot PostgreSQL CRUD with JPA and Hibernate",
+    "headline": "Spring Boot PostgreSQL CRUD API with JPA & Hibernate – Complete Example",
     "image": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60",
-    "description": "Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, sorting, and complete source code.",
+    "description": "Build a complete Spring Boot PostgreSQL CRUD REST API with Spring Data JPA and Hibernate. Includes application.properties, entity, repository, service, and curl examples.",
     "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
     "datePublished": "2026-06-17",
     "dateModified":  "2026-06-17",
     "url": "https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate",
-    "keywords": ["spring boot postgresql crud", "spring boot jpa tutorial", "hibernate crud example", "spring boot postgresql example", "spring data jpa tutorial", "Java 21", "Spring Boot 3", "Gradle"],
+    "keywords": ["spring boot postgresql", "spring boot postgresql crud, spring and postgresql", "spring hibernate postgresql", "spring boot jpa tutorial", "Java 21", "Spring Boot 3", "Gradle"],
     "publisher": {
       "@type": "Organization",
       "name": "Digital Drift",
@@ -99,7 +99,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
      crossorigin="anonymous"></script>
   <noscript><style>@media(max-width:992px){.nav-mobile{display:flex}}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
-  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot PostgreSQL CRUD with JPA and Hibernate","item":"https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate"}]}</script>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot PostgreSQL CRUD API with JPA & Hibernate – Complete Example","item":"https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate"}]}</script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -203,8 +203,8 @@
           <span class="tag" data-tag="Backend">Backend</span>
         </div>
 
-        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot PostgreSQL CRUD with JPA and Hibernate</span></nav><!-- generated:breadcrumbs:end -->
-        <h1 class="post-title">Spring Boot PostgreSQL CRUD with JPA and Hibernate</h1>
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example</span></nav><!-- generated:breadcrumbs:end -->
+        <h1 class="post-title">Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example</h1>
 
         <div class="post-meta">
           <span>📅 Jun 17, 2026</span>
@@ -214,7 +214,7 @@
 
         <!-- Post Banner Image -->
         <div class="post-banner-wrapper">
-          <img src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60" alt="Spring Boot PostgreSQL CRUD with JPA and Hibernate" class="post-banner-img" fetchpriority="high" />
+          <img src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60" alt="Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example" class="post-banner-img" fetchpriority="high" />
         </div>
 
         <div class="post-content">

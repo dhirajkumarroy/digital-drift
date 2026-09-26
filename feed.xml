@@ -38,11 +38,11 @@
       <category>Backend</category>
     </item>
     <item>
-      <title>Spring Boot File Upload and Download — Complete Guide</title>
+      <title>Spring Boot File Upload and Download REST API – Step-by-Step Guide</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide</link>
       <guid isPermaLink="true">https://blog.dhirajroy.com/post/spring-boot-file-upload-download-complete-guide</guid>
       <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
-      <description>Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, validation, security, and production practices.</description>
+      <description>Step-by-step tutorial to build file upload and download endpoints in Spring Boot. Covers MultipartFile, file validation, storage service, and streaming downloads.</description>
       <category>Java</category>
       <category>Spring Boot</category>
       <category>Backend</category>
@@ -58,21 +58,21 @@
       <category>Backend</category>
     </item>
     <item>
-      <title>Spring Boot Global Exception Handling with @ControllerAdvice</title>
+      <title>Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice</link>
       <guid isPermaLink="true">https://blog.dhirajroy.com/post/spring-boot-global-exception-handling-controlleradvice</guid>
       <pubDate>Sun, 21 Jun 2026 00:00:00 GMT</pubDate>
-      <description>Master spring boot exception handling with Java 21, Spring Boot 3.x, custom exceptions, validation, @ControllerAdvice, error DTOs, tests, and production advice.</description>
+      <description>Learn global exception handling in Spring Boot using @ControllerAdvice and @ExceptionHandler. Includes custom exceptions, error responses, validation errors and complete Java examples.</description>
       <category>Java</category>
       <category>Spring Boot</category>
       <category>Backend</category>
     </item>
     <item>
-      <title>Spring Boot PostgreSQL CRUD with JPA and Hibernate</title>
+      <title>Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate – Complete Example</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</link>
       <guid isPermaLink="true">https://blog.dhirajroy.com/post/spring-boot-postgresql-crud-jpa-hibernate</guid>
       <pubDate>Wed, 17 Jun 2026 00:00:00 GMT</pubDate>
-      <description>Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, and complete source code.</description>
+      <description>Build a complete Spring Boot PostgreSQL CRUD REST API with Spring Data JPA and Hibernate. Includes application.properties, entity, repository, service, and curl examples.</description>
       <category>Java</category>
       <category>Spring Boot</category>
       <category>Backend</category>
@@ -90,11 +90,11 @@
       <category>Security</category>
     </item>
     <item>
-      <title>How to Build a REST API with Spring Boot in 30 Minutes</title>
+      <title>Build a Spring Boot REST API in 30 Minutes (Step-by-Step with Code)</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</link>
       <guid isPermaLink="true">https://blog.dhirajroy.com/post/spring-boot-rest-api-30-minutes</guid>
       <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
-      <description>Build a Spring Boot REST API in 30 minutes with CRUD endpoints, Java records, JSON requests, and curl testing.</description>
+      <description>Build your first production-ready Spring Boot REST API in 30 minutes. Complete tutorial covering project setup, CRUD endpoints, Java records, and testing with curl.</description>
       <category>Java</category>
       <category>Spring Boot</category>
       <category>Backend</category>

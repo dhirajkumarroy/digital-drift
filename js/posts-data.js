@@ -73,8 +73,8 @@ const BLOG_POSTS = [
   {
     id: 19,
     slug: "spring-boot-file-upload-download-complete-guide",
-    title: "Spring Boot File Upload and Download — Complete Guide",
-    summary: "Master spring boot file upload and download with Java 21, Spring Boot 3.x, MultipartFile, PostgreSQL metadata storage, validation, security, and production practices.",
+    title: "Spring Boot File Upload and Download REST API – Step-by-Step Guide",
+    summary: "Step-by-step tutorial to build file upload and download endpoints in Spring Boot. Covers MultipartFile, file validation, storage service, and streaming downloads.",
     date: "Jul 20, 2026",
     dateISO: "2026-07-20",
     url: "/post/spring-boot-file-upload-download-complete-guide",
@@ -101,8 +101,8 @@ const BLOG_POSTS = [
   {
     id: 17,
     slug: "spring-boot-global-exception-handling-controlleradvice",
-    title: "Spring Boot Global Exception Handling with @ControllerAdvice",
-    summary: "Master spring boot exception handling with Java 21, Spring Boot 3.x, custom exceptions, validation, @ControllerAdvice, error DTOs, tests, and production advice.",
+    title: "Spring Boot Global Exception Handling: @ControllerAdvice + @ExceptionHandler Example",
+    summary: "Learn global exception handling in Spring Boot using @ControllerAdvice and @ExceptionHandler. Includes custom exceptions, error responses, validation errors and complete Java examples.",
     date: "Jun 21, 2026",
     dateISO: "2026-06-21",
     url: "/post/spring-boot-global-exception-handling-controlleradvice",
@@ -115,8 +115,8 @@ const BLOG_POSTS = [
   {
     id: 16,
     slug: "spring-boot-postgresql-crud-jpa-hibernate",
-    title: "Spring Boot PostgreSQL CRUD with JPA and Hibernate",
-    summary: "Learn spring boot postgresql crud with Java 21, Spring Boot 3.x, JPA, Hibernate, PostgreSQL, Gradle, validation, pagination, and complete source code.",
+    title: "Spring Boot PostgreSQL CRUD API with JPA & Hibernate – Complete Example",
+    summary: "Build a complete Spring Boot PostgreSQL CRUD REST API with Spring Data JPA and Hibernate. Includes application.properties, entity, repository, service, and curl examples.",
     date: "Jun 17, 2026",
     dateISO: "2026-06-17",
     url: "/post/spring-boot-postgresql-crud-jpa-hibernate",
@@ -143,8 +143,8 @@ const BLOG_POSTS = [
   {
     id: 14,
     slug: "spring-boot-rest-api-30-minutes",
-    title: "How to Build a REST API with Spring Boot in 30 Minutes",
-    summary: "Build a Spring Boot REST API in 30 minutes with CRUD endpoints, Java records, JSON requests, and curl testing.",
+    title: "Build a Spring Boot REST API in 30 Minutes (Step-by-Step with Code)",
+    summary: "Build your first production-ready Spring Boot REST API in 30 minutes. Complete tutorial covering project setup, CRUD endpoints, Java records, and testing with curl.",
     date: "Jun 16, 2026",
     dateISO: "2026-06-16",
     url: "/post/spring-boot-rest-api-30-minutes",
