@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Prevent dark/light theme flash — runs before any paint -->
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ═══ SEO Metadata ═══ -->
+  <title>Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis | Digital Drift</title>
+  <meta name="description" content="Master high-performance Redis caching in Spring Boot 3 &amp; Java 21 using Spring Data Redis. Covers @Cacheable, TTL, custom RedisConfig, Docker, and cache eviction." />
+  <meta name="keywords" content="spring boot redis cache, spring boot @cacheable, spring data redis tutorial, redis cache spring boot 3, redis cache manager spring boot, Java 21, Spring Boot 3, Redis, Docker" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/spring-boot-redis-cache" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis" />
+  <meta property="og:description" content="Master high-performance Redis caching in Spring Boot 3 &amp; Java 21 using Spring Data Redis. Covers @Cacheable, TTL, custom RedisConfig, Docker, and cache eviction." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/spring-boot-redis-cache" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/images/spring-boot-redis-cache.jpg" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis" />
+  <meta name="twitter:description" content="Master high-performance Redis caching in Spring Boot 3 &amp; Java 21 using Spring Data Redis. Covers @Cacheable, TTL, custom RedisConfig, Docker, and cache eviction." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/images/spring-boot-redis-cache.jpg" />
+
+  <!-- Structured Data: Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Spring Boot Redis Cache: Complete Guide with @Cacheable & Spring Data Redis",
+    "image": "https://blog.dhirajroy.com/images/spring-boot-redis-cache.jpg",
+    "description": "Master high-performance Redis caching in Spring Boot 3 & Java 21 using Spring Data Redis. Covers @Cacheable, TTL, custom RedisConfig, Docker, and cache eviction.",
+    "author": { "@type": "Person", "name": "Dhiraj Roy", "url": "https://blog.dhirajroy.com/about" },
+    "datePublished": "2026-09-26",
+    "dateModified": "2026-09-26",
+    "url": "https://blog.dhirajroy.com/post/spring-boot-redis-cache",
+    "keywords": ["spring boot redis cache", "spring boot @cacheable", "spring data redis tutorial", "redis cache spring boot 3", "Java 21", "Spring Boot 3", "Redis"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Digital Drift",
+      "logo": { "@type": "ImageObject", "url": "https://blog.dhirajroy.com/apple-touch-icon.png" }
+    }
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between @Cacheable and @CachePut in Spring Boot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "@Cacheable skips method execution if the key exists in the cache, returning the cached result. @CachePut always executes the method and updates the cache with the fresh return value."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why avoid default Java serialization with Redis in Spring Boot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Default JdkSerializationRedisSerializer writes unreadable binary payloads, fails across different class versions or JVMs, and bloats cache memory. Using GenericJackson2JsonRedisSerializer stores clean, inspectable JSON readable by any service."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if Redis goes down in a Spring Boot application?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "By default, cache exceptions propagate to callers. In production, implement a custom CachingConfigurerSupport or CacheErrorHandler to catch Redis connection exceptions and gracefully fall back to the primary database."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <!-- Google Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=9" />
+
+  <!-- RSS Feed & Monetization -->
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002" crossorigin="anonymous"></script>
+  <noscript><style>@media(max-width:992px){.nav-mobile{display:flex}}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"Spring Boot Redis Cache: Complete Guide with @Cacheable & Spring Data Redis","item":"https://blog.dhirajroy.com/post/spring-boot-redis-cache"}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Reading progress bar -->
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Brand Logo -->
+        <a href="/" class="brand-logo" aria-label="Digital Drift Home">
+          <div class="logo-mark">D</div>
+          <div class="logo-text-group">
+            <span class="logo-title">Digital Drift</span>
+            <span class="logo-tagline">Code · Learn · Build · Grow</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav-desktop" aria-label="Main Navigation">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <details class="nav-categories">
+            <summary>Categories <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><svg class="category-icon" data-category-icon="all" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>All articles</span></a>
+              <a href="/archive?category=AI" data-category="AI"><svg class="category-icon" data-category-icon="ai" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/><path d="M20 2v4m-2-2h4"/></svg><span>AI</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><svg class="category-icon" data-category-icon="system design" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg><span>System Design</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><svg class="category-icon" data-category-icon="backend" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M12 6.5h5M12 17.5h5"/></svg><span>Backend</span></a>
+              <a href="/archive?category=Java" data-category="Java"><svg class="category-icon" data-category-icon="java" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9ZM17 10h1a3 3 0 1 1 0 6h-1M3 22h17M8 2v3M12 1v4M16 2v3"/></svg><span>Java</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><svg class="category-icon" data-category-icon="spring boot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3C11 2 3 6 3 13a7 7 0 0 0 7 7c7 0 11-8 10-17Z"/><path d="m4 20 12-12M8 16v-5M8 16h5"/></svg><span>Spring Boot</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><svg class="category-icon" data-category-icon="node.js" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg><span>Node.js</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><svg class="category-icon" data-category-icon="javascript" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M11 8v7a2 2 0 0 1-4 0M18 9h-2a2 2 0 0 0 0 4 2 2 0 0 1 0 4h-2"/></svg><span>JavaScript</span></a>
+              <a href="/archive?category=Database" data-category="Database"><svg class="category-icon" data-category-icon="database" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg><span>Database</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><svg class="category-icon" data-category-icon="devops" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 8a4 4 0 1 0 0 8c4 0 6-8 10-8a4 4 0 1 1 0 8c-4 0-6-8-10-8Z"/></svg><span>DevOps</span></a>
+              <a href="/archive?category=Security" data-category="Security"><svg class="category-icon" data-category-icon="security" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 8 3v6c0 5-3 8-8 11-5-3-8-6-8-11V5l8-3Z"/><path d="m8 12 3 3 5-6"/></svg><span>Security</span></a>
+            </div>
+          </details>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme" title="Toggle theme">
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <a href="/#newsletter-section" id="header-subscribe-btn" class="btn-subscribe">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            Subscribe
+          </a>
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-menu" class="nav-mobile" aria-label="Mobile navigation">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <details class="nav-categories">
+            <summary>Categories <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><svg class="category-icon" data-category-icon="all" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>All articles</span></a>
+              <a href="/archive?category=AI" data-category="AI"><svg class="category-icon" data-category-icon="ai" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/><path d="M20 2v4m-2-2h4"/></svg><span>AI</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><svg class="category-icon" data-category-icon="system design" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg><span>System Design</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><svg class="category-icon" data-category-icon="backend" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M12 6.5h5M12 17.5h5"/></svg><span>Backend</span></a>
+              <a href="/archive?category=Java" data-category="Java"><svg class="category-icon" data-category-icon="java" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9ZM17 10h1a3 3 0 1 1 0 6h-1M3 22h17M8 2v3M12 1v4M16 2v3"/></svg><span>Java</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><svg class="category-icon" data-category-icon="spring boot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3C11 2 3 6 3 13a7 7 0 0 0 7 7c7 0 11-8 10-17Z"/><path d="m4 20 12-12M8 16v-5M8 16h5"/></svg><span>Spring Boot</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><svg class="category-icon" data-category-icon="node.js" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg><span>Node.js</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><svg class="category-icon" data-category-icon="javascript" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M11 8v7a2 2 0 0 1-4 0M18 9h-2a2 2 0 0 0 0 4 2 2 0 0 1 0 4h-2"/></svg><span>JavaScript</span></a>
+              <a href="/archive?category=Database" data-category="Database"><svg class="category-icon" data-category-icon="database" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg><span>Database</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><svg class="category-icon" data-category-icon="devops" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 8a4 4 0 1 0 0 8c4 0 6-8 10-8a4 4 0 1 1 0 8c-4 0-6-8-10-8Z"/></svg><span>DevOps</span></a>
+              <a href="/archive?category=Security" data-category="Security"><svg class="category-icon" data-category-icon="security" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 8 3v6c0 5-3 8-8 11-5-3-8-6-8-11V5l8-3Z"/><path d="m8 12 3 3 5-6"/></svg><span>Security</span></a>
+            </div>
+          </details>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
+    </nav>
+
+    <!-- Main Article -->
+    <main id="main-content" tabindex="-1" role="main">
+      <article class="blog-post">
+
+        <!-- Tags -->
+        <div class="tags">
+          <span class="tag" data-tag="Java">Java</span>
+          <span class="tag" data-tag="Spring Boot">Spring Boot</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+          <span class="tag" data-tag="Database">Database</span>
+        </div>
+
+        <!-- Breadcrumbs -->
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis</span></nav><!-- generated:breadcrumbs:end -->
+
+        <h1 class="post-title">Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis</h1>
+
+        <div class="post-meta">
+          <span>📅 Sep 26, 2026</span>
+          <span>⏱ 18 min read</span>
+          <span>✍ Dhiraj Roy</span>
+        </div>
+
+        <!-- Post Banner Image -->
+        <div class="post-banner-wrapper">
+          <img src="/images/spring-boot-redis-cache.jpg" alt="Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis" class="post-banner-img" width="1376" height="768" fetchpriority="high" />
+        </div>
+
+        <div class="post-content">
+          <p>
+            In high-throughput distributed applications, direct database access is almost always your primary performance bottleneck. While an optimized PostgreSQL or MySQL query takes between <strong>15ms and 80ms</strong> (accounting for index traversal, query planning, connection pooling, and disk I/O), an in-memory <strong>Redis</strong> lookup finishes in <strong>under 1 millisecond</strong>.
+          </p>
+          <p>
+            Spring Boot provides a powerful declarative caching abstraction, but running it in production requires far more than slapping <code>@EnableCaching</code> on your main class. In this production-grade tutorial using <strong>Java 21</strong>, <strong>Spring Boot 3.x</strong>, and <strong>Spring Data Redis</strong>, you will build a robust caching architecture: custom JSON serialization with Jackson (avoiding unreadable JDK binary blobs), custom per-cache TTL expiration, Docker Compose orchestration, and bulletproof defenses against <em>Cache Avalanche</em>, <em>Cache Penetration</em>, and <em>Cache Stampede</em>.
+          </p>
+
+          <blockquote>
+            Building on top of a relational database? Check out our previous guide on <a href="/post/spring-boot-postgresql-crud-jpa-hibernate">Spring Boot PostgreSQL CRUD API with JPA &amp; Hibernate</a> to establish your database and entity layer.
+          </blockquote>
+
+          <!-- ⚡ Quick Answer / TL;DR Box -->
+          <div style="background: var(--color-card); border: 2px solid var(--color-action); border-radius: var(--radius); padding: 1.5rem; margin: 2rem 0; box-shadow: var(--shadow-sm);">
+            <div style="display:flex; align-items:center; gap: 0.6rem; margin-bottom: 0.75rem;">
+              <span style="font-size: 1.25rem;">⚡</span>
+              <h3 style="margin: 0; font-size: 1.15rem; color: var(--color-navy);">TL;DR: The 3-Minute Production Redis Cache Snippet</h3>
+            </div>
+            <p style="margin-bottom: 1rem; font-size: 0.92rem; color: var(--color-text-secondary);">Here is the essential production pattern: Add <code>spring-boot-starter-data-redis</code>, configure JSON serialization in <code>RedisCacheManager</code>, and annotate service methods with <code>@Cacheable</code>:</p>
+            <pre tabindex="0"><code class="language-java">@Service
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    // 1. Read through cache (Cache-Aside)
+    @Cacheable(value = "products", key = "#id", unless = "#result == null")
+    public ProductResponse getProductById(Long id) {
+        return productRepository.findById(id)
+            .map(ProductResponse::fromEntity)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    }
+
+    // 2. Update database and refresh cache entry
+    @CachePut(value = "products", key = "#result.id()")
+    public ProductResponse updateProduct(Long id, ProductUpdateRequest request) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id));
+        product.update(request.name(), request.price());
+        return ProductResponse.fromEntity(productRepository.save(product));
+    }
+
+    // 3. Invalidate cache on deletion
+    @CacheEvict(value = "products", key = "#id")
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+}</code></pre>
+          </div>
+
+          <!-- Table of Contents -->
+          <div style="background: var(--color-card); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0;">
+            <strong>Table of Contents</strong>
+            <ul style="margin-top: 1rem;">
+              <li><a href="#why-redis">1. Why Redis Caching Matters (Latency Breakdown)</a></li>
+              <li><a href="#cache-aside">2. How Spring Cache Abstraction &amp; Cache-Aside Work</a></li>
+              <li><a href="#docker-setup">3. Local Redis with Docker Compose</a></li>
+              <li><a href="#dependencies">4. Project Dependencies (build.gradle &amp; pom.xml)</a></li>
+              <li><a href="#application-yml">5. Connection &amp; Lettuce Pool Configuration</a></li>
+              <li><a href="#redis-config">6. Custom RedisConfig (JSON Serialization &amp; Per-Cache TTL)</a></li>
+              <li><a href="#service-layer">7. Implementing @Cacheable, @CachePut &amp; @CacheEvict</a></li>
+              <li><a href="#controller">8. REST Controller Endpoints</a></li>
+              <li><a href="#production-pitfalls">9. Production Pitfalls: Avalanche, Penetration &amp; Stampede</a></li>
+              <li><a href="#testing">10. Testing with Redis CLI &amp; Performance Benchmarks</a></li>
+              <li><a href="#faq">11. Frequently Asked Questions &amp; Interview Tips</a></li>
+            </ul>
+          </div>
+
+          <!-- Section 1 -->
+          <h2 id="why-redis">1. Why Redis Caching Matters (Latency Breakdown)</h2>
+          <p>
+            When an API handles thousands of simultaneous requests per second, recurring read queries (such as product details, user profiles, feature flags, or catalog listings) needlessly saturate your relational database. Database CPU spikes, thread pools deplete, and connection limits trigger cascading timeouts.
+          </p>
+          <p>
+            Redis operates strictly in RAM using single-threaded, non-blocking asynchronous event loops. The speed difference is dramatic:
+          </p>
+
+          <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                <th style="padding: 0.75rem;">Metric</th>
+                <th style="padding: 0.75rem;">PostgreSQL (Indexed Read)</th>
+                <th style="padding: 0.75rem;">Redis In-Memory Cache</th>
+                <th style="padding: 0.75rem;">Speed Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 0.75rem;"><strong>Average Latency</strong></td>
+                <td style="padding: 0.75rem;">12ms – 65ms</td>
+                <td style="padding: 0.75rem;"><strong>0.3ms – 1.2ms</strong></td>
+                <td style="padding: 0.75rem; color: #10B981; font-weight: bold;">~25x – 60x faster</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 0.75rem;"><strong>Throughput (Single Node)</strong></td>
+                <td style="padding: 0.75rem;">~3,000 – 7,000 QPS</td>
+                <td style="padding: 0.75rem;"><strong>100,000+ QPS</strong></td>
+                <td style="padding: 0.75rem; color: #10B981; font-weight: bold;">~15x higher</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 0.75rem;"><strong>I/O Bottleneck</strong></td>
+                <td style="padding: 0.75rem;">Disk / Buffer Cache / Locks</td>
+                <td style="padding: 0.75rem;">RAM Memory Bus only</td>
+                <td style="padding: 0.75rem;">Zero Disk Wait</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Section 2 -->
+          <h2 id="cache-aside">2. How Spring Cache Abstraction &amp; Cache-Aside Work</h2>
+          <p>
+            Spring Boot uses the <strong>Cache-Aside (Lazy Loading)</strong> pattern implemented via Spring AOP proxies:
+          </p>
+          <ol>
+            <li><strong>Request arrives:</strong> The caller invokes a service method annotated with <code>@Cacheable</code>.</li>
+            <li><strong>Proxy interception:</strong> Spring's cache aspect intercepts the invocation and computes the cache key (e.g. <code>products::42</code>).</li>
+            <li><strong>Cache Lookup:</strong> If the key is found in Redis (<strong>Cache Hit</strong>), Spring bypasses the method body entirely and returns the cached value.</li>
+            <li><strong>Database Read:</strong> If the key is not in Redis (<strong>Cache Miss</strong>), the target service method executes, queries PostgreSQL, and stores the resulting object in Redis before returning it to the caller.</li>
+          </ol>
+
+          <!-- Section 3 -->
+          <h2 id="docker-setup">3. Local Redis with Docker Compose</h2>
+          <p>
+            To spin up Redis locally with a persistent volume and a web-based GUI management tool (Redis Commander), create a <code>docker-compose.yml</code> file:
+          </p>
+          <pre tabindex="0"><code class="language-yaml">version: '3.8'
+
+services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: digitaldrift-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning --requirepass "secret123"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "secret123", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: digitaldrift-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:secret123
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:</code></pre>
+          <p>Start Redis by running:</p>
+          <pre tabindex="0"><code class="language-bash">docker compose up -d</code></pre>
+          <p>You can access Redis Commander at <code>http://localhost:8081</code> to inspect keys, values, and memory consumption in real time.</p>
+
+          <!-- Section 4 -->
+          <h2 id="dependencies">4. Project Dependencies (build.gradle &amp; pom.xml)</h2>
+          <p>
+            Add <code>spring-boot-starter-data-redis</code> and <code>commons-pool2</code> (which enables high-performance connection pooling for the default Lettuce driver).
+          </p>
+
+          <h3>Gradle (build.gradle)</h3>
+          <pre tabindex="0"><code class="language-groovy">dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.apache.commons:commons-pool2'
+
+    // JSON serialization with Java 8/21 Date/Time support
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}</code></pre>
+
+          <h3>Maven (pom.xml)</h3>
+          <pre tabindex="0"><code class="language-xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+        &lt;artifactId&gt;commons-pool2&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+
+          <!-- Section 5 -->
+          <h2 id="application-yml">5. Connection &amp; Lettuce Pool Configuration</h2>
+          <p>Configure Redis connection parameters and Lettuce pool sizing in <code>src/main/resources/application.yml</code>:</p>
+          <pre tabindex="0"><code class="language-yaml">spring:
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: secret123
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 4
+          max-wait: 1000ms
+
+# Custom application cache settings
+app:
+  cache:
+    default-ttl: 600s
+    product-ttl: 300s
+    user-ttl: 3600s</code></pre>
+
+          <!-- Section 6 -->
+          <h2 id="redis-config">6. Custom RedisConfig (JSON Serialization &amp; Per-Cache TTL)</h2>
+          <p>
+            By default, Spring Boot serializes objects into Redis using Java's built-in <code>JdkSerializationRedisSerializer</code>. This produces unreadable hexadecimal binaries (<code>\xac\xed\x00\x05...</code>), causes <code>InvalidClassException</code> whenever your DTO schema changes, and prevents other microservices from parsing the cached data.
+          </p>
+          <p>
+            The production solution is a custom <code>RedisCacheManager</code> configured with <strong>GenericJackson2JsonRedisSerializer</strong>:
+          </p>
+
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.config;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+
+@Configuration
+@EnableCaching
+public class RedisConfig {
+
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        // Configure Jackson ObjectMapper for clean polymorphic JSON handling
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.activateDefaultTyping(
+            LaissezFaireSubTypeValidator.instance,
+            ObjectMapper.DefaultTyping.NON_FINAL,
+            JsonTypeInfo.As.PROPERTY
+        );
+
+        GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(mapper);
+
+        // Default Cache Configuration: 10 minutes TTL, no null caching
+        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(10))
+            .disableCachingNullValues()
+            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer));
+
+        // Tailored per-cache TTL configurations
+        Map&lt;String, RedisCacheConfiguration&gt; cacheConfigurations = new HashMap&lt;&gt;();
+        cacheConfigurations.put("products", defaultConfig.entryTtl(Duration.ofMinutes(5)));
+        cacheConfigurations.put("categories", defaultConfig.entryTtl(Duration.ofHours(24)));
+        cacheConfigurations.put("user_sessions", defaultConfig.entryTtl(Duration.ofMinutes(30)));
+
+        return RedisCacheManager.builder(connectionFactory)
+            .cacheDefaults(defaultConfig)
+            .withInitialCacheConfigurations(cacheConfigurations)
+            .build();
+    }
+}</code></pre>
+
+          <!-- Section 7 -->
+          <h2 id="service-layer">7. Implementing @Cacheable, @CachePut &amp; @CacheEvict</h2>
+          <p>
+            Now let's examine the three core annotations you will use in your service layer:
+          </p>
+
+          <h3>1. <code>@Cacheable</code> — Read-through caching</h3>
+          <p>Checks the cache first. If found, returns it immediately without querying the database:</p>
+          <pre tabindex="0"><code class="language-java">// Caches the return value under key: "products::101"
+@Cacheable(value = "products", key = "#id", unless = "#result == null")
+public ProductResponse getProductById(Long id) {
+    log.info("Fetching product #{} directly from PostgreSQL...", id);
+    return productRepository.findById(id)
+        .map(ProductResponse::fromEntity)
+        .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+}</code></pre>
+
+          <h3>2. <code>@CachePut</code> — Updating cache without bypassing execution</h3>
+          <p>Always runs the method (saving the update to PostgreSQL) and updates Redis with the new result:</p>
+          <pre tabindex="0"><code class="language-java">@CachePut(value = "products", key = "#result.id()")
+public ProductResponse updateProduct(Long id, ProductUpdateRequest request) {
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id));
+
+    product.setName(request.name());
+    product.setPrice(request.price());
+
+    Product saved = productRepository.save(product);
+    log.info("Updated product #{} in DB and refreshed Redis cache", saved.getId());
+    return ProductResponse.fromEntity(saved);
+}</code></pre>
+
+          <h3>3. <code>@CacheEvict</code> — Invalidation upon deletion</h3>
+          <p>Removes the stale key from Redis when an entity is deleted or updated:</p>
+          <pre tabindex="0"><code class="language-java">@CacheEvict(value = "products", key = "#id")
+public void deleteProduct(Long id) {
+    if (!productRepository.existsById(id)) {
+        throw new ResourceNotFoundException("Cannot delete: product #" + id + " does not exist");
+    }
+    productRepository.deleteById(id);
+    log.info("Deleted product #{} from DB and evicted from Redis", id);
+}
+
+// Bulk eviction: Clears the entire 'products' cache namespace
+@CacheEvict(value = "products", allEntries = true)
+public void clearAllProductCache() {
+    log.info("Cleared entire products cache partition");
+}</code></pre>
+
+          <!-- Section 8 -->
+          <h2 id="controller">8. REST Controller Endpoints</h2>
+          <p>Expose standard REST endpoints in <code>ProductController</code>:</p>
+          <pre tabindex="0"><code class="language-java">package com.digitaldrift.controller;
+
+import com.digitaldrift.dto.ProductCreateRequest;
+import com.digitaldrift.dto.ProductResponse;
+import com.digitaldrift.dto.ProductUpdateRequest;
+import com.digitaldrift.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/products")
+public class ProductController {
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity&lt;ProductResponse&gt; getProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;ProductResponse&gt; createProduct(@Valid @RequestBody ProductCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity&lt;ProductResponse&gt; updateProduct(
+        @PathVariable Long id,
+        @Valid @RequestBody ProductUpdateRequest request
+    ) {
+        return ResponseEntity.ok(productService.updateProduct(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity&lt;Void&gt; deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+}</code></pre>
+
+          <!-- Section 9 -->
+          <h2 id="production-pitfalls">9. Production Pitfalls: Avalanche, Penetration &amp; Stampede</h2>
+          <p>
+            When scaling Redis in production environments, three classic caching anomalies can take down your backend:
+          </p>
+
+          <h3>1. Cache Avalanche (Mass Expiration)</h3>
+          <p>
+            <strong>The Problem:</strong> If you set a fixed 1-hour TTL on 100,000 product records during a midnight sync, all 100,000 keys expire at exactly 1:00 AM. 100% of user traffic instantly falls through to PostgreSQL, crashing the database.
+          </p>
+          <p>
+            <strong>The Fix:</strong> Introduce <em>TTL Jitter</em> (adding a random offset of 10%–20% to each key):
+          </p>
+          <pre tabindex="0"><code class="language-java">// Example: Base TTL of 60 minutes + random 0 to 12 minutes jitter
+Duration ttl = Duration.ofMinutes(60).plusSeconds(ThreadLocalRandom.current().nextLong(720));</code></pre>
+
+          <h3>2. Cache Penetration (Querying Non-Existent Keys)</h3>
+          <p>
+            <strong>The Problem:</strong> An attacker sends millions of requests for non-existent IDs (e.g. <code>id = -99999</code> or random UUIDs). Because the data is never in Redis or the DB, the cache never stores it, and every single request hits PostgreSQL.
+          </p>
+          <p>
+            <strong>The Fix:</strong> Cache empty/null results with a very short TTL (e.g., 60 seconds), or use a <strong>Bloom Filter</strong> in front of your service.
+          </p>
+
+          <h3>3. Cache Stampede / Dog-piling</h3>
+          <p>
+            <strong>The Problem:</strong> When an extremely popular hot key (like the homepage banner or flash sale inventory) expires, thousands of concurrent threads experience a cache miss simultaneously and all query PostgreSQL at the exact same millisecond.
+          </p>
+          <p>
+            <strong>The Fix:</strong> Enable Spring's synchronized cache lock:
+          </p>
+          <pre tabindex="0"><code class="language-java">@Cacheable(value = "products", key = "#id", sync = true)
+public ProductResponse getHotProduct(Long id) {
+    // Only ONE thread executes this database lookup; all other threads wait and receive the cached result
+    return productRepository.findById(id).map(ProductResponse::fromEntity).orElseThrow();
+}</code></pre>
+
+          <!-- Section 10 -->
+          <h2 id="testing">10. Testing with Redis CLI &amp; Performance Benchmarks</h2>
+          <p>Verify your keys and inspection payloads using the Redis command line:</p>
+
+          <pre tabindex="0"><code class="language-bash"># Connect to Redis container
+docker exec -it digitaldrift-redis redis-cli -a secret123
+
+# List active keys
+127.0.0.1:6379> KEYS "products::*"
+1) "products::1"
+2) "products::2"
+
+# Inspect remaining TTL in seconds
+127.0.0.1:6379> TTL "products::1"
+(integer) 284
+
+# Inspect the clean JSON payload stored by Jackson
+127.0.0.1:6379> GET "products::1"
+"{\"@class\":\"com.digitaldrift.dto.ProductResponse\",\"id\":1,\"name\":\"Mechanical Keyboard\",\"price\":129.99}"</code></pre>
+
+          <h3>Latency Benchmark (cURL)</h3>
+          <p>Measure the response time before and after caching:</p>
+          <pre tabindex="0"><code class="language-bash"># 1st Request (Cache Miss — hits PostgreSQL)
+curl -o /dev/null -s -w 'Total Time: %{time_total}s\n' http://localhost:8080/api/v1/products/1
+# Total Time: 0.048210s (48ms)
+
+# 2nd Request (Cache Hit — served by Redis)
+curl -o /dev/null -s -w 'Total Time: %{time_total}s\n' http://localhost:8080/api/v1/products/1
+# Total Time: 0.001140s (1.1ms)</code></pre>
+
+          <!-- Section 11 -->
+          <h2 id="faq">11. Frequently Asked Questions &amp; Interview Tips</h2>
+          <div style="margin-top: 1.5rem;">
+            <h3>Q: What is the difference between Redis and Memcached?</h3>
+            <p>
+              Memcached is a pure multi-threaded in-memory key-value store. Redis is a rich in-memory data structures server supporting strings, hashes, lists, sets, sorted sets, streams, Pub/Sub, persistence (RDB/AOF), and cluster clustering. For modern Spring Boot applications, Redis is the industry standard.
+            </p>
+
+            <h3>Q: How do you handle Redis connection failures gracefully?</h3>
+            <p>
+              By default, a failed Redis connection throws a <code>RedisConnectionFailureException</code>. In production, configure a custom <code>CacheErrorHandler</code>:
+            </p>
+            <pre tabindex="0"><code class="language-java">public class CustomCacheErrorHandler implements CacheErrorHandler {
+    private static final Logger log = LoggerFactory.getLogger(CustomCacheErrorHandler.class);
+
+    @Override
+    public void handleCacheGetError(RuntimeException ex, Cache cache, Object key) {
+        log.warn("Redis unavailable for GET on key {}. Falling back to DB.", key, ex);
+    }
+
+    @Override
+    public void handleCachePutError(RuntimeException ex, Cache cache, Object key, Object value) {
+        log.warn("Redis unavailable for PUT on key {}. Writing to DB only.", key, ex);
+    }
+
+    @Override
+    public void handleCacheEvictError(RuntimeException ex, Cache cache, Object key) {
+        log.warn("Redis unavailable for EVICT on key {}.", key, ex);
+    }
+
+    @Override
+    public void handleCacheClearError(RuntimeException ex, Cache cache) {
+        log.warn("Redis unavailable for CLEAR on cache {}.", cache.getName(), ex);
+    }
+}</code></pre>
+
+            <h3>Q: Can I cache paginated queries with @Cacheable?</h3>
+            <p>
+              Yes! Use SpEL (Spring Expression Language) to incorporate page number and page size into the key:
+            </p>
+            <pre tabindex="0"><code class="language-java">@Cacheable(value = "product_pages", key = "'page_' + #pageable.pageNumber + '_size_' + #pageable.pageSize")
+public Page&lt;ProductResponse&gt; getProducts(Pageable pageable) { ... }</code></pre>
+          </div>
+
+          <h2 id="conclusion">Conclusion &amp; Next Steps</h2>
+          <p>
+            Implementing Redis caching in Spring Boot 3 transforms your backend from a fragile service vulnerable to database bottlenecks into a lightning-fast, production-ready distributed system.
+          </p>
+          <p>
+            To continue expanding your Spring Boot architecture:
+          </p>
+          <ul>
+            <li>Pair Redis with robust error handling from <a href="/post/spring-boot-global-exception-handling-controlleradvice">Spring Boot Global Exception Handling</a>.</li>
+            <li>Protect your endpoints with <a href="/post/spring-boot-jwt-authentication-complete-guide">Spring Boot JWT Authentication</a>.</li>
+            <li>Optimize your underlying tables using <a href="/post/spring-boot-pagination-sorting-complete-guide">Spring Boot Pagination and Sorting</a>.</li>
+          </ul>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Col 1: About -->
+        <div class="footer-col footer-about-col">
+          <div class="footer-logo">
+            <span class="logo-mark">D</span>
+            <span class="footer-logo-text">Digital Drift</span>
+          </div>
+          <p class="footer-desc">
+            A modern developer blog exploring Backend Engineering, AI, and System Design. Practical tutorials, architectural deep-dives, and production setups.
+          </p>
+        </div>
+
+        <!-- Col 2: Navigation -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-link-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/archive">Archive</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Categories -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Categories</h4>
+          <ul class="footer-link-list">
+            <li><a href="/archive?category=System%20Design" data-tag="System Design">System Design</a></li>
+            <li><a href="/archive?category=Backend" data-tag="Backend">Backend</a></li>
+            <li><a href="/archive?category=Spring%20Boot" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/archive?category=JavaScript" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/archive?category=DevOps" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/archive?category=Database" data-tag="Database">Database</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Connect With Me -->
+        <div class="footer-col">
+          <h4 class="footer-col-title">Connect With Me</h4>
+          <div class="footer-social-icons">
+            <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Col 5: Quote Box -->
+        <div class="footer-col footer-quote-col">
+          <blockquote class="footer-quote">
+            <p class="quote-text">"Small steps in the right direction lead to big results."</p>
+            <cite class="quote-author">— Digital Drift</cite>
+          </blockquote>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <p class="footer-copyright">&copy; <span id="current-year">2026</span> Digital Drift. All rights reserved.</p>
+        <div class="footer-legal-links">
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/disclaimer">Disclaimer</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=9"></script>
+  <script src="/js/categories.js?v=9"></script>
+  <script src="/js/script.js?v=9"></script>
+</body>
+</html>

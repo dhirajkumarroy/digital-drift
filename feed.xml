@@ -5,8 +5,19 @@
     <link>https://blog.dhirajroy.com/</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis</title>
+      <link>https://blog.dhirajroy.com/post/spring-boot-redis-cache</link>
+      <guid isPermaLink="true">https://blog.dhirajroy.com/post/spring-boot-redis-cache</guid>
+      <pubDate>Sat, 26 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Master high-performance Redis caching in Spring Boot 3 &amp; Java 21 using Spring Data Redis. Covers @Cacheable, TTL, custom RedisConfig, Docker, and cache eviction.</description>
+      <category>Java</category>
+      <category>Spring Boot</category>
+      <category>Backend</category>
+      <category>Database</category>
+    </item>
     <item>
       <title>GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares</title>
       <link>https://blog.dhirajroy.com/post/gpt-6-astra-explained</link>

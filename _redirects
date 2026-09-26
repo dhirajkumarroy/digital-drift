@@ -14,6 +14,8 @@
 /privacy-policy /privacy-policy.html 200
 /disclaimer.html /disclaimer 301
 /disclaimer /disclaimer.html 200
+/post/spring-boot-redis-cache.html /post/spring-boot-redis-cache 301
+/post/spring-boot-redis-cache /post/spring-boot-redis-cache.html 200
 /post/gpt-6-astra-explained.html /post/gpt-6-astra-explained 301
 /post/gpt-6-astra-explained /post/gpt-6-astra-explained.html 200
 /post/system-design-url-shortener-tinyurl.html /post/system-design-url-shortener-tinyurl 301

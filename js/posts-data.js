@@ -29,6 +29,20 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 23,
+    slug: "spring-boot-redis-cache",
+    title: "Spring Boot Redis Cache: Complete Guide with @Cacheable & Spring Data Redis",
+    summary: "Master high-performance Redis caching in Spring Boot 3 & Java 21 using Spring Data Redis. Covers @Cacheable, TTL, custom RedisConfig, Docker, and cache eviction.",
+    date: "Sep 26, 2026",
+    dateISO: "2026-09-26",
+    url: "/post/spring-boot-redis-cache",
+    image: "/images/spring-boot-redis-cache.jpg",
+    tags: ["Java", "Spring Boot", "Backend", "Database"],
+    readTime: 18,
+    featured: false
+  },
+
+  {
     id: 22,
     slug: "gpt-6-astra-explained",
     title: "GPT-6 Astra Explained: Features, Pricing, Use Cases, and How It Compares",
