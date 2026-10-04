@@ -5,8 +5,18 @@
     <link>https://blog.dhirajroy.com/</link>
     <description>Backend, AI, and programming blogs by Dhiraj Roy.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 04 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://blog.dhirajroy.com/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>JavaScript Async/Await: Errors, Concurrency, and Cancellation</title>
+      <link>https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide</link>
+      <guid isPermaLink="true">https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide</guid>
+      <pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Learn JavaScript async/await with practical examples: handle errors, limit concurrent requests, choose promise combinators, and cancel fetch calls safely.</description>
+      <category>JavaScript</category>
+      <category>Node.js</category>
+      <category>Backend</category>
+    </item>
     <item>
       <title>Spring Boot Redis Cache: Complete Guide with @Cacheable &amp; Spring Data Redis</title>
       <link>https://blog.dhirajroy.com/post/spring-boot-redis-cache</link>

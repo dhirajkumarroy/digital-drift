@@ -1,0 +1,4 @@
+Generated with the built-in imagegen tool. Exported as a 1280x720 JPEG.
+
+Prompt:
+Create a polished editorial banner for a software engineering blog article about JavaScript async/await, concurrent tasks, and cancellation. Wide 16:9 composition, designed for a 1280x720 crop. Dark navy #0b0f19 background, architectural isometric 3D illustration: a central small amber glowing execution core routes three clean parallel cyan and blue task lanes through glasslike cubes toward a shared completion hub; one lane branches gently into a purple cancellation gate. Restrained cyan #06b6d4 and purple #8b5cf6 accents, crisp geometry, soft ambient light, subtle depth, generous negative space, sophisticated minimal technical aesthetic. Keep all essential elements within the central 80 percent of the image. No people, no words, no letters, no digits, no logos, no watermark.

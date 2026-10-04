@@ -19,7 +19,7 @@ class Page(HTMLParser):
         self.tags = []
         self.schemas = []
         self.schema = None
-        self.feed(file.read_text())
+        self.feed(file.read_text(encoding='utf-8'))
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -56,7 +56,7 @@ for file, page in pages.items():
     check('main-content' in ids, f'{label}: missing skip-link destination')
     if file.name != '404.html':
         canonical = [a.get('href') for a in page.select('link') if a.get('rel') == 'canonical']
-        expected = DOMAIN + ('/' if file.name == 'index.html' else '/' + str(file.relative_to(ROOT).with_suffix('')))
+        expected = DOMAIN + ('/' if file.name == 'index.html' else '/' + file.relative_to(ROOT).with_suffix('').as_posix())
         check(canonical == [expected], f'{label}: incorrect canonical {canonical}')
         check(len([a for a in page.select('meta') if a.get('name') == 'description' and a.get('content')]) == 1, f'{label}: missing description')
         check(not any('noindex' in a.get('content', '') for a in page.select('meta') if a.get('name') == 'robots'), f'{label}: published page is noindex')
@@ -80,20 +80,20 @@ for file, page in pages.items():
             target_ids = [a['id'] for _, a in pages[target].tags if 'id' in a]
             check(unquote(url.fragment) in target_ids, f'{label}: missing anchor {link}')
 
-registry = (ROOT / 'js/posts-data.js').read_text()
+registry = (ROOT / 'js/posts-data.js').read_text(encoding='utf-8')
 post_urls = re.findall(r'url:\s*"([^"]+)"', registry)
 sitemap = ET.parse(ROOT / 'sitemap.xml')
 locations = [node.text for node in sitemap.findall('.//{*}loc')]
 check(len(locations) == len(set(locations)), 'Sitemap contains duplicate URLs')
 for url in post_urls:
     check(DOMAIN + url in locations, f'Sitemap missing {url}')
-    check(f'href="{url}"' in (ROOT / 'archive.html').read_text(), f'Static archive missing {url}')
-    check(f'{url} {url}.html 200' in (ROOT / '_redirects').read_text(), f'Missing clean route {url}')
-    check(f'{url}.html {url} 301' in (ROOT / '_redirects').read_text(), f'Missing canonical redirect {url}')
+    check(f'href="{url}"' in (ROOT / 'archive.html').read_text(encoding='utf-8'), f'Static archive missing {url}')
+    check(f'{url} {url}.html 200' in (ROOT / '_redirects').read_text(encoding='utf-8'), f'Missing clean route {url}')
+    check(f'{url}.html {url} 301' in (ROOT / '_redirects').read_text(encoding='utf-8'), f'Missing canonical redirect {url}')
 feed = ET.parse(ROOT / 'feed.xml')
 check(len(feed.findall('./channel/item')) == len(post_urls), 'RSS item count differs from registry')
-check('YOUR_FORMSPREE_ID' not in (ROOT / 'contact.html').read_text(), 'Contact form still has a placeholder endpoint')
-check('Thank you for subscribing' not in (ROOT / 'js/script.js').read_text(), 'Newsletter still claims a fake subscription')
+check('YOUR_FORMSPREE_ID' not in (ROOT / 'contact.html').read_text(encoding='utf-8'), 'Contact form still has a placeholder endpoint')
+check('Thank you for subscribing' not in (ROOT / 'js/script.js').read_text(encoding='utf-8'), 'Newsletter still claims a fake subscription')
 if errors:
     print('\n'.join(errors))
     sys.exit(1)

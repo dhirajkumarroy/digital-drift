@@ -29,6 +29,20 @@ const BLOG_POSTS = [
   /* ── ADD NEW POSTS AT THE TOP ─────────────────────────────── */
 
   {
+    id: 24,
+    slug: "javascript-async-await-promises-concurrency-guide",
+    title: "JavaScript Async/Await: Errors, Concurrency, and Cancellation",
+    summary: "Learn JavaScript async/await with practical examples: handle errors, limit concurrent requests, choose promise combinators, and cancel fetch calls safely.",
+    date: "Oct 4, 2026",
+    dateISO: "2026-10-04",
+    url: "/post/javascript-async-await-promises-concurrency-guide",
+    image: "/images/javascript-async-await-promises-concurrency-guide.jpg",
+    tags: ["JavaScript", "Node.js", "Backend"],
+    readTime: 14,
+    featured: false
+  },
+
+  {
     id: 23,
     slug: "spring-boot-redis-cache",
     title: "Spring Boot Redis Cache: Complete Guide with @Cacheable & Spring Data Redis",

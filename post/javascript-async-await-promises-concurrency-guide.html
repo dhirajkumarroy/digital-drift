@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <script>try{var theme=localStorage.getItem("theme");var dark=theme==="dark"||(!theme&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.classList.add("light");}</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>JavaScript Async/Await &amp; Concurrency | Digital Drift</title>
+
+  <meta name="description" content="Learn JavaScript async/await with practical examples: handle errors, limit concurrent requests, choose promise combinators, and cancel fetch calls safely." />
+  <meta name="keywords" content="JavaScript async await, Promises, Promise.all, concurrency, AbortController, Node.js" />
+  <meta name="author" content="Dhiraj Roy" />
+  <link rel="canonical" href="https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide" />
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <meta property="og:title" content="JavaScript Async/Await: Errors, Concurrency, and Cancellation" />
+  <meta property="og:description" content="Learn JavaScript async/await with practical examples: handle errors, limit concurrent requests, choose promise combinators, and cancel fetch calls safely." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide" />
+  <meta property="og:image" content="https://blog.dhirajroy.com/images/javascript-async-await-promises-concurrency-guide.jpg" />
+  <meta property="og:site_name" content="Digital Drift" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="JavaScript Async/Await: Errors, Concurrency, and Cancellation" />
+  <meta name="twitter:description" content="Learn JavaScript async/await with practical examples: handle errors, limit concurrent requests, choose promise combinators, and cancel fetch calls safely." />
+  <meta name="twitter:image" content="https://blog.dhirajroy.com/images/javascript-async-await-promises-concurrency-guide.jpg" />
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "JavaScript Async/Await: Errors, Concurrency, and Cancellation",
+  "description": "Learn JavaScript async/await with practical examples: handle errors, limit concurrent requests, choose promise combinators, and cancel fetch calls safely.",
+  "author": {
+    "@type": "Person",
+    "name": "Dhiraj Roy",
+    "url": "https://blog.dhirajroy.com/about"
+  },
+  "datePublished": "2026-10-04",
+  "dateModified": "2026-10-04",
+  "url": "https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide",
+  "mainEntityOfPage": "https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide",
+  "image": "https://blog.dhirajroy.com/images/javascript-async-await-promises-concurrency-guide.jpg",
+  "keywords": [
+    "JavaScript",
+    "Async/Await",
+    "Promises",
+    "Node.js",
+    "Concurrency",
+    "AbortController"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Digital Drift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.dhirajroy.com/apple-touch-icon.png"
+    }
+  }
+}
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN488V6MP5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VN488V6MP5');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="/css/style.css?v=9" />
+
+  <link rel="alternate" type="application/rss+xml" title="Digital Drift RSS Feed" href="/feed.xml" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8526944296509002"
+     crossorigin="anonymous"></script>
+  <noscript><style>@media(max-width:992px){.nav-mobile{display:flex}}.mobile-menu-toggle,.theme-toggle,#header-search-btn,.search-widget,.archive-search-box{display:none}</style></noscript>
+  <script id="breadcrumb-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.dhirajroy.com/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://blog.dhirajroy.com/archive"},{"@type":"ListItem","position":3,"name":"JavaScript Async/Await: Errors, Concurrency, and Cancellation","item":"https://blog.dhirajroy.com/post/javascript-async-await-promises-concurrency-guide"}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <div class="reading-progress" id="reading-progress"></div>
+
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+
+        <a href="/" class="brand-logo" aria-label="Digital Drift Home">
+          <div class="logo-mark">D</div>
+          <div class="logo-text-group">
+            <span class="logo-title">Digital Drift</span>
+            <span class="logo-tagline">Code · Learn · Build · Grow</span>
+          </div>
+        </a>
+
+        <nav class="nav-desktop" aria-label="Main Navigation">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <details class="nav-categories">
+            <summary>Categories <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><svg class="category-icon" data-category-icon="all" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>All articles</span></a>
+              <a href="/archive?category=AI" data-category="AI"><svg class="category-icon" data-category-icon="ai" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/><path d="M20 2v4m-2-2h4"/></svg><span>AI</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><svg class="category-icon" data-category-icon="system design" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg><span>System Design</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><svg class="category-icon" data-category-icon="backend" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M12 6.5h5M12 17.5h5"/></svg><span>Backend</span></a>
+              <a href="/archive?category=Java" data-category="Java"><svg class="category-icon" data-category-icon="java" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9ZM17 10h1a3 3 0 1 1 0 6h-1M3 22h17M8 2v3M12 1v4M16 2v3"/></svg><span>Java</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><svg class="category-icon" data-category-icon="spring boot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3C11 2 3 6 3 13a7 7 0 0 0 7 7c7 0 11-8 10-17Z"/><path d="m4 20 12-12M8 16v-5M8 16h5"/></svg><span>Spring Boot</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><svg class="category-icon" data-category-icon="node.js" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg><span>Node.js</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><svg class="category-icon" data-category-icon="javascript" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M11 8v7a2 2 0 0 1-4 0M18 9h-2a2 2 0 0 0 0 4 2 2 0 0 1 0 4h-2"/></svg><span>JavaScript</span></a>
+              <a href="/archive?category=Database" data-category="Database"><svg class="category-icon" data-category-icon="database" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg><span>Database</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><svg class="category-icon" data-category-icon="devops" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 8a4 4 0 1 0 0 8c4 0 6-8 10-8a4 4 0 1 1 0 8c-4 0-6-8-10-8Z"/></svg><span>DevOps</span></a>
+              <a href="/archive?category=Security" data-category="Security"><svg class="category-icon" data-category-icon="security" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 8 3v6c0 5-3 8-8 11-5-3-8-6-8-11V5l8-3Z"/><path d="m8 12 3 3 5-6"/></svg><span>Security</span></a>
+            </div>
+          </details>
+          <a href="/contact">Contact</a>
+          <a href="/archive">Archive</a>
+        </nav>
+
+        <div class="header-actions">
+          <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme" title="Toggle theme">
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.394 2.594a1 1 0 01.707 1.414l-1 1a1 1 0 01-1.414-1.414l1-1a1 1 0 011.414 0zm3.33 5.5a1 1 0 010 2h-1a1 1 0 110-2h1zm-4.394 4.394a1 1 0 01-1.414 1.414l-1-1a1 1 0 011.414-1.414l1 1a1 1 0 010 1.414zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.606 15.406a1 1 0 01-1.414-1.414l1-1a1 1 0 111.414 1.414l-1 1zM2 11a1 1 0 010-2h1a1 1 0 110 2H2zm4.394-4.394a1 1 0 011.414-1.414l1 1a1 1 0 11-1.414 1.414l-1-1z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <a href="/#newsletter-section" id="header-subscribe-btn" class="btn-subscribe">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            Subscribe
+          </a>
+          <button id="mobile-menu-btn" class="mobile-menu-toggle" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <nav id="mobile-menu" class="nav-mobile" aria-label="Mobile navigation">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <details class="nav-categories">
+            <summary>Categories <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="category-menu">
+              <a href="/archive" data-category=""><svg class="category-icon" data-category-icon="all" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>All articles</span></a>
+              <a href="/archive?category=AI" data-category="AI"><svg class="category-icon" data-category-icon="ai" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/><path d="M20 2v4m-2-2h4"/></svg><span>AI</span></a>
+              <a href="/archive?category=System%20Design" data-category="System Design"><svg class="category-icon" data-category-icon="system design" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg><span>System Design</span></a>
+              <a href="/archive?category=Backend" data-category="Backend"><svg class="category-icon" data-category-icon="backend" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M12 6.5h5M12 17.5h5"/></svg><span>Backend</span></a>
+              <a href="/archive?category=Java" data-category="Java"><svg class="category-icon" data-category-icon="java" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 9h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9ZM17 10h1a3 3 0 1 1 0 6h-1M3 22h17M8 2v3M12 1v4M16 2v3"/></svg><span>Java</span></a>
+              <a href="/archive?category=Spring%20Boot" data-category="Spring Boot"><svg class="category-icon" data-category-icon="spring boot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3C11 2 3 6 3 13a7 7 0 0 0 7 7c7 0 11-8 10-17Z"/><path d="m4 20 12-12M8 16v-5M8 16h5"/></svg><span>Spring Boot</span></a>
+              <a href="/archive?category=Node.js" data-category="Node.js"><svg class="category-icon" data-category-icon="node.js" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg><span>Node.js</span></a>
+              <a href="/archive?category=JavaScript" data-category="JavaScript"><svg class="category-icon" data-category-icon="javascript" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M11 8v7a2 2 0 0 1-4 0M18 9h-2a2 2 0 0 0 0 4 2 2 0 0 1 0 4h-2"/></svg><span>JavaScript</span></a>
+              <a href="/archive?category=Database" data-category="Database"><svg class="category-icon" data-category-icon="database" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg><span>Database</span></a>
+              <a href="/archive?category=DevOps" data-category="DevOps"><svg class="category-icon" data-category-icon="devops" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 8a4 4 0 1 0 0 8c4 0 6-8 10-8a4 4 0 1 1 0 8c-4 0-6-8-10-8Z"/></svg><span>DevOps</span></a>
+              <a href="/archive?category=Security" data-category="Security"><svg class="category-icon" data-category-icon="security" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 8 3v6c0 5-3 8-8 11-5-3-8-6-8-11V5l8-3Z"/><path d="m8 12 3 3 5-6"/></svg><span>Security</span></a>
+            </div>
+          </details>
+      <a href="/contact">Contact</a>
+      <a href="/archive">Archive</a>
+      <a href="/#newsletter-section" class="mobile-subscribe-link">Subscribe via RSS</a>
+    </nav>
+
+    <main id="main-content" tabindex="-1" role="main">
+      <article class="blog-post">
+        <div class="tags">
+          <span class="tag" data-tag="JavaScript">JavaScript</span>
+          <span class="tag" data-tag="Node.js">Node.js</span>
+          <span class="tag" data-tag="Backend">Backend</span>
+        </div>
+        <!-- generated:breadcrumbs:start --><nav class="breadcrumbs" aria-label="Breadcrumb navigation"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">/</span><a href="/archive">Archive</a><span class="bc-sep" aria-hidden="true">/</span><span class="bc-current" aria-current="page">JavaScript Async/Await: Errors, Concurrency, and Cancellation</span></nav><!-- generated:breadcrumbs:end -->
+        <h1 class="post-title">JavaScript Async/Await: Errors, Concurrency, and Cancellation</h1>
+        <div class="post-meta">
+          <span>&#128197; <time datetime="2026-10-04">Oct 4, 2026</time></span>
+          <span>&#9201; 14 min read</span>
+          <span>&#9997;&#65039; Dhiraj Roy</span>
+        </div>
+        <div class="post-banner-wrapper">
+          <img src="/images/javascript-async-await-promises-concurrency-guide.jpg" alt="Three glowing task paths connect an execution core to a completion hub, with one path branching to a cancellation gate" class="post-banner-img" width="1280" height="720" fetchpriority="high" decoding="async" />
+        </div>
+        <div class="post-content">
+          <p>JavaScript async/await makes asynchronous code easier to read, but it does not decide when tasks should start, how many requests your API can handle, or what should happen when one request fails. Those decisions still belong in your application. A dashboard that loads three independent widgets and an import job that updates thousands of records need different strategies.</p>
+          <p>This guide builds from promise execution to a small concurrency limiter and a cancellable JSON request. You will learn how to choose sequential execution, <code>Promise.all()</code>, or <code>Promise.allSettled()</code>, and how to handle failures without silently losing work.</p>
+          <blockquote><p><strong>Before you start:</strong> Know functions, arrays, and basic promises. Save examples with top-level <code>await</code> in an <code>.mjs</code> file and run them with Node.js, or use a browser module. The cancellation examples require <code>fetch</code>, <code>AbortSignal.timeout</code>, and <code>AbortSignal.any</code>. Example <code>/api/...</code> routes represent your application; they are not endpoints hosted by this blog.</p></blockquote>
+
+          <nav class="table-of-contents" aria-label="Table of contents">
+            <h2 id="contents">In this guide</h2>
+            <ol>
+              <li><a href="#execution">How JavaScript async/await executes</a></li>
+              <li><a href="#dependencies">Choose sequential or concurrent work</a></li>
+              <li><a href="#promise-tools">Choose the right promise combinator</a></li>
+              <li><a href="#async-loops">Fix async loops</a></li>
+              <li><a href="#error-handling">Handle async/await errors at a useful boundary</a></li>
+              <li><a href="#concurrency-limit">Limit concurrent work</a></li>
+              <li><a href="#cancellation">Add timeouts and cancellation</a></li>
+              <li><a href="#testing">Test failures and ordering</a></li>
+              <li><a href="#operating">Apply the patterns in a real application</a></li>
+              <li><a href="#faq">Common questions</a></li>
+            </ol>
+          </nav>
+
+          <h2 id="execution">1. How JavaScript async/await executes</h2>
+          <p>An <code>async</code> function always returns a promise. Its body begins running immediately, up to the first <code>await</code>. Awaiting a promise suspends that function; the code that called it can continue. When the awaited operation settles, the suspended function resumes through a promise continuation.</p>
+          <p>Even an already fulfilled promise causes the code after <code>await</code> to run asynchronously. Run this example and compare the output with the comments. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function#description">async function reference</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#control_flow_effects_of_await">await control-flow documentation</a> explain these execution rules.</p>
+          <pre tabindex="0" data-example="order"><code class="language-javascript">async function inspectOrder() {
+  console.log("inside: before await");
+  await Promise.resolve();
+  console.log("inside: after await");
+}
+
+console.log("start");
+const pending = inspectOrder();
+console.log("outside");
+await pending;
+
+// start
+// inside: before await
+// outside
+// inside: after await</code></pre>
+          <p>That pause is local to the function. It does not freeze the entire browser or Node.js process. Conversely, putting a long calculation inside an async function still runs that calculation on the thread executing the function. For expensive CPU work, evaluate Web Workers in a browser or <a href="https://nodejs.org/api/worker_threads.html">Node.js worker threads</a>. Promises alone do not distribute calculations across cores.</p>
+
+          <h2 id="dependencies">2. Choose sequential or concurrent work</h2>
+          <p>Start with dependencies. If loading orders requires the user's ID, the user lookup must finish first. Sequential awaits express that dependency clearly:</p>
+          <pre tabindex="0" data-example="sequential"><code class="language-javascript">// Illustrative application functions; supply your own implementations.
+async function loadAccount(email) {
+  const user = await findUser(email);
+  const orders = await findOrders(user.id);
+  return { user, orders };
+}</code></pre>
+          <p>A dashboard's profile and project list might be independent. Starting both requests before awaiting their combined result allows the network waits to overlap. The following example uses the <code>getJSON</code> helper introduced in section 5:</p>
+          <pre tabindex="0" data-example="concurrent"><code class="language-javascript">// These requests are independent and both are required.
+async function loadDashboard() {
+  const [profile, projects] = await Promise.all([
+    getJSON("/api/profile"),
+    getJSON("/api/projects")
+  ]);
+  return { profile, projects };
+}</code></pre>
+          <p>If two independent requests each take roughly 300 milliseconds, sequential execution spends roughly 600 milliseconds waiting. Concurrent execution can bring that closer to 300 milliseconds, plus overhead. This is an illustration, not a performance guarantee: connection limits, server load, and shared resources affect the result.</p>
+          <p>The calls to <code>getJSON()</code> initiate the requests. <code>Promise.all()</code> observes their returned promises. Passing the function itself, such as <code>Promise.all([getJSON])</code>, does not call it. Also attach the aggregate immediately when starting independent operations; creating promises and awaiting them separately can leave an early rejection temporarily unhandled. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function#async_functions_and_execution_order">async execution order</a>.</p>
+
+          <h2 id="promise-tools">3. Choose the right promise combinator</h2>
+          <div class="table-scroll" role="region" aria-label="Promise combinator comparison" tabindex="0">
+            <table>
+              <caption>Match the completion rule to your application</caption>
+              <thead><tr><th scope="col">Tool</th><th scope="col">Completion rule</th><th scope="col">Useful when</th></tr></thead>
+              <tbody>
+                <tr><td><code>Promise.all</code></td><td>All fulfill, or an input rejects</td><td>Every result is required</td></tr>
+                <tr><td><code>Promise.allSettled</code></td><td>Every input settles; returns each outcome</td><td>Partial success is useful</td></tr>
+                <tr><td><code>Promise.race</code></td><td>First input to settle determines the outcome</td><td>You need the earliest result or failure</td></tr>
+                <tr><td><code>Promise.any</code></td><td>First fulfillment; rejects if all inputs reject</td><td>Any successful provider is enough</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>Failing fast does not cancel sibling work.</strong> If a request inside <code>Promise.all()</code> fails, other requests can still complete and cause side effects. None of these combinators automatically cancels the underlying operations. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#composition">promise composition guide</a> documents their different completion rules.</p>
+          <p>For optional dashboard widgets, collecting individual outcomes lets you show successful content while offering a retry for one failed widget:</p>
+          <pre tabindex="0" data-example="settled"><code class="language-javascript">const outcomes = await Promise.allSettled([
+  getJSON("/api/activity"),
+  getJSON("/api/recommendations")
+]);
+
+for (const [index, outcome] of outcomes.entries()) {
+  if (outcome.status === "fulfilled") {
+    console.log("Widget", index, outcome.value);
+  } else {
+    console.error("Widget", index, "failed:", outcome.reason);
+  }
+}</code></pre>
+          <p><code>allSettled()</code> returns outcomes in input order, even when operations finish in a different order. Check <code>status</code> before reading <code>value</code> or <code>reason</code>; failures should remain distinguishable from an empty successful result. See the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled#return_value">allSettled return value reference</a>.</p>
+
+          <h2 id="async-loops">4. Fix async loops</h2>
+          <p><code>forEach()</code> does not wait for promises returned by its callback. An async callback can therefore leave the outer function finished while saves are still in progress, with callback rejections escaping the caller's error handling. Adding <code>await</code> before <code>forEach()</code> does not repair this because the method returns <code>undefined</code>. This behavior is documented in the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#description">forEach reference</a>.</p>
+          <pre tabindex="0" data-example="foreach"><code class="language-javascript">// Avoid: this function finishes before the saves finish.
+async function saveAllIncorrectly(records) {
+  records.forEach(async record =&gt; {
+    await saveRecord(record);
+  });
+}
+
+// Sequential: each save completes before the next one starts.
+async function saveAllInOrder(records) {
+  for (const record of records) {
+    await saveRecord(record);
+  }
+}
+
+// Concurrent: suitable only for a small, bounded collection.
+async function saveSmallBatch(records) {
+  await Promise.all(records.map(record =&gt; saveRecord(record)));
+}</code></pre>
+          <p>Here, <code>saveRecord</code> represents your persistence function. Choose the sequential version when writes depend on previous writes or order matters. Choose the concurrent version only when the input is small enough for your service. Mapping 20,000 records creates 20,000 operations immediately; a promise aggregate is not a concurrency limit.</p>
+
+          <h2 id="error-handling">5. Handle async/await errors at a useful boundary</h2>
+          <p>A request has several failure points: connecting to the server, receiving an unsuccessful HTTP status, reading the response body, and parsing its contents. <code>fetch()</code> can fulfill for HTTP 404 or 500, so check <code>response.ok</code> yourself. Reading JSON is also asynchronous and can fail after the headers arrive. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">Using the Fetch API</a>.</p>
+          <pre tabindex="0" data-example="fetch"><code class="language-javascript">class HttpError extends Error {
+  constructor(status) {
+    super("Request failed with HTTP " + status);
+    this.name = "HttpError";
+    this.status = status;
+  }
+}
+
+async function getJSON(url, { signal } = {}) {
+  const response = await fetch(url, {
+    signal,
+    headers: { Accept: "application/json" }
+  });
+
+  if (!response.ok) {
+    // Discard the unused error body; preserve the HTTP error.
+    await response.body?.cancel().catch(() =&gt; {});
+    throw new HttpError(response.status);
+  }
+
+  return response.json();
+}</code></pre>
+          <p>This helper expects a successful response containing JSON. An endpoint returning an empty 204 response needs a different contract. Parsing JSON also does not validate its shape: check required fields before passing external data into application logic. In Node.js, supply an absolute URL; browser examples here use routes relative to the current site.</p>
+          <p>Let low-level helpers reject when they cannot produce their promised result. Catch at a boundary that can make a decision: an HTTP handler, an interface action, or a job runner. Returning an empty array from every catch block makes a failed service look like a valid empty database.</p>
+          <pre tabindex="0" data-example="catch"><code class="language-javascript">async function loadRequiredProfile() {
+  try {
+    return await getJSON("/api/profile");
+  } catch (cause) {
+    throw new Error("Could not load the required profile", { cause });
+  }
+}</code></pre>
+          <p>Inside this <code>try</code> block, <code>return await</code> matters: it allows the local catch to intercept the rejected request. Returning the promise directly would pass its later rejection to the caller instead. The original failure is retained as <code>cause</code>, so a boundary can log diagnostic context without replacing the useful underlying error. Avoid exposing raw responses, credentials, or personal data in user-facing error messages.</p>
+
+          <h2 id="concurrency-limit">6. Limit concurrent work</h2>
+          <p>For a larger collection, start a fixed number of workers. Each worker takes one item, waits for its mapper call, records the outcome, and then takes the next item. The function below preserves input order and continues after individual failures. It accepts an array of inputs, a positive integer limit, and a mapper that starts the operation.</p>
+          <pre tabindex="0" data-example="pool"><code class="language-javascript">async function mapSettledLimit(items, concurrency, mapper) {
+  if (!Array.isArray(items)) {
+    throw new TypeError("items must be an array");
+  }
+  if (!Number.isInteger(concurrency) || concurrency &lt; 1) {
+    throw new RangeError("concurrency must be a positive integer");
+  }
+  if (typeof mapper !== "function") {
+    throw new TypeError("mapper must be a function");
+  }
+
+  const input = Array.from(items);
+  const results = new Array(input.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex &lt; input.length) {
+      const index = nextIndex++;
+      try {
+        results[index] = {
+          status: "fulfilled",
+          value: await mapper(input[index], index)
+        };
+      } catch (reason) {
+        results[index] = { status: "rejected", reason };
+      }
+    }
+  }
+
+  const workerCount = Math.min(concurrency, input.length);
+  await Promise.all(
+    Array.from({ length: workerCount }, worker)
+  );
+  return results;
+}</code></pre>
+          <p>The index is claimed before each worker awaits. In this single JavaScript execution context, another worker cannot interrupt that synchronous claim, so each index is assigned once. Results are stored at their original index rather than pushed in completion order. The array is copied once so changes to the caller's array structure do not change the queue; contained objects are still shared references.</p>
+          <p>Try it without an API. The middle item fails quickly, but the final results still follow the original input order:</p>
+          <pre tabindex="0" data-example="poolDemo"><code class="language-javascript">const outcomes = await mapSettledLimit(
+  [30, 5, 15],
+  2,
+  async (milliseconds, index) =&gt; {
+    await new Promise(resolve =&gt; setTimeout(resolve, milliseconds));
+    if (index === 1) throw new Error("Item unavailable");
+    return "item-" + index;
+  }
+);
+
+console.log(outcomes.map(outcome =&gt;
+  outcome.status === "fulfilled"
+    ? outcome.value
+    : outcome.reason.message
+));
+// ["item-0", "Item unavailable", "item-2"]</code></pre>
+          <p>For API work, pass IDs or URLs and start the request inside the mapper: <code>mapSettledLimit(urls, 4, url =&gt; getJSON(url))</code>. Passing promises from requests you already started cannot throttle them. A mapper must return or await its complete operation; detached work escapes the limit.</p>
+          <p>This implementation bounds active mapper calls and keeps one result per input. It does not enforce requests per second, provide retries, or stop scheduling after a failure. It also waits indefinitely for a mapper that never settles. Use timeouts for network calls. For inputs too large to retain in memory, design a streaming queue with backpressure instead of collecting every result in an array.</p>
+
+          <h2 id="cancellation">7. Add timeouts and cancellation</h2>
+          <p>A timeout should reach the operation doing the work. Racing a request against a timer only changes which promise you await; the request can continue afterward. Fetch accepts an abort signal, which gives the caller a way to stop waiting on that request and its response body.</p>
+          <p>Combine a caller's signal with a timeout signal so either can end the request. <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/any_static"><code>AbortSignal.any()</code></a> uses the first signal that aborts, including its reason. <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static"><code>AbortSignal.timeout()</code></a> creates the timeout signal. In browsers its duration measures active time, so it is not a strict wall-clock deadline during suspension.</p>
+          <pre tabindex="0" data-example="timeout"><code class="language-javascript">async function getJSONWithTimeout(
+  url,
+  { signal, timeoutMs = 5000 } = {}
+) {
+  const deadline = AbortSignal.timeout(timeoutMs);
+  const combined = signal
+    ? AbortSignal.any([signal, deadline])
+    : deadline;
+
+  return getJSON(url, { signal: combined });
+}</code></pre>
+          <p>This extends the earlier <code>getJSON</code> helper, including JSON body reading. Here is an immediate cancellation example; an interface would call <code>abort()</code> from its Cancel action or cleanup handler:</p>
+          <pre tabindex="0" data-example="cancel"><code class="language-javascript">const controller = new AbortController();
+
+const request = getJSONWithTimeout("/api/report", {
+  signal: controller.signal,
+  timeoutMs: 5000
+}).then(
+  data =&gt; console.log("Report:", data),
+  error =&gt; {
+    // Default abort() uses AbortError; a timeout uses TimeoutError.
+    if (error?.name === "AbortError") {
+      console.log("Request cancelled");
+    } else if (error?.name === "TimeoutError") {
+      console.log("Request timed out");
+    } else {
+      console.error("Request failed:", error);
+    }
+  }
+);
+
+// In a UI, call this from the Cancel button or component cleanup.
+controller.abort();
+await request;</code></pre>
+          <p>A signal is one-shot: create a new controller for a new request. The example uses the default abort reason; callers supplying custom reasons may reject with values other than an Error. Treat cancellation as a distinct application outcome, and keep unexpected failures visible.</p>
+          <p>Check these methods in your target runtimes. Browser support for <code>any()</code> and <code>timeout()</code> became broadly available in 2024; older browsers may need a compatible implementation. Node.js documents <code>timeout()</code> from versions 16.14/17.3 and <code>any()</code> from 18.17/20.3. These are introduction versions, not recommendations to run those older releases. See the <a href="https://nodejs.org/api/globals.html#class-abortsignal">Node.js AbortSignal documentation</a>.</p>
+          <p>Aborting a request does not roll back a server-side change that already happened. The worker pool above also keeps scheduling after item failures, including aborted requests. If your whole import must stop, add an explicit queue cancellation policy and define what happens to items that never started.</p>
+
+          <h2 id="testing">8. Test failures and ordering</h2>
+          <p>A successful demo is only one case. First, copy <code>mapSettledLimit</code> into <code>async-guide.mjs</code>, add the checks below, and run <code>node async-guide.mjs</code>. These assertions exercise mixed outcomes, result order, empty input, and an invalid limit without network dependencies.</p>
+          <pre tabindex="0" data-example="checks"><code class="language-javascript">import assert from "node:assert/strict";
+
+// Put mapSettledLimit above these checks in async-guide.mjs.
+const results = await mapSettledLimit(
+  [1, 2, 3],
+  2,
+  async value =&gt; {
+    if (value === 2) throw new Error("expected failure");
+    return value * 10;
+  }
+);
+
+assert.equal(results[0].value, 10);
+assert.equal(results[1].status, "rejected");
+assert.equal(results[2].value, 30);
+assert.deepEqual(await mapSettledLimit([], 2, value =&gt; value), []);
+await assert.rejects(
+  mapSettledLimit([1], 0, value =&gt; value),
+  RangeError
+);
+console.log("Checks passed");</code></pre>
+          <p>For an application test suite, also cover these behaviors:</p>
+          <ul>
+            <li><strong>Concurrency:</strong> Hold mapper calls on controlled promises, count active calls, and confirm no additional item starts before a slot is released.</li>
+            <li><strong>Failure isolation:</strong> Make a mapper throw synchronously and another reject asynchronously; confirm subsequent items still run.</li>
+            <li><strong>Request handling:</strong> Test a valid JSON response, HTTP 500, malformed JSON, and a response that sends headers but stalls before completing the body.</li>
+            <li><strong>Cancellation:</strong> Test an already aborted signal, cancellation during body reading, and the timeout path. Confirm no stale result updates the interface.</li>
+          </ul>
+          <p>Prefer explicit gates and assertions over tests that assume a particular request finishes within a few milliseconds. Short delays are convenient demonstrations, but overloaded test machines can make timing-only assertions unreliable.</p>
+
+          <h2 id="operating">9. Apply the patterns in a real application</h2>
+          <p>Choose a concurrency limit from the resources the work consumes. Four workers is an example, not a universal safe setting. A database pool, an upstream service quota, and a browser's connection behavior can each impose a different constraint. Start with a modest limit, measure latency and error rate, then adjust against realistic traffic.</p>
+          <p>A per-request limit also multiplies across users and server instances. If 100 incoming requests each create four workers, the system can still create 400 active upstream operations. Shared services may need a central queue or a service-wide budget. A concurrency cap limits in-flight work; a rate limiter controls how frequently new work starts. Our <a href="/post/nodejs-api-rate-limiting">Node.js API rate limiting guide</a> covers that separate concern.</p>
+          <p>Retries need their own policy. Retrying a payment or an import write after a timeout can duplicate work when the server completed the first attempt. Use an operation's documented idempotency mechanism, bound the retry count, and respect the overall request budget. Record outcome counts and elapsed time so partial failures are visible to operators, not just hidden in a returned array.</p>
+          <p>For a dashboard, decide which widgets are essential and which may fail independently. For an import, decide whether to stop, skip, or report failed records. Those choices determine the promise pattern; the syntax follows from the behavior you want.</p>
+
+          <h2 id="faq">Common questions</h2>
+          <h3 id="await-blocking">Does await block JavaScript?</h3>
+          <p>It suspends the current async function. Other work can run while the awaited operation is pending. Synchronous CPU work before or after the await still occupies its executing thread.</p>
+          <h3 id="promise-parallelism">Does Promise.all run work in parallel?</h3>
+          <p>It coordinates promises whose operations may overlap. It does not create worker threads or invoke functions passed as values. CPU parallelism requires an appropriate worker or process model.</p>
+          <h3 id="when-allsettled">When should I choose allSettled?</h3>
+          <p>Use it when each outcome matters and partial success is useful, such as independent widgets or a batch report. It waits for every input to settle, so give operations that can hang a timeout.</p>
+          <h3 id="rate-versus-concurrency">Is a concurrency limiter also a rate limiter?</h3>
+          <p>No. A worker can start another request as soon as the previous one finishes. Fast requests can still exceed a requests-per-second quota even with a small concurrency limit.</p>
+
+          <h2 id="next">Try it in your next endpoint</h2>
+          <p>Pick one handler that performs several asynchronous operations. Mark the dependencies, decide which results are required, and identify the boundary responsible for failures. Then add a concurrency cap or cancellation only where that behavior is needed, and test the failure paths before increasing traffic.</p>
+          <p>To apply these ideas in a complete service, continue with <a href="/post/nodejs-backend-development-production-api">building a production Node.js API</a>. If you are still learning request and response flow, start with <a href="/post/what-is-backend">what backend development means</a>.</p>
+
+        </div>
+        <div class="author-bio">
+          <img src="/android-chrome-192x192.png" alt="Dhiraj Roy" class="author-avatar" width="64" height="64" loading="lazy" decoding="async" />
+          <div class="author-info">
+            <strong>Dhiraj Roy</strong>
+            <p>Backend developer &amp; tech writer. Writing about Java, Spring Boot, Python, and AI at Digital Drift.</p>
+          </div>
+        </div>
+        <nav class="post-nav" aria-label="Post navigation">
+          <a href="/post/nodejs-api-rate-limiting" class="nav-prev">
+            <span class="nav-label">&larr; Related guide</span>
+            <span class="nav-title">Node.js API Rate Limiting</span>
+          </a>
+          <a href="/archive?category=JavaScript" class="nav-next">
+            <span class="nav-label">Keep reading &rarr;</span>
+            <span class="nav-title">More JavaScript Articles</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <footer class="footer-v2">
+    <div class="container">
+      <div class="footer-top-grid">
+
+        <div class="footer-col footer-brand-col">
+          <a href="/" class="brand-logo" aria-label="Digital Drift Home">
+            <div class="logo-mark">D</div>
+            <div class="logo-text-group">
+              <span class="logo-title">Digital Drift</span>
+              <span class="logo-tagline">Code · Learn · Build · Grow</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-link-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/#popular-categories">Categories</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/archive">Archive</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Categories</h4>
+          <ul class="footer-link-list">
+            <li><a href="/archive?category=System%20Design" data-tag="System Design">System Design</a></li>
+            <li><a href="/archive?category=Backend" data-tag="Backend">Backend</a></li>
+            <li><a href="/archive?category=Spring%20Boot" data-tag="Spring Boot">Spring Boot</a></li>
+            <li><a href="/archive?category=JavaScript" data-tag="JavaScript">JavaScript</a></li>
+            <li><a href="/archive?category=DevOps" data-tag="DevOps">DevOps</a></li>
+            <li><a href="/archive?category=Database" data-tag="Database">Database</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Connect With Me</h4>
+          <div class="footer-social-icons">
+            <a href="https://github.com/dhirajkumarroy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            <a href="/feed.xml" target="_blank" rel="noopener" aria-label="RSS Feed"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg></a>
+          </div>
+        </div>
+
+        <div class="footer-col footer-quote-col">
+          <blockquote class="footer-quote">
+            <p class="quote-text">"Small steps in the right direction lead to big results."</p>
+            <cite class="quote-author">— Digital Drift</cite>
+          </blockquote>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <p class="footer-copyright">&copy; <span id="current-year">2026</span> Digital Drift. All rights reserved.</p>
+        <div class="footer-legal-links">
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/disclaimer">Disclaimer</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <script src="/js/posts-data.js?v=9"></script>
+  <script src="/js/categories.js?v=9"></script>
+  <script src="/js/script.js?v=9"></script>
+
+</body>
+</html>
